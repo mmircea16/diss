@@ -17,6 +17,9 @@ typedef struct __int8_8 int8_8;
 
 
 #define  int8_8_new(X,Y) int8_8_new_impl(X,Y+1)
+#define  int8_8_new2(X) int8_8_new_impl2(X)
+
+
 #define  _int(X) *(int*)&X
 
 #define  _int8_8(X) *(int8_8*)&X //this is not good because it will keep residues from other formats
@@ -53,11 +56,23 @@ int8_8 int8_8_new_impl(int integer_part, const float no)
 	return *x;
 }
 
+int8_8 int8_8_new_impl2(const float no)
+{
+	int8_8* x=(int8_8*) malloc(sizeof(int8_8));
+	*(int*)x = 0;
+	_float* ff=&no;
+	int exp = ff->exp;
+	int aux = *(int*)ff;
+	aux <<= (exp-127);
+	*x = _int8_8(aux);
+
+	return *x;
+}
+
 int main()
 {
 	int8_8* x=(int8_8*) malloc(sizeof(int8_8));
 	int8_8* y=(int8_8*) malloc(sizeof(int8_8));
-
 
 	int8_8 my_num=int8_8_new(1,0.2);
 	int8_8 other_num=int8_8_new(2,0.25);
@@ -69,6 +84,8 @@ int main()
     if (comp_eq(add8_8(other_num,my_num),sum)) printf("yaay\n");
     if (comp_eq(sub8_8(other_num,my_num),sum)) printf("yaay\n");
 
+    int8_8 num = int8_8_new2(1.5);
+    printf("Num with new constructor:%x\n",num);
 	return 0;
 }
 
