@@ -35,6 +35,36 @@ char* test_compare_equal()
 	return 0;
 }
 
+char* test_compare_not_equal()
+{
+	mu_test_title("Comparison for greater and lesser than");
+
+	int8_8* x=(int8_8*) malloc(sizeof(int8_8));
+	int8_8* y=(int8_8*) malloc(sizeof(int8_8));
+    x->padding1=0;x->padding2=0;
+    y->padding1=0;y->padding2=0;
+    x->p=1;x->q=0x80;
+	y->p=0;y->q=0x40;
+	int8_8 xx=*x;
+	int8_8 yy=*y;
+	mu_assert("error: 1.5 > 0.25  failed",(comp_gt(xx,yy))==1);
+
+	x->p=1;x->q=0x80;
+	y->p=1;y->q=0x80;
+	xx=*x;
+	yy=*y;
+	mu_assert("error: 1.5 > 1.5  wrong",(comp_gt(xx,yy))==0);
+
+	xx.p=2;xx.q=0x66;
+	yy.p=2;yy.q=0x67;
+	mu_assert("error: 2.sth > 2.sth+2^-8  wrong",(comp_gt(xx,yy))==0);
+
+	mu_final();
+	return 0;
+}
+
+
+
 
 char * test_foo() {
 	 int foo = 7;
@@ -46,6 +76,7 @@ char * test_foo() {
  char * all_tests() {
      //mu_run_test(test_foo);
      mu_run_test(test_compare_equal);
+     mu_run_test(test_compare_not_equal);
      return 0;
  }
 
