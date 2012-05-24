@@ -37,6 +37,9 @@ typedef struct __int8_8 int8_8;
 #define sub8_8(X,Y) _int8_8(sub(X,Y))
 
 
+#define SIGN_EXP_MASK 0x007fffff;
+#define SET_BIT_BEFORE_MANTISSA_MASK 0x00800000;
+#define INT8_8_MASK 0x00ffff00;
 
 struct __float{
 	 int mantissa :23;
@@ -63,7 +66,13 @@ int8_8 int8_8_new_impl2(const float no)
 	_float* ff=&no;
 	int exp = ff->exp;
 	int aux = *(int*)ff;
+	printf("%d %x\n",exp,aux);
+	aux &= SIGN_EXP_MASK;
+	aux |= SET_BIT_BEFORE_MANTISSA_MASK;
+	printf("%d %x\n",exp,aux);
 	aux <<= (exp-127);
+	aux >>= 7; //move decimal point to middle
+	aux &= INT8_8_MASK;
 	*x = _int8_8(aux);
 
 	return *x;
@@ -84,7 +93,7 @@ int main()
     if (comp_eq(add8_8(other_num,my_num),sum)) printf("yaay\n");
     if (comp_eq(sub8_8(other_num,my_num),sum)) printf("yaay\n");
 
-    int8_8 num = int8_8_new2(1.5);
+    int8_8 num = int8_8_new2(25.2);
     printf("Num with new constructor:%x\n",num);
 	return 0;
 }
