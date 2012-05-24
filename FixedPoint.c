@@ -50,8 +50,6 @@ int8_8 int8_8_new_impl(int integer_part, const float no)
 	x->p = integer_part;
 	_float* ff=&no;
 	x->q = ff->mantissa >> 15;
-
-	printf("%d %d\n",*x,x->q);
 	return *x;
 }
 
