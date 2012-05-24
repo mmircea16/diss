@@ -31,7 +31,7 @@ typedef struct __int8_8 int8_8;
 
 #define comp_gt(X,Y) _int(X) > _int(Y)
 #define comp_lt(X,Y) _int(X) < _int(Y)
-#define comp_eq(X,Y) _int(X) == _int(Y)
+#define comp_eq(X,Y) (_int(X) == _int(Y))
 #define comp_gt_eq(X,Y) _int(X) >= _int(Y)
 #define comp_lt_eq(X,Y) _int(X) <= _int(Y)
 
