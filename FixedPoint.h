@@ -12,10 +12,8 @@
 
 struct __int8_8
 {
-	unsigned padding1: 8;
 	unsigned q:8;
 	unsigned p:8;
-	unsigned padding2:8;
 };
 
 typedef struct __int8_8 int8_8;
