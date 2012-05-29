@@ -63,7 +63,26 @@ char* test_compare_lesser_and_greater()
 	return 0;
 }
 
+char* test_constructor()
+{
+	mu_test_title("Constructor for 8.8 format");
 
+	int8_8 y = int8_8_new(1.5);
+
+	mu_assert("error: creating 1.5 fails",((y.p==1)&&(y.q=0x80)));
+
+	y = int8_8_new(0.5);
+	mu_assert("error: creating 0.5 fails",((y.p==0)&&(y.q=0x80)));
+
+	y = int8_8_new(1);
+	mu_assert("error: creating 1 fails",((y.p==1)&&(y.q==0)));
+
+	y = int8_8_new(133.2);
+	mu_assert("error: creating 133.2 fails",((y.p==133)&&(y.q=0x66)));
+
+	mu_final();
+	return 0;
+}
 
 
 char * test_foo() {
@@ -77,6 +96,7 @@ char * test_foo() {
      //mu_run_test(test_foo);
      mu_run_test(test_compare_equal);
      mu_run_test(test_compare_lesser_and_greater);
+     mu_run_test(test_constructor);
      return 0;
  }
 

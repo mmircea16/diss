@@ -19,10 +19,6 @@ struct __int8_8
 typedef struct __int8_8 int8_8;
 
 
-#define  int8_8_new(X,Y) int8_8_new_impl(X,Y+1)
-#define  int8_8_new2(X) int8_8_new_impl2(X)
-
-
 #define  _int(X) *(int*)&X
 
 #define  _int8_8(X) *(int8_8*)&X //this is not good because it will keep residues from other formats
@@ -54,3 +50,14 @@ typedef struct __float _float;
 
 int8_8 int8_8_new_impl(int integer_part, const float no);
 int8_8 int8_8_new_impl2(const float no);
+
+static inline int8_8 int8_8_new(const float number)
+{
+  int x = (int)(number*256);
+  //x <<=16;
+  //printf(">>%X\n",x);
+  int8_8 y = *(int8_8*)&x;
+  //printf(">>%d %d\n",y.p,y.q);
+  return y;
+};
+
