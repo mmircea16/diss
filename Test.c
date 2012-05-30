@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include "FixedPoint.h"
 #include "FixedPointTests.h"
+#include "Info.h"
+#include "InfoTests.h"
 #include "minunit.h"
 
 int tests_run = 0;
@@ -16,7 +18,7 @@ int tests_run = 0;
 /* main function is from: http://www.jera.com/techinfo/jtns/jtn002.html */
 int main()
 {
-	 char *result = all_tests_fixed_point();
+	 char *result = all_tests_info();
 	 if (result != 0) {
 	     printf("%s\n", result);
 	 }
