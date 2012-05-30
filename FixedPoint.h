@@ -46,6 +46,7 @@ typedef struct __int8_8 int8_8;
 
 /*utility macros*/
 #define floor8_8(X) (X).p
+#define fract8_8(X,Y) (Y)=(X);(Y).p=0;
 
 /*init and alloc macros*/
 #define int8_8_new(X,Y) if(1){ int __xx =(int)(X*256); Y = *(int8_8*)&__xx;}

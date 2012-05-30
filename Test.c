@@ -203,6 +203,30 @@ char* test_floor()
   return 0;
 }
 
+char* test_fractional_part()
+{
+  mu_test_title("Fractional part function");
+  int8_8 res;
+  int8_8 *x,*y;
+  int8_8_alloc(x);
+  int8_8_alloc(y);
+  y->p=0;
+
+  x->p=1;x->q=0x12;y->q=0x12;
+  fract8_8(*x,res);
+  mu_assert("error: floor failed for 1.sth",comp_eq(res,*y));
+
+  x->p=0;x->q=0x52;y->q=0x52;
+  fract8_8(*x,res);
+  mu_assert("error: floor failed for 0.sth",comp_eq(res,*y));
+
+  x->p=138;x->q=0x00;y->q=0x00;
+  fract8_8(*x,res);
+  mu_assert("error: floor failed for 138.0",comp_eq(res,*y));
+
+  mu_final();
+  return 0;
+}
 
 char * test_foo() {
 	 int foo = 7;
@@ -220,6 +244,7 @@ char * test_foo() {
      mu_run_test(test_subtract);
      mu_run_test(test_multiply);
      mu_run_test(test_floor);
+     mu_run_test(test_fractional_part);
      return 0;
  }
 
