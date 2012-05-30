@@ -42,7 +42,10 @@ typedef struct __int8_8 int8_8;
 /*arithmetic macros*/
 #define add8_8(X,Y,Z) if(1) {int __s = *(int*)(&X) + *(int*)(&Y);Z=_int8_8(__s);}
 #define sub8_8(X,Y,Z) if(1) {int __s = *(int*)(&X) - *(int*)(&Y);Z=_int8_8(__s);}
-#define mul8_8(X,Y,Z) if(1) {int __s = *(int*)(&X) * *(int*)(&Y);s>>=8;Z=_int8_8(__s);}
+#define mul8_8(X,Y,Z) if(1) {int __s = *(int*)(&X) * *(int*)(&Y);__s>>=8;Z=_int8_8(__s);}
+
+/*utility macros*/
+#define floor8_8(X) (X).p
 
 /*init and alloc macros*/
 #define int8_8_new(X,Y) if(1){ int __xx =(int)(X*256); Y = *(int8_8*)&__xx;}
