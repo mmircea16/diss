@@ -49,4 +49,4 @@ typedef struct __int8_8 int8_8;
 #define int8_8_alloc(X) if(1){ int __xx=0; X=(int8_8*)&__xx;}
 
 
-/*comment: careful on naming variables!!! important not to be the same as in the files where is used*/
+

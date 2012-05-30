@@ -138,7 +138,7 @@ char* test_subtract()
 	mu_assert("error: 123.5 - 2.75 failed",comp_eq(computed_diff,diff));
 
 	mu_final();
-	/*comment: lose of precision reflects on adds; all the tests are done without having to deal with lost precision*/
+
 	return 0;
 }
 
@@ -211,30 +211,9 @@ int main()
 	 }
 	 printf("Tests run: %d\n", tests_run);
 
-
-
 	 return result != 0;
 }
 
 
 
-/* Old tests -- needs refactoring */
-/*
- * printf("Test.c main\n");
-	int8_8* x=(int8_8*) malloc(sizeof(int8_8));
-	int8_8* y=(int8_8*) malloc(sizeof(int8_8));
 
-	int8_8 my_num=int8_8_new(1,0.2);
-	int8_8 other_num=int8_8_new(2,0.25);
-	int8_8 sum=int8_8_new(1,0.05);
-
-	int d =sub(other_num,my_num);
-	int8_8 dif = _int8_8(d);
-	printf("%d %d\n",dif.p,dif.q);
-    if (comp_eq(add8_8(other_num,my_num),sum)) printf("yaay\n");
-    if (comp_eq(sub8_8(other_num,my_num),sum)) printf("yaay\n");
-
-    int8_8 num = int8_8_new2(25.2);
-    printf("Num with new constructor:%x\n",num);
-    return 0;
- */
