@@ -142,6 +142,45 @@ char* test_subtract()
 	return 0;
 }
 
+char* test_multiply()
+{
+	mu_test_title("Multiply");
+
+	int8_8 computed_prod;
+	int8_8 *x,*y,*prod;
+	int8_8_alloc(x);
+	int8_8_alloc(y);
+	int8_8_alloc(prod);
+
+    x->p = 1;
+    x->q=0;
+    y->p = 2;
+    y->q=0x81;
+    mul8_8(*x,*y,computed_prod);
+    mu_assert("error: multiplying by 1 failed",comp_eq(*y,computed_prod));
+
+    x->p = 0; x->q=0;
+    y->p = 2; y->q=0x81;
+    mul8_8(*x,*y,computed_prod);
+    mu_assert("error: multiplying by 0 failed",comp_eq(*x,computed_prod));
+
+    x->p = 2; x->q=0;
+    y->p = 2; y->q=0x81;
+    prod->p=5; prod->q=0x02;
+    mul8_8(*x,*y,computed_prod);
+    mu_assert("error: multiplying by 2 failed",comp_eq(*prod,computed_prod));
+
+    x->p = 0; x->q=0x80;
+    y->p = 2; y->q=0x82;
+    prod->p=1; prod->q=0x41;
+    mul8_8(*x,*y,computed_prod);
+    mu_assert("error: multiplying by 0.5 failed",comp_eq(*prod,computed_prod));
+
+	mu_final();
+	return 0;
+}
+
+
 char * test_foo() {
 	 int foo = 7;
      mu_assert("error, foo != 7", foo == 7);
@@ -156,6 +195,7 @@ char * test_foo() {
      mu_run_test(test_constructor);
      mu_run_test(test_add);
      mu_run_test(test_subtract);
+     mu_run_test(test_multiply);
      return 0;
  }
 

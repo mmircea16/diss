@@ -35,12 +35,14 @@ typedef struct __int8_8 int8_8;
 #define sub(X,Y) _int(X) - _int(Y)
 #define sub8_8(X,Y,Z) if(1) {int s = *(int*)(&X) - *(int*)(&Y);Z=_int8_8(s);}
 
+#define mul8_8(X,Y,Z) if(1) {int s = *(int*)(&X) * *(int*)(&Y);s>>=8;Z=_int8_8(s);}
 
 #define SIGN_EXP_MASK 0x007fffff;
 #define SET_BIT_BEFORE_MANTISSA_MASK 0x00800000;
 #define INT8_8_MASK 0x00ffff00;
 
 #define int8_8_new(X,Y) if(1){ int x =(int)(X*256); Y = *(int8_8*)&x;}
+#define int8_8_alloc(X) if(1){ int xx=0; X=(int8_8*)&xx;}
 
 struct __float{
 	 int mantissa :23;
@@ -53,10 +55,4 @@ typedef struct __float _float;
 int8_8 int8_8_new_impl(int integer_part, const float no);
 int8_8 int8_8_new_impl2(const float no);
 
-/*static inline int8_8 int8_8_new(const float number)
-{
-  int x = (int)(number*256);
-  int8_8 y = *(int8_8*)&x;
-  return y;
-};*/
-
+/*comment: careful on naming variables!!! important not to be the same as in the files where is used*/
