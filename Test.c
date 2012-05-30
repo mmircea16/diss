@@ -86,6 +86,34 @@ char* test_constructor()
 }
 
 
+char* test_add()
+{
+  mu_test_title("Adding")
+  int8_8 t1;
+  int8_8 t2,sum,computed_sum;
+  int8_8_new(1.5,t1);
+  int8_8_new(0.2,t2);
+  int8_8_new(1.7,sum);
+  add8_8(t2,t1,computed_sum);
+  mu_assert("error: 1.5 + 0.2 failed",comp_eq(computed_sum,sum));
+
+  int8_8_new(12.75,t1);
+  int8_8_new(15.3,t2);
+  int8_8_new(28.05,sum);
+  add8_8(t2,t1,computed_sum);
+  mu_assert("error: 12.75 + 15.3 failed",comp_eq(computed_sum,sum));
+
+  int8_8_new(123.45,t1);
+  int8_8_new(2.78,t2);
+  int8_8_new(126.23,sum);
+  add8_8(t2,t1,computed_sum);
+  mu_assert("error: 123.45 + 2.78 failed",comp_eq(computed_sum,sum));
+
+  mu_final();
+  /*comment: lose of precision reflects on adds; all the tests are done without having to deal with lost precision*/
+  return 0;
+
+}
 char * test_foo() {
 	 int foo = 7;
      mu_assert("error, foo != 7", foo == 7);
@@ -98,6 +126,7 @@ char * test_foo() {
      mu_run_test(test_compare_equal);
      mu_run_test(test_compare_lesser_and_greater);
      mu_run_test(test_constructor);
+     mu_run_test(test_add);
      return 0;
  }
 

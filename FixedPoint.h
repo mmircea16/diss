@@ -29,8 +29,8 @@ typedef struct __int8_8 int8_8;
 #define comp_gt_eq(X,Y) _int(X) >= _int(Y)
 #define comp_lt_eq(X,Y) _int(X) <= _int(Y)
 
-#define add(X,Y) _int(X)+_int(Y)
-#define add8_8(X,Y) _int8_8(add(X,Y))
+#define add(X,Y) _int(X) + _int(Y)
+#define add8_8(X,Y,Z) if(1) {int s = *(int*)(&X) + *(int*)(&Y);Z=_int8_8(s);}
 
 #define sub(X,Y) _int(X) - _int(Y)
 #define sub8_8(X,Y) _int8_8(sub(X,Y))
