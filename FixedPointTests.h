@@ -238,6 +238,7 @@ char * test_foo() {
 /* all_tests function is from: http://www.jera.com/techinfo/jtns/jtn002.html */
  char * all_tests_fixed_point() {
      //mu_run_test(test_foo);
+	 set_no_debug();
      mu_run_test(test_compare_equal);
      mu_run_test(test_compare_lesser_and_greater);
      mu_run_test(test_constructor);

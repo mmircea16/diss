@@ -49,7 +49,7 @@ typedef struct __int8_8 int8_8;
 #define fract8_8(X,Y) (Y)=(X);(Y).p=0;
 
 /*init and alloc macros*/
-#define int8_8_new(X,Y) if(1){ int __xx =(int)(X*256); Y = *(int8_8*)&__xx;}
+#define int8_8_new(X,Y) if(DEBUG) {int __yy =(int)(X*256); Y = *(int8_8*)&__yy; (__yy>0xFFFF)?set_overflow(CURRENT_ERR):reset_overflow(CURRENT_ERR);} else{ int __xx =(int)(X*256); Y = *(int8_8*)&__xx;}
 #define int8_8_alloc(X) if(1){ int __xx=0; X=(int8_8*)&__xx;}
 
 

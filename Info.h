@@ -22,10 +22,18 @@ typedef struct __error _Error;
 
 #define has_error(X) ((X)->code!=0)
 
-#define set_overflow(X) (X)->code |= MASK_OVERFLOW
-#define reset_overflow(X) (X)->code &= ~MASK_OVERFLOW
+#define set_overflow(X) ((X)->code |= MASK_OVERFLOW)
+#define reset_overflow(X) ((X)->code &= ~MASK_OVERFLOW)
 #define get_overflow(X) ((X)->code &= MASK_OVERFLOW)
 
 #define MASK_OVERFLOW 0x00000001
 
+#define set_debug() DEBUG=1
+#define set_no_debug() DEBUG=0
+#define init_current_err() init_err(CURRENT_ERR)
 
+#define debug_on() if(1){set_debug();init_current_err();}
+#define debug_off() if(1){set_no_debug();init_current_err();}
+
+extern int DEBUG;
+extern _Error* CURRENT_ERR;
