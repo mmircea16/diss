@@ -112,8 +112,36 @@ char* test_add()
   mu_final();
   /*comment: lose of precision reflects on adds; all the tests are done without having to deal with lost precision*/
   return 0;
-
 }
+
+char* test_subtract()
+{
+	mu_test_title("Subtracting")
+	int8_8 t1;
+	int8_8 t2,diff,computed_diff;
+	int8_8_new(1.5,t1);
+	int8_8_new(0.25,t2);
+	int8_8_new(1.25,diff);
+	sub8_8(t1,t2,computed_diff);
+	mu_assert("error: 1.5 - 0.2 failed",comp_eq(computed_diff,diff));
+
+	int8_8_new(12.75,t1);
+	int8_8_new(15.3,t2);
+	int8_8_new(2.55,diff);
+	sub8_8(t2,t1,computed_diff);
+	mu_assert("error:  15.3 -12.75  failed",comp_eq(computed_diff,diff));
+
+	int8_8_new(123.5,t1);
+	int8_8_new(2.75,t2);
+	int8_8_new(120.75,diff);
+	sub8_8(t1,t2,computed_diff);
+	mu_assert("error: 123.5 - 2.75 failed",comp_eq(computed_diff,diff));
+
+	mu_final();
+	/*comment: lose of precision reflects on adds; all the tests are done without having to deal with lost precision*/
+	return 0;
+}
+
 char * test_foo() {
 	 int foo = 7;
      mu_assert("error, foo != 7", foo == 7);
@@ -127,6 +155,7 @@ char * test_foo() {
      mu_run_test(test_compare_lesser_and_greater);
      mu_run_test(test_constructor);
      mu_run_test(test_add);
+     mu_run_test(test_subtract);
      return 0;
  }
 

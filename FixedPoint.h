@@ -33,7 +33,7 @@ typedef struct __int8_8 int8_8;
 #define add8_8(X,Y,Z) if(1) {int s = *(int*)(&X) + *(int*)(&Y);Z=_int8_8(s);}
 
 #define sub(X,Y) _int(X) - _int(Y)
-#define sub8_8(X,Y) _int8_8(sub(X,Y))
+#define sub8_8(X,Y,Z) if(1) {int s = *(int*)(&X) - *(int*)(&Y);Z=_int8_8(s);}
 
 
 #define SIGN_EXP_MASK 0x007fffff;
