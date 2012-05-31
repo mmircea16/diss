@@ -29,6 +29,8 @@ typedef struct __int8_8 int8_8;
 
 #define  _int8_8(X) *(int8_8*)&X //this is not good because it will keep residues from other formats
 
+#define print8_8(X) printf("%d : %d\n",(X).p,(X).q)
+
 /*comparison macros*/
 #define comp_gt(X,Y) _int(X) > _int(Y)
 #define comp_lt(X,Y) _int(X) < _int(Y)
@@ -39,9 +41,9 @@ typedef struct __int8_8 int8_8;
 #if DEBUG_FLAG
 
 /*arithmetic macros*/
-#define add8_8(X,Y,Z) if(1) {int __s = *(int*)(&X) + *(int*)(&Y);Z=_int8_8(__s);}
+#define add8_8(X,Y,Z) if(1) {int __s = *(int*)(&X) + *(int*)(&Y);Z=_int8_8(__s);(__s>0xFFFF)?set_overflow(CURRENT_ERR):reset_overflow(CURRENT_ERR);}
 #define sub8_8(X,Y,Z) if(1) {int __s = *(int*)(&X) - *(int*)(&Y);Z=_int8_8(__s);}
-#define mul8_8(X,Y,Z) if(1) {int __s = *(int*)(&X) * *(int*)(&Y);__s>>=8;Z=_int8_8(__s);}
+#define mul8_8(X,Y,Z) if(1) {int __s = *(int*)(&X) * *(int*)(&Y);__s>>=8;Z=_int8_8(__s);(__s>0xFFFF)?set_overflow(CURRENT_ERR):reset_overflow(CURRENT_ERR);}
 
 /*utility macros*/
 #define floor8_8(X) (X).p
