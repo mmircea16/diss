@@ -35,5 +35,5 @@ typedef struct __error _Error;
 #define debug_on() if(1){set_debug();init_current_err();}
 #define debug_off() if(1){set_no_debug();init_current_err();}
 
-extern int DEBUG;
-extern _Error* CURRENT_ERR;
+int DEBUG;
+_Error* CURRENT_ERR;
