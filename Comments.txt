@@ -2,3 +2,4 @@ Comment file
 - careful on naming variables!!! important not to be the same as in the files where is used
 - lost of precision needs to be considered (at least when writing tests)
 - use parantheses as often as possible to avoid incorrect assignments
+- need to consider sign representation
