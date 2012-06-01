@@ -20,7 +20,7 @@ typedef struct __error _Error;
 
 struct __info
 {
-	int underflow_value; //(represented value - actual value)*2^32
+	int underflow_value; //the first 8 bits not represented (range 0-256)
 };
 
 typedef struct __info _Info;
@@ -34,13 +34,13 @@ typedef struct __info _Info;
 
 #define set_overflow(X) ((X)->code |= MASK_OVERFLOW)
 #define reset_overflow(X) ((X)->code &= ~MASK_OVERFLOW)
-#define get_overflow(X) ((X)->code &= MASK_OVERFLOW)
+#define get_overflow(X) ((X)->code & MASK_OVERFLOW)
 
 #define MASK_OVERFLOW 0x00000001
 
 #define set_underflow(X) ((X)->code |= MASK_UNDERFLOW)
 #define reset_underflow(X) ((X)->code &= ~MASK_UNDERFLOW)
-#define get_underflow(X) ((X)->code &= MASK_UNDERFLOW)
+#define get_underflow(X) ((X)->code & MASK_UNDERFLOW)
 
 #define MASK_UNDERFLOW 0x00000010
 
@@ -57,7 +57,7 @@ typedef struct __info _Info;
 #define debug_off() if(1){set_no_debug();init_current_err();init_current_info();}
 
 #define verify_overflow(X) (((X)>=128*256)||((X)<-128*256))?set_overflow(CURRENT_ERR):reset_overflow(CURRENT_ERR);
-#define verify_underflow(X) if(1){const float __x = X;int exp=((_float*)(&__x))->exp;int sign=((_float*)(&__x))->sign;int aux=*(int*)(&__x);aux &= 0x007FFFFF; aux |= 0x00800000;aux <<=(exp-127); aux>>=7;if(sign) aux = ~aux + 1;aux &= 0x000000FF;(aux)?set_underflow(CURRENT_ERR):reset_underflow(CURRENT_ERR);aux <<= 24;set_underflow_value(aux);}
+#define verify_underflow(X) if(1){const float __x = X;int exp=((_float*)(&__x))->exp;int sign=((_float*)(&__x))->sign;int aux=*(int*)(&__x);aux &= 0x007FFFFF; aux |= 0x00800000;aux <<=(exp-127); aux>>=7;if(sign) aux = ~aux + 1;aux &= 0x000000FF;(aux)?set_underflow(CURRENT_ERR):reset_underflow(CURRENT_ERR);set_underflow_value(aux);}
 
 
 int DEBUG;
