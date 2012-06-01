@@ -47,9 +47,9 @@ typedef struct __int8_8 int8_8;
 #define verify_overflow(X) (((X)>=128*256)||((X)<-128*256))?set_overflow(CURRENT_ERR):reset_overflow(CURRENT_ERR);
 
 /*arithmetic macros*/
-#define add8_8(X,Y,Z) if(1) {int __s = *(int*)(&X) + *(int*)(&Y);Z=_int8_8(__s);(__s>0xFFFF)?set_overflow(CURRENT_ERR):reset_overflow(CURRENT_ERR);}
+#define add8_8(X,Y,Z) if(1) {int __s = *(int*)(&X) + *(int*)(&Y);Z=_int8_8(__s);verify_overflow(__s);}
 #define sub8_8(X,Y,Z) if(1) {int __s = *(int*)(&X) - *(int*)(&Y);Z=_int8_8(__s);}
-#define mul8_8(X,Y,Z) if(1) {int __s = *(int*)(&X) * *(int*)(&Y);__s>>=8;Z=_int8_8(__s);(__s>0xFFFF)?set_overflow(CURRENT_ERR):reset_overflow(CURRENT_ERR);}
+#define mul8_8(X,Y,Z) if(1) {int __s = *(int*)(&X) * *(int*)(&Y);__s>>=8;Z=_int8_8(__s);verify_overflow(__s);}
 
 
 /*init and alloc macros*/
