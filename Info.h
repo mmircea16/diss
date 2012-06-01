@@ -28,6 +28,12 @@ typedef struct __error _Error;
 
 #define MASK_OVERFLOW 0x00000001
 
+#define set_underflow(X) ((X)->code |= MASK_UNDERFLOW)
+#define reset_underflow(X) ((X)->code &= ~MASK_UNDERFLOW)
+#define get_underflow(X) ((X)->code &= MASK_UNDERFLOW)
+
+#define MASK_UNDERFLOW 0x00000010
+
 #define set_debug() DEBUG=1
 #define set_no_debug() DEBUG=0
 #define init_current_err() init_err(CURRENT_ERR)

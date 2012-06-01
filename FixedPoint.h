@@ -45,6 +45,7 @@ typedef struct __int8_8 int8_8;
 #if DEBUG_FLAG
 
 #define verify_overflow(X) (((X)>=128*256)||((X)<-128*256))?set_overflow(CURRENT_ERR):reset_overflow(CURRENT_ERR);
+#define verify_underflow(X) if(1){const float __x = X;int exp=((_float*)(&__x))->exp;int sign=((_float*)(&__x))->sign;int aux=*(int*)(&__x);aux &= 0x007FFFFF; aux |= 0x00800000;aux <<=(exp-127); aux>>=7;if(sign) aux = ~aux + 1;(aux&0x000000FF)?set_underflow(CURRENT_ERR):reset_underflow(CURRENT_ERR);}
 
 /*arithmetic macros*/
 #define add8_8(X,Y,Z) if(1) {int __s = *(int*)(&X) + *(int*)(&Y);Z=_int8_8(__s);verify_overflow(__s);}
@@ -53,7 +54,7 @@ typedef struct __int8_8 int8_8;
 
 
 /*init and alloc macros*/
-#define int8_8_new(X,Y) if(1){int __yy =(int)(X*256); Y = *(int8_8*)&__yy; verify_overflow(__yy); }
+#define int8_8_new(X,Y) if(1){int __yy =(int)(X*256); Y = *(int8_8*)&__yy; verify_overflow(__yy);verify_underflow(X); }
 #define int8_8_alloc(X) if(1){int __xx=0; X=(int8_8*)&__xx;}
 
 #else

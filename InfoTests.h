@@ -51,8 +51,28 @@ char * test_overflow()
 	return 0;
 }
 
+char * test_underflow()
+{
+	mu_test_title("Underflow setter and getter");
+
+	_Error* err;
+	init_err(err);
+
+	mu_assert("error: init underflow",get_underflow(err)==0);
+
+	set_underflow(err);
+	mu_assert("error: set underflow",get_underflow(err));
+
+	reset_underflow(err);
+    mu_assert("error: reset underflow",get_underflow(err)==0);
+
+	mu_final();
+	return 0;
+}
+
 char * all_tests_info() {
      mu_run_test(test_overflow);
+     mu_run_test(test_underflow);
      mu_run_test(test_has_error);
      return 0;
  }
