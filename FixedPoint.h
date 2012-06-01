@@ -18,7 +18,7 @@ typedef struct __float _float;
 
 struct __int8_8
 {
-	unsigned q:8;
+	signed int q:8;
 	unsigned p:8;
 };
 
@@ -61,7 +61,7 @@ typedef struct __int8_8 int8_8;
 #define mul8_8(X,Y,Z) if(1) {int __s = _int(X) * _int(Y);__s>>=8;Z=_int8_8(__s);}
 
 /*utility macros*/
-#define floor8_8(X) (X).p
+#define floor8_8(X) ((int)(_int(X)>>8))
 #define fract8_8(X,Y) (Y)=(X);(Y).p=0;
 
 /*init and alloc macros*/

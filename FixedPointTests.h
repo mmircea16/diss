@@ -296,15 +296,31 @@ char* test_floor()
 
   x->p=1;x->q=0x12;
   res=floor8_8(*x);
+
   mu_assert("error: floor failed for 1.sth",res==1);
 
   x->p=0;x->q=0x52;
   res=floor8_8(*x);
   mu_assert("error: floor failed for 0.sth",res==0);
 
-  x->p=138;x->q=0x00;
+  x->p=118;x->q=0x00;
   res=floor8_8(*x);
-  mu_assert("error: floor failed for 138.0",res==138);
+
+  mu_assert("error: floor failed for 118.0",res==118);
+
+  int8_8_new(-1.25,*x);
+  res=floor8_8(*x);
+  mu_assert("error: floor failed for -1.sth",res==-2);
+
+  int8_8_new(-0.325,*x);
+  res=floor8_8(*x);
+  mu_assert("error: floor failed for -0.sth",res==-1);
+
+  int8_8_new(-125.0,*x);
+  res=floor8_8(*x);
+  mu_assert("error: floor failed for -125.0",res==-125);
+
+
 
   mu_final();
   return 0;
@@ -321,15 +337,27 @@ char* test_fractional_part()
 
   x->p=1;x->q=0x12;y->q=0x12;
   fract8_8(*x,res);
-  mu_assert("error: floor failed for 1.sth",comp_eq(res,*y));
+  mu_assert("error: fractional part failed for 1.sth",comp_eq(res,*y));
 
   x->p=0;x->q=0x52;y->q=0x52;
   fract8_8(*x,res);
-  mu_assert("error: floor failed for 0.sth",comp_eq(res,*y));
+  mu_assert("error: fractional part failed for 0.sth",comp_eq(res,*y));
 
   x->p=138;x->q=0x00;y->q=0x00;
   fract8_8(*x,res);
-  mu_assert("error: floor failed for 138.0",comp_eq(res,*y));
+  mu_assert("error: fractional part failed for 138.0",comp_eq(res,*y));
+
+  int8_8_new(-1.25,*x);int8_8_new(0.75,*y);
+  fract8_8(*x,res);
+  mu_assert("error: fractional part failed for -1.25",comp_eq(res,*y));
+
+  int8_8_new(-0.75,*x);int8_8_new(0.25,*y);
+  fract8_8(*x,res);
+  mu_assert("error: fractional part failed for -0.75",comp_eq(res,*y));
+
+  int8_8_new(-123.0,*x);int8_8_new(0.0,*y);
+  fract8_8(*x,res);
+  mu_assert("error: fractional part failed for -123.0",comp_eq(res,*y));
 
   mu_final();
   return 0;
