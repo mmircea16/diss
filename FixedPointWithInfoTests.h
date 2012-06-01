@@ -164,10 +164,34 @@ char* test_underflow_at_constructor()
     return 0;
 }
 
+char* test_underflow_value_at_constructor()
+{
+	mu_test_title("Underflow value at constructor");
+    int8_8 x;
+    debug_on();
+
+    int8_8_new(1.5,x);
+	mu_assert("error: underflow failed for 1.5",get_underflow_value()==0);
+
+	int8_8_new(1.2,x);
+	printf("::%d\n",get_underflow_value());
+	mu_assert("error: underflow failed for 1.2",get_underflow_value()==3355443);
+
+    int8_8_new(-112.375,x);
+	mu_assert("error: underflow failed for -112.375",get_underflow_value()==0);
+
+	//int8_8_new(-22.8,x);
+	//mu_assert("error: underflow failed for -22.8",get_underflow(CURRENT_ERR));
+
+    mu_final();
+    return 0;
+}
+
 char * all_tests_fixed_point_with_info() {
 	 mu_run_test(test_overflow_at_constructor);
 	 mu_run_test(test_overflow_at_sum);
 	 mu_run_test(test_overflow_at_multiply);
 	 mu_run_test(test_underflow_at_constructor);
+	 mu_run_test(test_underflow_value_at_constructor);
      return 0;
  }
