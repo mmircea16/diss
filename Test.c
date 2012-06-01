@@ -4,7 +4,7 @@
  *  Created on: 24.05.2012
  *      Author: Mircea
  */
-#define DEBUG_FLAG 0
+#define DEBUG_FLAG 1
 #include <stdio.h>
 #include "FixedPoint.h"
 #include "Info.h"
@@ -20,8 +20,8 @@ int tests_run = 0;
 /* main function is from: http://www.jera.com/techinfo/jtns/jtn002.html */
 int main()
 {
-	 char *result = all_tests_fixed_point();
-	 //char *result = all_tests_info();
+	 //char *result = all_tests_fixed_point();
+	 char *result = all_tests_fixed_point_with_info();
 	 //char *result = all_tests_info();
 	 if (result != 0) {
 	     printf("%s\n", result);

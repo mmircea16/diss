@@ -26,6 +26,18 @@ char* test_overflow_at_constructor()
 	int8_8_new(1000.232,y);
 	mu_assert("error: overflow for 1000.232 fails",get_overflow(CURRENT_ERR));
 
+	int8_8_new(128.0,y);
+	mu_assert("error: overflow for 128 fails",get_overflow(CURRENT_ERR));
+
+	int8_8_new(-1000.232,y);
+	mu_assert("error: overflow for -1000.232 fails",get_overflow(CURRENT_ERR));
+
+	int8_8_new(-123.245,y);
+	mu_assert("error: overflow for -123.245 fails",get_overflow(CURRENT_ERR)==0);
+
+	int8_8_new(-200.2,y);
+	mu_assert("error: overflow for -200.2 fails",get_overflow(CURRENT_ERR));
+
 	mu_final();
 	return 0;
 }
