@@ -180,7 +180,6 @@ char* test_underflow_value_at_constructor()
 	mu_assert("error: underflow failed for -112.375",get_underflow_value()==0);
 
 	int8_8_new(-22.8,x);
-
 	mu_assert("error: underflow failed for -22.8",get_underflow_value()==0x34);
 
     mu_final();

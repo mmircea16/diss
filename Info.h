@@ -38,7 +38,7 @@ typedef struct __info _Info;
 
 #define MASK_OVERFLOW 0x00000001
 
-#define set_underflow(X) ((X)->code |= MASK_UNDERFLOW)
+#define set_underflow(X) ((X)->code |= MASK_UNDERFLOW) //representation error instead of underflow
 #define reset_underflow(X) ((X)->code &= ~MASK_UNDERFLOW)
 #define get_underflow(X) ((X)->code & MASK_UNDERFLOW)
 
