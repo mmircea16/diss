@@ -7,7 +7,7 @@
 
 
 #define FLOATING_POINT_FORMAT 1 // "Floating point format"
-#define FIXED_POINT_8_8 2 //"Fixed point 8.8"
+#define FIXED_POINT_FORMAT 2 //"Fixed point"
 
 struct _metadata
 {
@@ -20,10 +20,17 @@ struct _metadata
 	float max_relative_error; // the maximum acceptable relative error
 };
 
+struct _parsed_fixed_point
+{
+	int integer_part;
+	int fractional_part; // actual fractional part * 2^16
+};
+
+typedef struct _parsed_fixed_point Parsed_fixed_foint;
+
 typedef struct _metadata Metadata;
 
 void init_file(char* file_name);
-void reset();
 char* get_current_file_name();
 Metadata* get_metadata();
 void* get_operand(int test_no,int k);
