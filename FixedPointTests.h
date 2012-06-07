@@ -5,6 +5,7 @@
  *      Author: moisem
  */
 #include "minunit.h"
+#include "Interpreter.h"
 
 #ifndef FIXEDPOINTTESTS_H_
 #define FIXEDPOINTTESTS_H_
@@ -97,7 +98,17 @@ char* test_constructor()
 	mu_test_title("Constructor for 8.8 format");
 
 	int8_8 y;
-
+	float input;
+	Parsed_fixed_point output;
+	int i=0;
+	while (input=*(float*)get_operand(i,1))
+	{
+		output=*(Parsed_fixed_point*)get_result(i);
+		(output.fractional_part) >>=8;
+		int8_8_new(input,y);
+		mu_assert("error",((y.p==output.integer_part)&&(y.q=output.fractional_part)));
+	}
+    /*
 	int8_8_new(1.5,y);
 	mu_assert("error: creating 1.5 fails",((y.p==1)&&(y.q=0x80)));
 
@@ -121,7 +132,7 @@ char* test_constructor()
 
 	int8_8_new(-113.25,y);
 	mu_assert("error: creating -113.25 fails",((y.p==0x8E)&&(y.q=0xC0)));
-
+    */
 	mu_final();
 	return 0;
 }
@@ -372,14 +383,14 @@ char * test_foo() {
 /* all_tests function is from: http://www.jera.com/techinfo/jtns/jtn002.html */
  char * all_tests_fixed_point() {
      //mu_run_test(test_foo);
-	 set_no_debug();
+	 set_no_debug();/*
      mu_run_test(test_compare_equal);
-     mu_run_test(test_compare_lesser_and_greater);
-     mu_run_test(test_constructor);
+     mu_run_test(test_compare_lesser_and_greater);*/
+     mu_run_test(test_constructor);/*
      mu_run_test(test_add);
      mu_run_test(test_subtract);
      mu_run_test(test_multiply);
      mu_run_test(test_floor);
-     mu_run_test(test_fractional_part);
+     mu_run_test(test_fractional_part);*/
      return 0;
  }

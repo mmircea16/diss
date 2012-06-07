@@ -17,7 +17,7 @@ Metadata* current_metadata;
 void* first_operands;
 void* second_operands;
 int* results;
-
+int no_of_tests;
 
 
 
@@ -31,13 +31,15 @@ void init_file(const char* file_name)
 
 void* get_operand(int test_no,int k)
 {
-  if (k==1) return first_operand[test_no];
-  if (k==2) return second_operand[test_no];
+  if (test_no>=no_of_tests) return NULL;
+  if (k==1) return ((int*)first_operands[test_no]);
+  if (k==2) return ((int*)second_operands[test_no]);
   return NULL;
 }
 
 void* get_result(int test_no)
 {
+  if (test_no>=no_of_tests) return NULL;
   return results[test_no];
 }
 
@@ -53,11 +55,13 @@ void parse_file()
 	char* second_operand;
 	char* result;
 
-	current_metadata = parse_metadata();
+	current_metadata = parse_metadata2();
 
 	init_array(first_operands,current_metadata->type_of_operands);
 	init_array(results,current_metadata->type_of_result);
 	if (current_metadata->number_of_operands==2) init_array(first_operand,current_metadata->type_of_result);
+
+	no_of_tests = 0;
 
 	while (!feof(current_file))
     {
@@ -66,6 +70,7 @@ void parse_file()
         parse_input(first_operand,first_operands+test_no,current_metadata->type_of_operands);
         parse_input(result,results+test_no,current_metadata->type_of_result);
         if (current_metadata->number_of_operands==2) parse_input(first_operand,first_operands,current_metadata->type_of_operands);
+        no_of_tests++;
     }
 }
 
@@ -142,7 +147,7 @@ int parse_as_binary_fixed_point(char* input,Parsed_fixed_point* output)
 {
 	char* crt = input;
     int integer_part=0;
-
+    int fractional_part=0;
 	int state = 0; /* 0 - must be [0-1]; 1 - must be [0-1] or . or NULL; 2 - must be [0-1] or NULL */
 	int p = 2^16;
 	while (*crt)
@@ -184,22 +189,23 @@ int parse_as_binary_fixed_point(char* input,Parsed_fixed_point* output)
 	return 0;
 }
 
-Metadata* parse_metadata()
+Metadata* parse_metadata2()
 {
 	Metadata* meta = (Metadata*) malloc(sizeof(Metadata));
-	fscanf(current_file,"Title:%s\n",meta->test_title);
-	fscanf(current_file,"Operands:%d\n",&(meta->number_of_operands));
+	fscanf(current_file,"Title: %s\n",meta->test_title);
+	fscanf(current_file,"Operands: %d\n",&(meta->number_of_operands));
 
 	char* aux;
-	fscanf(current_file,"Type of operands:%d\n",aux);
+	fscanf(current_file,"Type of operands: %s\n",aux);
 	if (strcmp(aux,"FLOATING POINT")) meta->type_of_operands = FLOATING_POINT_FORMAT;
-	if (strcmp(aux,"FIXED POINT 8.8")) meta->type_of_operands = FIXED_POINT_8_8;
+	if (strcmp(aux,"FIXED POINT BINARY")) meta->type_of_operands = FIXED_POINT_FORMAT;
 
-	fscanf(current_file,"Type of result:%d\n",aux);
+	fscanf(current_file,"Type of result: %s\n",aux);
     if (strcmp(aux,"FLOATING POINT")) meta->type_of_result = FLOATING_POINT_FORMAT;
-	if (strcmp(aux,"FIXED POINT 8.8")) meta->type_of_result = FIXED_POINT_8_8;
+	if (strcmp(aux,"FIXED POINT BINARY")) meta->type_of_result = FIXED_POINT_FORMAT;
 
-	fscanf(current_file,"Accepts error:%d\n",aux);
+
+	fscanf(current_file,"Accepts error: %s\n",aux);
 	meta->accepts_error = strcmp(aux,"FALSE");
 
 	return meta;

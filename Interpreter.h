@@ -26,11 +26,11 @@ struct _parsed_fixed_point
 	int fractional_part; // actual fractional part * 2^16
 };
 
-typedef struct _parsed_fixed_point Parsed_fixed_foint;
+typedef struct _parsed_fixed_point Parsed_fixed_point;
 
 typedef struct _metadata Metadata;
 
-void init_file(char* file_name);
+void init_file(const char* file_name);
 char* get_current_file_name();
 Metadata* get_metadata();
 void* get_operand(int test_no,int k);
