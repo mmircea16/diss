@@ -20,6 +20,8 @@ int tests_run = 0;
 /* main function is from: http://www.jera.com/techinfo/jtns/jtn002.html */
 int main()
 {
+	 printf("intro to main\n");
+	 //char* result="as";
 	 char *result = all_tests_fixed_point();
 	 //char *result = all_tests_fixed_point_with_info();
 	 //char *result = all_tests_info();

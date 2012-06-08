@@ -32,6 +32,7 @@ typedef struct _metadata Metadata;
 
 void init_file(const char* file_name);
 char* get_current_file_name();
+Metadata* parse_metadata();
 Metadata* get_metadata();
 void* get_operand(int test_no,int k);
 void* get_result(int test_no);
