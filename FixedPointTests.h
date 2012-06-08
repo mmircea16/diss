@@ -96,14 +96,18 @@ char* test_compare_lesser_and_greater()
 char* test_constructor()
 {
 	mu_test_title("Constructor for 8.8 format");
+	printf("test constructor\n");
     init_file("tests/constructor.test");
 	int8_8 y;
 	float input;
 	Parsed_fixed_point output;
 	int i=0;
+	printf("test constructor\n");
 	get_operand(0,1);
-	/*while (input==(*(float*)get_operand(i,1)))
+	while (get_operand(i,1)!=NULL)
 	{
+	   input=(*(float*)get_operand(i,1));
+       printf("::%f\n",input);
 	  output=*(Parsed_fixed_point*)get_result(i);
 		(output.fractional_part) >>=8;
 		int8_8_new(input,y);

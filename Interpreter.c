@@ -14,9 +14,9 @@
 char* current_file_name=NULL;
 FILE* current_file;
 Metadata* current_metadata;
-void* first_operands;
-void* second_operands;
-int* results;
+int first_operands[2000];
+int second_operands[2000];
+int results[2000];
 int no_of_tests;
 
 
@@ -27,15 +27,15 @@ void* get_operand(int test_no,int k)
 {
   printf("no_t:%d\n",no_of_tests);
   if (test_no>=no_of_tests) return NULL;
-  if (k==1) return (first_operands+test_no);
-  if (k==2) return (second_operands+test_no);
+  if (k==1) return (void*)(&first_operands[test_no]);
+  if (k==2) return (void*)(&second_operands[test_no]);
   return NULL;
 }
 
 void* get_result(int test_no)
 {
   if (test_no>=no_of_tests) return NULL;
-  return results[test_no];
+  return results+test_no;
 }
 
 Metadata* get_metadata()
@@ -43,25 +43,25 @@ Metadata* get_metadata()
 	return current_metadata;
 }
 
-void init_array(void* array, int format)
+void init_array(void** array, int format)
 {
 	if (format==FLOATING_POINT_FORMAT)
 	{
-		array = (float*)malloc(1000*sizeof(float));
+		*array = (float*)malloc(1*sizeof(float));
 	}
 	if (format==FIXED_POINT_FORMAT)
 	{
-		array = (Parsed_fixed_point*)malloc(1000*sizeof(Parsed_fixed_point));
+		*array = (Parsed_fixed_point*)malloc(1000*sizeof(Parsed_fixed_point));
 	}
 }
 
 
 /* if returns 1 is error in parsing, 0 parsing ok */
-int parse_input_as_float(char* input,int* output)
+int parse_input_as_float(char* input,float* output)
 {
 	/* input is float if: [0-9]+.?[0-9]* */
 	char* crt = input;
-	float result=0;
+	float result=0.0;
 
 	float p = 0.1;
 	int state = 0; /* 0 - must be [0-9]; 1 - must be [0-9] or . or NULL; 2 - must be [0-9] or NULL */
@@ -78,8 +78,7 @@ int parse_input_as_float(char* input,int* output)
 			result *=10;
 			result += (*crt-'0');
 			state = 1;
-		}
-		if (state==1)
+		}else if (state==1)
 		{
 			if (*crt!='.')
 			{
@@ -89,9 +88,7 @@ int parse_input_as_float(char* input,int* output)
 			}else{
 				state = 2;
 			}
-		}
-
-		if (state==2)
+		}else if (state==2)
 		{
 			result += ((*crt-'0')*p);
 			p /= 10;
@@ -99,7 +96,7 @@ int parse_input_as_float(char* input,int* output)
 		crt++ ;
 	}
 	if (state==0) return 1;
-	*output = *((int*)&result);
+	*output = result;
 	return 0;
 }
 
@@ -110,7 +107,7 @@ int parse_input_as_binary_fixed_point(char* input,Parsed_fixed_point* output)
     int integer_part=0;
     int fractional_part=0;
 	int state = 0; /* 0 - must be [0-1]; 1 - must be [0-1] or . or NULL; 2 - must be [0-1] or NULL */
-	int p = 2^16;
+	int p = 1<<16;
 	while (*crt)
 	{
 		if ((state==0)||(state==2))
@@ -124,8 +121,7 @@ int parse_input_as_binary_fixed_point(char* input,Parsed_fixed_point* output)
 			integer_part *=2;
 			integer_part += (*crt-'0');
 			state = 1;
-		}
-		if (state==1)
+		}else if (state==1)
 		{
 			if (*crt!='.')
 			{
@@ -135,9 +131,7 @@ int parse_input_as_binary_fixed_point(char* input,Parsed_fixed_point* output)
 			}else{
 				state = 2;
 			}
-		}
-
-		if (state==2)
+		}else if (state==2)
 		{
 			fractional_part += ((*crt-'0')*p);
 			p /= 2;
@@ -150,35 +144,43 @@ int parse_input_as_binary_fixed_point(char* input,Parsed_fixed_point* output)
 	return 0;
 }
 
-int parse_input(char* input,void* output,int format)
+int parse_input(char* input,int* output,int format)
 {
 	int k=0;
-	if (format==FLOATING_POINT_FORMAT) k=parse_input_as_float(input,output);
-	if (format==FIXED_POINT_FORMAT) k=parse_input_as_binary_fixed_point(input,output);
+	if (format==FLOATING_POINT_FORMAT) k=parse_input_as_float(input,(float*)output);
+	if (format==FIXED_POINT_FORMAT) k=parse_input_as_binary_fixed_point(input,(Parsed_fixed_point*)output);
 	return k;
 }
 void parse_file()
 {
 	int test_no;
-	char* first_operand="";
-	char* second_operand="";
-	char* result="";
+	char* first_operand=(char*)malloc(50*sizeof(char));
+	char* second_operand=(char*)malloc(50*sizeof(char));
+	char* result=(char*)malloc(50*sizeof(char));
 
 	current_metadata = parse_metadata();
-    printf("no of operands:%d\n",current_metadata->number_of_operands);
-	init_array(first_operands,current_metadata->type_of_operands);
-	init_array(results,current_metadata->type_of_result);
-	if (current_metadata->number_of_operands==2) init_array(first_operand,current_metadata->type_of_result);
+	//printf("-------------");
+    // printf("no of operands:%d\n",current_metadata->number_of_operands);
 
+	//init_array(&first_operands,current_metadata->type_of_operands);
+	//init_array(&results,current_metadata->type_of_result);
+	if (first_operands==NULL) printf("is nulllll!!!!\n");
+	//if (current_metadata->number_of_operands==2) init_array(first_operand,current_metadata->type_of_result);
+   // printf("-------------");
 	no_of_tests = 0;
 	fseek ( current_file , start, SEEK_SET );
+	int poz=0;
+
+
+
 	while (!feof(current_file))
-    {
-    	if (current_metadata->number_of_operands==1) fscanf(current_file,"#%d %s %s",&test_no,first_operand,result);
-    	if (current_metadata->number_of_operands==2) fscanf(current_file,"#%d %s %s %s",&test_no,first_operand,second_operand,result);
-      parse_input(first_operand,first_operands+test_no,current_metadata->type_of_operands);
-        parse_input(result,results+test_no,current_metadata->type_of_result);
-        if (current_metadata->number_of_operands==2) parse_input(first_operand,first_operands,current_metadata->type_of_operands);
+   {
+    	if (current_metadata->number_of_operands==1) poz = fscanf(current_file,"#%d %s %s\n",&test_no,first_operand,result);
+    	if (current_metadata->number_of_operands==2) poz = fscanf(current_file,"#%d %s %s %s\n",&test_no,first_operand,second_operand,result);
+    	printf("--%s %s %d\n",first_operand,result,poz);
+    	parse_input(first_operand,&first_operands[test_no],current_metadata->type_of_operands);
+        parse_input(result,&results[test_no],current_metadata->type_of_result);
+        if (current_metadata->number_of_operands==2) parse_input(second_operand,second_operands,current_metadata->type_of_operands);
         no_of_tests++;
     }
 }
@@ -192,7 +194,7 @@ Metadata* parse_metadata()
 	int cnt=0;
     char* crt = auxx;
     start=0;
-    printf(">>%s\n",crt);
+   // printf(">>%s\n",crt);
 	while (cnt<4)
 	{
 		if (*crt=='\n'){ *crt=0;cnt++;}
@@ -219,7 +221,7 @@ Metadata* parse_metadata()
     //strcpy(meta->test_title,auxx);
 	//fscanf(current_file,"Title: %s",meta->test_title);
 	//fscanf(current_file,"Operands: %d",&(meta->number_of_operands));
-    printf("!!%s %d\n",meta->test_title,meta->number_of_operands);
+    //printf("!!%s %d\n",meta->test_title,meta->number_of_operands);
 	//char* aux="asda";
 	//fscanf(current_file,"Type of operands: %s\n",aux);
 	/*if (strcmp(aux,"FLOATING POINT")) meta->type_of_operands = FLOATING_POINT_FORMAT;
