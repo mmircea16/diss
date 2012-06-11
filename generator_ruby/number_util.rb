@@ -34,24 +34,41 @@ def signed_binary_to_float binary_string
    end 
    
  end
- x -= q
+ x -= q*binary_string[0].to_i
  x /= p
  return x
 end
 
+def float_to_unsigned_8_8 x
+   x *= 2**8
+   x = x.floor
+   p = 0
+   s = ""
+   while (x>0)
+     s += (x%2).to_s
+	 x /= 2
+	 p += 1
+	 if (p==8) 
+	  s +="."
+	 end
+   end
+   (p..15).each do |k|
+     s += "0"
+   end
+   s.reverse!
+   return s
 end
 
-n = NumberUtil.new
-puts n.unsigned_binary_to_float("11.1")
-puts n.unsigned_binary_to_float("10.01")
-puts n.unsigned_binary_to_float("1001.101")
-puts n.unsigned_binary_to_float("10001.01001")
-puts n.unsigned_binary_to_float("110.011")
-puts n.unsigned_binary_to_float("10.1")
-puts "---------------"
-puts n.signed_binary_to_float("11.1")
-puts n.signed_binary_to_float("10.01")
-puts n.signed_binary_to_float("1001.101")
-puts n.signed_binary_to_float("10001.01001")
-puts n.signed_binary_to_float("110.011")
-puts n.signed_binary_to_float("10.1")
+def float_to_signed_8_8 x
+ if x>=0 
+  return float_to_unsigned_8_8 x
+ end
+ x +=2**8
+ s = float_to_unsigned_8_8 x
+ s[0] = '1'
+ return s
+end
+
+
+end
+

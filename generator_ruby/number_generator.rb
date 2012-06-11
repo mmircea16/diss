@@ -20,10 +20,14 @@ class NumberGenerator
    return s
  end
  
+ def generate_float min,max
+ random = Random.new
+ x = random.rand
+ x *= (max-min)
+ x += min
+ return x
+end
  
 end
 
-n = NumberGenerator.new
-(1..10).each  do |k|
-  puts n.generate_fixed_point_8_8
-end
+
