@@ -10,8 +10,8 @@ class GeneratorConstructor < Generator
   @test_file_name = test_file_name
   @no_of_operands = 1
   @test_title = "Constructor test"
-  @type_of_operands = "FIXED POINT BINARY"
-  @type_of_result = "FLOATING POINT"
+  @type_of_result = "FIXED POINT BINARY"
+  @type_of_operands = "FLOATING POINT"
  end
  
  def generate_test test_no
@@ -35,5 +35,5 @@ class GeneratorConstructor < Generator
 
 end
 
-gen = GeneratorConstructor.new("../tests/gen/add.test");
+gen = GeneratorConstructor.new("../tests/gen/constructor.test");
 gen.make_tests()

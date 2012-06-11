@@ -96,7 +96,7 @@ char* test_compare_lesser_and_greater()
 char* test_constructor()
 {
 	mu_test_title("Constructor for 8.8 format");
-    init_file("tests/constructor.test");
+    init_file("tests/gen/constructor.test");
 	int8_8 y;
 	float input;
 	Parsed_fixed_point output;
