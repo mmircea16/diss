@@ -220,9 +220,11 @@ Metadata* parse_metadata()
 	{
 		if (*crt==0)
 		{
-			//printf(">>%s %d\n",crt+2,cnt);
+			printf(">>|%s| %d\n",crt+2,cnt);
 			if (cnt==0) strcpy(meta->test_title,crt+1);
 			if (cnt==2) meta->number_of_operands=atoi(crt+1);
+			if (cnt==4) meta->type_of_operands = (strcmp(crt+2,"FLOATING POINT")? FIXED_POINT_FORMAT : FLOATING_POINT_FORMAT );
+			if (cnt==6) meta->type_of_result = (strcmp(crt+2,"FLOATING POINT")? FIXED_POINT_FORMAT : FLOATING_POINT_FORMAT );
 			cnt++;
 		}
 		crt++;
@@ -241,8 +243,8 @@ Metadata* parse_metadata()
 	fscanf(current_file,"Type of result: %s\n",aux);
     if (strcmp(aux,"FLOATING POINT")) meta->type_of_result = FLOATING_POINT_FORMAT;
 	if (strcmp(aux,"FIXED POINT BINARY")) meta->type_of_result = FIXED_POINT_FORMAT;
-*/meta->type_of_operands = FLOATING_POINT_FORMAT;
-meta->type_of_result = FIXED_POINT_FORMAT;
+meta->type_of_operands = FLOATING_POINT_FORMAT;
+meta->type_of_result = FIXED_POINT_FORMAT;*/
 	//fscanf(current_file,"Accepts error: %s\n",aux);
 	meta->accepts_error = 0;//strcmp(aux,"FALSE");
 
