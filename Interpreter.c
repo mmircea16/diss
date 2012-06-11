@@ -52,9 +52,9 @@ int parse_input_as_float(char* input,float* output)
 	/* input is float if: [0-9]+.?[0-9]* */
 	char* crt = input;
 	float result=0.0;
-
+    float sign=1;
 	float p = 0.1;
-	int state = 0; /* 0 - must be [0-9]; 1 - must be [0-9] or . or NULL; 2 - must be [0-9] or NULL */
+	int state = 4; /* 0 - must be [0-9]; 1 - must be [0-9] or . or NULL; 2 - must be [0-9] or NULL; 4- must be - or [0-9] */
 	while (*crt)
 	{
 		if ((state==0)||(state==2))
@@ -63,7 +63,22 @@ int parse_input_as_float(char* input,float* output)
 		if (state==1)
 			if ((((int)(*crt)< '0')||((int)(*crt)> '9')) && (*crt!='.'))
 				return 1;
-		if (state==0)
+		if (state==4)
+			if ((((int)(*crt)< '0')||((int)(*crt)> '9')) && (*crt!='-'))
+				return 1;
+
+		if (state==4)
+		{
+			if (*crt=='-')
+			{
+				sign=-1;
+				state=0;
+			}else{
+				result *=10;
+				result += (*crt-'0');
+				state=1;
+			}
+		}else if (state==0)
 		{
 			result *=10;
 			result += (*crt-'0');
@@ -86,7 +101,7 @@ int parse_input_as_float(char* input,float* output)
 		crt++ ;
 	}
 	if (state==0) return 1;
-	*output = result;
+	*output = (result*sign);
 	return 0;
 }
 

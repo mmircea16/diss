@@ -107,7 +107,7 @@ char* test_constructor()
 	while (get_operand(i,1)!=NULL)
 	{
 	   input=(*(float*)get_operand(i,1));
-       //printf("::%f\n",input);
+       printf("::%f\n",input);
 	  output=*(Parsed_fixed_point*)get_result(i);
 
 		(output.fractional_part) >>=8;
