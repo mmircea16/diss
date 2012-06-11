@@ -107,11 +107,15 @@ char* test_constructor()
 	while (get_operand(i,1)!=NULL)
 	{
 	   input=(*(float*)get_operand(i,1));
-       printf("::%f\n",input);
+       //printf("::%f\n",input);
 	  output=*(Parsed_fixed_point*)get_result(i);
+
 		(output.fractional_part) >>=8;
+		// printf("::%d %d\n",output.integer_part,output.fractional_part);
 		int8_8_new(input,y);
-		mu_assert("error",((y.p==output.integer_part)&&(y.q=output.fractional_part)));
+		//printf("::%d %d\n",y.p,y.q);
+		mu_assert("error",((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+		i++;
 	}
     /*
 	int8_8_new(1.5,y);

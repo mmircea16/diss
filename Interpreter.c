@@ -14,29 +14,19 @@
 char* current_file_name=NULL;
 FILE* current_file;
 Metadata* current_metadata;
-int first_operands[2000];
-int second_operands[2000];
-int results[2000];
+long long first_operands[2000];
+long long second_operands[2000];
+long long results[2000];
+
+fpos_t test_positions[3000];
+
 int no_of_tests;
 
 
 int start;
 
 
-void* get_operand(int test_no,int k)
-{
-  printf("no_t:%d\n",no_of_tests);
-  if (test_no>=no_of_tests) return NULL;
-  if (k==1) return (void*)(&first_operands[test_no]);
-  if (k==2) return (void*)(&second_operands[test_no]);
-  return NULL;
-}
 
-void* get_result(int test_no)
-{
-  if (test_no>=no_of_tests) return NULL;
-  return results+test_no;
-}
 
 Metadata* get_metadata()
 {
@@ -107,7 +97,7 @@ int parse_input_as_binary_fixed_point(char* input,Parsed_fixed_point* output)
     int integer_part=0;
     int fractional_part=0;
 	int state = 0; /* 0 - must be [0-1]; 1 - must be [0-1] or . or NULL; 2 - must be [0-1] or NULL */
-	int p = 1<<16;
+	int p = 1<<15;
 	while (*crt)
 	{
 		if ((state==0)||(state==2))
@@ -154,34 +144,40 @@ int parse_input(char* input,int* output,int format)
 void parse_file()
 {
 	int test_no;
-	char* first_operand=(char*)malloc(50*sizeof(char));
-	char* second_operand=(char*)malloc(50*sizeof(char));
-	char* result=(char*)malloc(50*sizeof(char));
 
 	current_metadata = parse_metadata();
-	//printf("-------------");
-    // printf("no of operands:%d\n",current_metadata->number_of_operands);
 
-	//init_array(&first_operands,current_metadata->type_of_operands);
-	//init_array(&results,current_metadata->type_of_result);
-	if (first_operands==NULL) printf("is nulllll!!!!\n");
-	//if (current_metadata->number_of_operands==2) init_array(first_operand,current_metadata->type_of_result);
-   // printf("-------------");
 	no_of_tests = 0;
 	fseek ( current_file , start, SEEK_SET );
 	int poz=0;
-
-
+	char auxx;
+	fpos_t pos;
 
 	while (!feof(current_file))
-   {
-    	if (current_metadata->number_of_operands==1) poz = fscanf(current_file,"#%d %s %s\n",&test_no,first_operand,result);
-    	if (current_metadata->number_of_operands==2) poz = fscanf(current_file,"#%d %s %s %s\n",&test_no,first_operand,second_operand,result);
-    	printf("--%s %s %d\n",first_operand,result,poz);
-    	parse_input(first_operand,&first_operands[test_no],current_metadata->type_of_operands);
-        parse_input(result,&results[test_no],current_metadata->type_of_result);
-        if (current_metadata->number_of_operands==2) parse_input(second_operand,second_operands,current_metadata->type_of_operands);
-        no_of_tests++;
+    {
+		auxx=fgetc(current_file);
+		if (auxx=='#')
+		{
+			//printf("auxx:%c\n",auxx);
+			//fgetpos(current_file,&test_positions[no_of_tests]);
+			//printf("-------");
+			//exit(0);
+			no_of_tests++;
+		}
+
+    }
+}
+
+void go_to_test(int n)
+{
+	fseek ( current_file , start, SEEK_SET );
+	int poz=0;
+	char auxx;
+	n++;
+	while ((!feof(current_file))&&n)
+	{
+	  auxx=fgetc(current_file);
+	  if (auxx=='#') n--;
     }
 }
 
@@ -239,10 +235,48 @@ meta->type_of_result = FIXED_POINT_FORMAT;
 }
 void init_file(const char* file_name)
 {
-   printf("intro\n");
+   //printf("intro\n");
    if (current_file_name) free(current_file_name);
    current_file_name = (char*) malloc(sizeof(char)*(strlen(file_name)+1));
    strcpy(current_file_name,file_name);
    current_file = fopen(current_file_name,"r");
   parse_file();
+}
+
+void* get_operand(int test_no,int k)
+{
+ // printf("no_t:%d %d\n",no_of_tests,test_no);
+
+  int d;
+  char* s=(char*)malloc(50*sizeof(char));
+  char* ss=(char*)malloc(50*sizeof(char));
+  void* res=malloc(8);
+  go_to_test(test_no);
+  if (test_no>=no_of_tests) return NULL;
+  if (k==1) {
+	  fscanf(current_file,"%d %s",&d,s);
+	  parse_input(s,res,current_metadata->type_of_operands);
+  }
+  if (k==2) {
+	  fscanf(current_file,"%d %s %s",&d,ss,s);
+	  parse_input(s,res,current_metadata->type_of_operands);
+  }
+  return res;
+}
+
+void* get_result(int test_no)
+{
+  int d;
+  void* res=malloc(8);
+  if (test_no>=no_of_tests) return NULL;
+  char* s=(char*)malloc(50*sizeof(char));
+  char* ss=(char*)malloc(50*sizeof(char));
+  char* sss=(char*)malloc(50*sizeof(char));
+  go_to_test(test_no);
+  if (current_metadata->number_of_operands==2)
+  fscanf(current_file,"%d %s %s %s",&d,sss,ss,s);
+  else
+  fscanf(current_file,"%d %s %s",&d,sss,s);
+  parse_input(s,res,current_metadata->type_of_result);
+  return res;
 }
