@@ -14,14 +14,8 @@
 char* current_file_name=NULL;
 FILE* current_file;
 Metadata* current_metadata;
-long long first_operands[2000];
-long long second_operands[2000];
-long long results[2000];
-
-fpos_t test_positions[3000];
 
 int no_of_tests;
-
 
 int start;
 
@@ -173,10 +167,6 @@ void parse_file()
 		auxx=fgetc(current_file);
 		if (auxx=='#')
 		{
-			//printf("auxx:%c\n",auxx);
-			//fgetpos(current_file,&test_positions[no_of_tests]);
-			//printf("-------");
-			//exit(0);
 			no_of_tests++;
 		}
 
@@ -213,14 +203,12 @@ Metadata* parse_metadata()
 		crt ++;
 		start++;
 	}
-	//printf(">>%s\n",auxx);
 	crt = auxx;
 	cnt = 0;
 	while (cnt<8)
 	{
 		if (*crt==0)
 		{
-			printf(">>|%s| %d\n",crt+2,cnt);
 			if (cnt==0) strcpy(meta->test_title,crt+1);
 			if (cnt==2) meta->number_of_operands=atoi(crt+1);
 			if (cnt==4) meta->type_of_operands = (strcmp(crt+2,"FLOATING POINT")? FIXED_POINT_FORMAT : FLOATING_POINT_FORMAT );
