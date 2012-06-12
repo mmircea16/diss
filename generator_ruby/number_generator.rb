@@ -1,8 +1,8 @@
 class NumberGenerator
  
  def generate_fixed_point_8_8
-   random = Random.new()
-   x = random.rand(0...2**16)
+  # random = Random.new()
+   x = rand(0...2**16)
    p = 0
    s = ""
    while (x>0)
@@ -21,8 +21,8 @@ class NumberGenerator
  end
  
  def generate_float min,max
- random = Random.new
- x = random.rand
+ #random = Random.new
+ x = rand
  x *= (max-min)
  x += min
  return x

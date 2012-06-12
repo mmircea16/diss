@@ -65,6 +65,9 @@ def float_to_signed_8_8 x
  end
  x +=2**8
  s = float_to_unsigned_8_8 x
+ y = unsigned_binary_to_float s
+ y += 2**(-8)
+ s = float_to_unsigned_8_8 y
  s[0] = '1'
  return s
 end

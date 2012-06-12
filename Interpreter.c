@@ -208,7 +208,7 @@ Metadata* parse_metadata()
    // printf(">>%s\n",crt);
 	while (cnt<4)
 	{
-		if (*crt=='\n'){ *crt=0;cnt++;}
+		if (*crt=='#'){ *crt=0;cnt++;}
 		if (*crt==':') *crt=0;
 		crt ++;
 		start++;

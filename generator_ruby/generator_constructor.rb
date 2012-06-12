@@ -1,6 +1,6 @@
-require_relative "generator.rb"
-require_relative "number_generator.rb"
-require_relative "number_util.rb"
+require "./generator.rb"
+require "./number_generator.rb"
+require "./number_util.rb"
 
 class GeneratorConstructor < Generator
  
@@ -26,14 +26,16 @@ class GeneratorConstructor < Generator
  end
  
  def make_tests
-  write_metadata
+  write_metadata()
   (0..100).each do |k|
      test_hash = generate_test(k)
-	 write_test(test_hash)
+	   write_test(test_hash)
   end
  end
 
 end
 
 gen = GeneratorConstructor.new("../tests/gen/constructor.test");
+puts GeneratorConstructor.superclass
+
 gen.make_tests()

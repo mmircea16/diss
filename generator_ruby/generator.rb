@@ -6,10 +6,10 @@ end
  
 def write_metadata
   File.open(@test_file_name, 'w') {|f| 
-   f.puts("Title: #{@test_title}")
-   f.puts("Operands: #{@no_of_operands}")
-   f.puts("Type of operands: #{@type_of_operands}")
-   f.puts("Type of result: #{@type_of_result}")
+   f.puts("Title: #{@test_title}#")
+   f.puts("Operands: #{@no_of_operands}#")
+   f.puts("Type of operands: #{@type_of_operands}#")
+   f.puts("Type of result: #{@type_of_result}#")
    }
 end
  
@@ -26,3 +26,6 @@ end
 
  
 end
+
+gen = Generator.new "sda"
+gen.write_metadata
