@@ -123,7 +123,7 @@ char* test_constructor()
 char* test_add()
 {
   mu_test_title("Adding");
-  init_file("tests/add.test");
+  init_file("tests/gen/add.test");
   int8_8 x1,x2,y;
   x1=*(int8_8*)malloc(sizeof(int8_8));
   x2=*(int8_8*)malloc(sizeof(int8_8));

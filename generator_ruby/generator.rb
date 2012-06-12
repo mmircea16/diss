@@ -1,7 +1,15 @@
+require "./number_generator.rb"
+require "./number_util.rb"
+
 class Generator
 
 def initialize test_file_name
   @test_file_name = test_file_name
+end
+
+def init_generator
+  @gen = NumberGenerator.new
+  @util = NumberUtil.new
 end
  
 def write_metadata

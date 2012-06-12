@@ -1,6 +1,5 @@
 require "./generator.rb"
-require "./number_generator.rb"
-require "./number_util.rb"
+
 
 class GeneratorConstructor < Generator
  
@@ -12,16 +11,15 @@ class GeneratorConstructor < Generator
   @test_title = "Constructor test"
   @type_of_result = "FIXED POINT BINARY"
   @type_of_operands = "FLOATING POINT"
+  init_generator()
  end
  
  def generate_test test_no
-   gen = NumberGenerator.new
-   util = NumberUtil.new
    test = {}
    test["test_no"] = test_no
-   k = gen.generate_float(-128,127)
+   k = @gen.generate_float(-128,127)
    test["first_operand"] = k
-   test["result"] = util.float_to_signed_8_8(k)
+   test["result"] = @util.float_to_signed_8_8(k)
    return test
  end
  
@@ -36,6 +34,4 @@ class GeneratorConstructor < Generator
 end
 
 gen = GeneratorConstructor.new("../tests/gen/constructor.test");
-puts GeneratorConstructor.superclass
-
 gen.make_tests()

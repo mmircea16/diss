@@ -2,7 +2,7 @@ class NumberGenerator
  
  def generate_fixed_point_8_8
   # random = Random.new()
-   x = rand(0...2**16)
+   x = rand(2**16)
    p = 0
    s = ""
    while (x>0)

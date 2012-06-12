@@ -22,19 +22,22 @@ def signed_binary_to_float binary_string
  x = 0
  p = 1.0
  k = 1
- q = 2.0
+ q = 1.0
+ puts binary_string[1..-1]
  binary_string.chars.to_a[1..-1].each do |c|
    if c!='.'   
      x *= 2
 	 x += c.to_i
 	 p *=k
 	 q *= 2
+	
    else
      k = 2   
    end 
    
  end
- x -= q*binary_string[0].to_i
+ x -= (q*binary_string.chars.to_a[0].to_i)
+ puts x
  x /= p
  return x
 end
@@ -74,4 +77,6 @@ end
 
 
 end
+
+
 
