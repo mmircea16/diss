@@ -4,10 +4,17 @@
  *  Created on: 24.05.2012
  *      Author: Mircea
  */
-#define DEBUG_FLAG 0
 #include <stdio.h>
-#include "FixedPoint.h"
+
 #include "Info.h"
+
+
+#ifdef DEBUG_FLAG
+
+#else
+ #include "FixedPoint.h"
+#endif
+
 #include "FixedPointTests.h"
 #include "FixedPointWithInfoTests.h"
 #include "InfoTests.h"

@@ -9,7 +9,7 @@
 #define INFO_H_
 
 
-#endif /* INFO_H_ */
+
 
 struct __error
 {
@@ -63,3 +63,4 @@ typedef struct __info _Info;
 int DEBUG;
 _Error* CURRENT_ERR;
 _Info* CURRENT_INFO;
+#endif /* INFO_H_ */

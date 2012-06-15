@@ -6,6 +6,8 @@
  */
 
 
+#ifndef FIXEDPOINT_H_
+#define FIXEDPOINT_H_
 
 /*structures*/
 struct __float{
@@ -43,28 +45,6 @@ typedef struct __int8_8 int8_8;
 #define fract8_8(X,Y) (Y)=(X);(Y).p=0; //use mask to return res
 /*ceil,trunc,round,fix*/
 
-#if DEBUG_FLAG
-
-/*arithmetic macros*/
-#define add8_8(X,Y,Z) if(1) {int __s = *(int*)(&X) + *(int*)(&Y);Z=_int8_8(__s);verify_overflow(__s);}//!!!!!must inline to return
-#define sub8_8(X,Y,Z) if(1) {int __s = *(int*)(&X) - *(int*)(&Y);Z=_int8_8(__s);verify_overflow(__s);}
-#define mul8_8(X,Y,Z) if(1) {int __s = *(int*)(&X) * *(int*)(&Y);__s>>=8;Z=_int8_8(__s);verify_overflow(__s);}
-
-
-/*init and alloc macros*/
-#define int8_8_alloc(X) if(1){int __xx=0; X=(int8_8*)&__xx;}
-
-int8_8 int8_8_new(const float X)
-{
-	int __yy =(int)(X*256);
-    verify_overflow(__yy);
-    verify_underflow(X);
-    return *(int8_8*)&__yy;
-}
-
-
-#else
-
 /*arithmetic macros*/
 #define add8_8(X,Y,Z) if(1) {int __s = *(int*)(&X) + *(int*)(&Y);Z=_int8_8(__s);}
 #define sub8_8(X,Y,Z) if(1) {int __s = *(int*)(&X) - *(int*)(&Y);Z=_int8_8(__s);}
@@ -75,11 +55,7 @@ int8_8 int8_8_new(const float X)
 /*init and alloc macros*/
 #define int8_8_alloc(X) if(1){ int __xx=0; X=(int8_8*)&__xx;}
 
-int8_8 int8_8_new(const float X)
-{
-	int __yy =(int)(X*256);
-    return *(int8_8*)&__yy;
-}
+int8_8 int8_8_new(const float X);
 
 #endif
 
