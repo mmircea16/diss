@@ -104,14 +104,11 @@ char* test_constructor()
 	while (get_operand(i,1)!=NULL)
 	{
 	   input=(*(float*)get_operand(i,1));
-       //printf("::%f\n",input);
 	  output=*(Parsed_fixed_point*)get_result(i);
 
 		(output.fractional_part) >>=8;
-		 //printf("::%d %d\n",output.integer_part,output.fractional_part);
 		y = int8_8_new(input);
-		//printf("::%d %d\n",y.p,y.q);
-		//mu_assert("error",((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+		mu_assert("error",((y.p==output.integer_part)&&(y.q==output.fractional_part)));
 		i++;
 	}
 
@@ -142,11 +139,9 @@ char* test_add()
   	(input2.fractional_part) >>=8;
   	x1.p=input1.integer_part;x1.q=input1.fractional_part;
   	x2.p=input2.integer_part;x2.q=input2.fractional_part;
-  	/*printf("::%d %d\n",input1.integer_part,input1.fractional_part);
-  	printf("::%d %d\n",input2.integer_part,input2.fractional_part);
-  	printf("--%d %d\n",output.integer_part,output.fractional_part);*/
-  	add8_8(x1,x2,y);
-  	//printf("::%d %d\n",y.p,y.q);
+
+  	y = add8_8(x1,x2);
+
   	mu_assert("error",((y.p==output.integer_part)&&(y.q==output.fractional_part)));
   	i++;
   	}

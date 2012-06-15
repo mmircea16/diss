@@ -12,4 +12,8 @@ int8_8 int8_8_new(const float X)
     return *(int8_8*)&__yy;
 }
 
-
+int8_8 add8_8(int8_8 x,int8_8 y)
+{
+	int __s = *(int*)(&x) + *(int*)(&y);
+	return _int8_8(__s);
+}

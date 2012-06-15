@@ -46,7 +46,7 @@ typedef struct __int8_8 int8_8;
 /*ceil,trunc,round,fix*/
 
 /*arithmetic macros*/
-#define add8_8(X,Y,Z) if(1) {int __s = *(int*)(&X) + *(int*)(&Y);Z=_int8_8(__s);}
+
 #define sub8_8(X,Y,Z) if(1) {int __s = *(int*)(&X) - *(int*)(&Y);Z=_int8_8(__s);}
 #define mul8_8(X,Y,Z) if(1) {int __s = _int(X) * _int(Y);__s>>=8;Z=_int8_8(__s);}
 
@@ -56,6 +56,6 @@ typedef struct __int8_8 int8_8;
 #define int8_8_alloc(X) if(1){ int __xx=0; X=(int8_8*)&__xx;}
 
 int8_8 int8_8_new(const float X);
-
+int8_8 add8_8(int8_8 x,int8_8 y);
 #endif
 
