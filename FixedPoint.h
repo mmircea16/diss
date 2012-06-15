@@ -55,7 +55,7 @@ typedef struct __int8_8 int8_8;
 /*init and alloc macros*/
 #define int8_8_alloc(X) if(1){ int __xx=0; X=(int8_8*)&__xx;}
 
-int8_8 int8_8_new(const float X);
+__inline__ int8_8 int8_8_new(const float X);
 int8_8 add8_8(int8_8 x,int8_8 y);
 #endif
 

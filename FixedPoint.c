@@ -6,7 +6,7 @@
  */
 #include "FixedPoint.h"
 
-int8_8 int8_8_new(const float X)
+inline int8_8 int8_8_new(const float X)
 {
 	int __yy =(int)(X*256);
     return *(int8_8*)&__yy;
