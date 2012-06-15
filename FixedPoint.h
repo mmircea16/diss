@@ -52,8 +52,16 @@ typedef struct __int8_8 int8_8;
 
 
 /*init and alloc macros*/
-#define int8_8_new(X,Y) if(1){int __yy =(int)(X*256); Y = *(int8_8*)&__yy; verify_overflow(__yy);verify_underflow(X); }
 #define int8_8_alloc(X) if(1){int __xx=0; X=(int8_8*)&__xx;}
+
+int8_8 int8_8_new(const float X)
+{
+	int __yy =(int)(X*256);
+    verify_overflow(__yy);
+    verify_underflow(X);
+    return *(int8_8*)&__yy;
+}
+
 
 #else
 
@@ -65,8 +73,13 @@ typedef struct __int8_8 int8_8;
 
 
 /*init and alloc macros*/
-#define int8_8_new(X,Y) if(1){ int __xx =(int)(X*256); Y = *(int8_8*)&__xx;}
 #define int8_8_alloc(X) if(1){ int __xx=0; X=(int8_8*)&__xx;}
+
+int8_8 int8_8_new(const float X)
+{
+	int __yy =(int)(X*256);
+    return *(int8_8*)&__yy;
+}
 
 #endif
 
