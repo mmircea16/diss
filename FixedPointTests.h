@@ -148,159 +148,98 @@ char* test_add()
 
 
   mu_final();
-  /*comment: lose of precision reflects on adds; all the tests are done without having to deal with lost precision*/
+
   return 0;
 }
 
 char* test_subtract()
 {
-	mu_test_title("Subtracting");
-	int8_8 t1;
-	int8_8 t2,diff,computed_diff;
+	  mu_test_title("Subtracting");
+	  init_file("tests/gen/subtract.test");
+	  int8_8 x1,x2,y;
+	  x1=*(int8_8*)malloc(sizeof(int8_8));
+	  x2=*(int8_8*)malloc(sizeof(int8_8));
+	  Parsed_fixed_point input1;
+	  Parsed_fixed_point input2;
+	  Parsed_fixed_point output;
+	  int i=0;
+	  while (get_operand(i,1)!=NULL)
+	  {
+	  	input1=*(Parsed_fixed_point*)get_operand(i,1);
+	  	input2=*(Parsed_fixed_point*)get_operand(i,2);
+	  	output=*(Parsed_fixed_point*)get_result(i);
 
-	//int8_8_new(1.5,t1);
-	//int8_8_new(0.25,t2);
-	//int8_8_new(1.25,diff);
-	sub8_8(t1,t2,computed_diff);
-	mu_assert("error: 1.5 - 0.2 failed",comp_eq(computed_diff,diff));
+	  	(output.fractional_part) >>=8;
+	  	(input1.fractional_part) >>=8;
+	  	(input2.fractional_part) >>=8;
+	  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
+	  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
 
-	//int8_8_new(12.75,t1);
-	//int8_8_new(15.3,t2);
-	//int8_8_new(2.55,diff);
-	sub8_8(t2,t1,computed_diff);
-	mu_assert("error:  15.3 -12.75  failed",comp_eq(computed_diff,diff));
+	  	y = sub8_8(x1,x2);
 
-	//int8_8_new(123.5,t1);
-	//int8_8_new(2.75,t2);
-	//int8_8_new(120.75,diff);
-	sub8_8(t1,t2,computed_diff);
-	mu_assert("error: 123.5 - 2.75 failed",comp_eq(computed_diff,diff));
+	  	mu_assert("error",((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	  	i++;
+	  }
 
-	//int8_8_new(1.5,t1);
-	//int8_8_new(-0.25,t2);
-	//int8_8_new(1.75,diff);
-	sub8_8(t1,t2,computed_diff);
-	mu_assert("error: 1.5 - -0.25 failed",comp_eq(computed_diff,diff));
 
-	//int8_8_new(-12.75,t1);
-	//int8_8_new(15.325,t2);
-	//int8_8_new(-28.075,diff);
-	sub8_8(t1,t2,computed_diff);
-	mu_assert("error: -12.75 - 15.325  failed",comp_eq(computed_diff,diff));
-
-	//int8_8_new(-123.5,t1);
-	//int8_8_new(-2.75,t2);
-	//int8_8_new(-120.75,diff);
-	sub8_8(t1,t2,computed_diff);
-	mu_assert("error: -123.5 - -2.75 failed",comp_eq(computed_diff,diff));
-
-	mu_final();
-
+	  mu_final();
 	return 0;
 }
 
 char* test_multiply()
 {
-	mu_test_title("Multiply");
+	  mu_test_title("Multiplying");
+	  init_file("tests/gen/multiply.test");
+	  int8_8 x1,x2,y;
+	  x1=*(int8_8*)malloc(sizeof(int8_8));
+	  x2=*(int8_8*)malloc(sizeof(int8_8));
+	  Parsed_fixed_point input1;
+	  Parsed_fixed_point input2;
+	  Parsed_fixed_point output;
+	  int i=0;
+	  while (get_operand(i,1)!=NULL)
+	  {
+	  	input1=*(Parsed_fixed_point*)get_operand(i,1);
+	  	input2=*(Parsed_fixed_point*)get_operand(i,2);
+	  	output=*(Parsed_fixed_point*)get_result(i);
 
-	int8_8 computed_prod;
-	int8_8 *x,*y,*prod;
-	int8_8_alloc(x);
-	int8_8_alloc(y);
-	int8_8_alloc(prod);
+	  	(output.fractional_part) >>=8;
+	  	(input1.fractional_part) >>=8;
+	  	(input2.fractional_part) >>=8;
+	  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
+	  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
 
-    x->p = 1;
-    x->q=0;
-    y->p = 2;
-    y->q=0x81;
-    mul8_8(*x,*y,computed_prod);
-    mu_assert("error: multiplying by 1 failed",comp_eq(*y,computed_prod));
+	  	y = mul8_8(x1,x2);
 
-    x->p = 0; x->q=0;
-    y->p = 2; y->q=0x81;
-    mul8_8(*x,*y,computed_prod);
-    mu_assert("error: multiplying by 0 failed",comp_eq(*x,computed_prod));
-
-    x->p = 2; x->q=0;
-    y->p = 2; y->q=0x81;
-    prod->p=5; prod->q=0x02;
-    mul8_8(*x,*y,computed_prod);
-    mu_assert("error: multiplying by 2 failed",comp_eq(*prod,computed_prod));
-
-    x->p = 0; x->q=0x80;
-    y->p = 2; y->q=0x82;
-    prod->p=1; prod->q=0x41;
-    mul8_8(*x,*y,computed_prod);
-    mu_assert("error: multiplying by 0.5 failed",comp_eq(*prod,computed_prod));
-
-    x->p = -1;
-    x->q=0;
-    y->p = 2;
-    y->q=0x81;
-    prod->p=0xFD; prod->q=0x7F;
-    mul8_8(*x,*y,computed_prod);
-    mu_assert("error: multiplying by -1 failed",comp_eq(*prod,computed_prod));
-
-    x->p = -1; x->q=0;
-    y->p = -2; y->q=0x81;
-    prod->p=1; prod->q=0x7F;
-    mul8_8(*x,*y,computed_prod);
-    mu_assert("error: multiplying by -1 with negative failed",comp_eq(*prod,computed_prod));
-
-    x->p = -2; x->q=0;
-    y->p = -2; y->q=0x81;
-    prod->p=2; prod->q=0xFE;
-    mul8_8(*x,*y,computed_prod);
-    mu_assert("error: multiplying by -2 failed",comp_eq(*prod,computed_prod));
-
-    x->p = 0; x->q=0x80;
-    y->p = 2; y->q=0x82;
-    prod->p=1; prod->q=0x41;
-    mul8_8(*x,*y,computed_prod);
-    mu_assert("error: multiplying by 0.5 failed",comp_eq(*prod,computed_prod));
+	  	mu_assert("error",((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	  	i++;
+	  	}
 
 
-	mu_final();
+	  mu_final();
 	return 0;
 }
 
 char* test_floor()
 {
-  mu_test_title("Integer part function");
-  int res;
-  int8_8 *x;
-  int8_8_alloc(x);
+	mu_test_title("Integer part");
+	init_file("tests/gen/constructor.test");
+	int8_8 y;
+	float input;
+	Parsed_fixed_point output;
+	int i=0;
+	while (get_operand(i,1)!=NULL)
+	{
+	   input=(*(float*)get_operand(i,1));
+	  output=*(Parsed_fixed_point*)get_result(i);
+      (output.fractional_part) >>=8;
+	  y = int8_8_new(input);
+	  mu_assert("error",((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	  i++;
+	}
 
-  x->p=1;x->q=0x12;
-  res=floor8_8(*x);
-
-  mu_assert("error: floor failed for 1.sth",res==1);
-
-  x->p=0;x->q=0x52;
-  res=floor8_8(*x);
-  mu_assert("error: floor failed for 0.sth",res==0);
-
-  x->p=118;x->q=0x00;
-  res=floor8_8(*x);
-
-  mu_assert("error: floor failed for 118.0",res==118);
-
-  //int8_8_new(-1.25,*x);
-  res=floor8_8(*x);
-  mu_assert("error: floor failed for -1.sth",res==-2);
-
-  //int8_8_new(-0.325,*x);
-  res=floor8_8(*x);
-  mu_assert("error: floor failed for -0.sth",res==-1);
-
-  //int8_8_new(-125.0,*x);
-  res=floor8_8(*x);
-  mu_assert("error: floor failed for -125.0",res==-125);
-
-
-
-  mu_final();
-  return 0;
+	mu_final();
+    return 0;
 }
 
 char* test_fractional_part()
@@ -353,9 +292,9 @@ char * test_foo() {
      mu_run_test(test_compare_equal);
      mu_run_test(test_compare_lesser_and_greater);*/
      mu_run_test(test_constructor);
-	 mu_run_test(test_add);/*
+	 mu_run_test(test_add);
      mu_run_test(test_subtract);
-     mu_run_test(test_multiply);
+     mu_run_test(test_multiply);/*
      mu_run_test(test_floor);
      mu_run_test(test_fractional_part);*/
      return 0;

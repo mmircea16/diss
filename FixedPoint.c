@@ -12,8 +12,21 @@ inline int8_8 int8_8_new(const float X)
     return *(int8_8*)&__yy;
 }
 
-int8_8 add8_8(int8_8 x,int8_8 y)
+inline int8_8 add8_8(int8_8 x,int8_8 y)
 {
 	int __s = *(int*)(&x) + *(int*)(&y);
 	return _int8_8(__s);
+}
+
+inline int8_8 sub8_8(int8_8 x,int8_8 y)
+{
+    int __s = *(int*)(&x) - *(int*)(&y);
+    return _int8_8(__s);
+}
+
+inline int8_8 mul8_8(int8_8 x,int8_8 y)
+{
+int __s = _int(x) * _int(y);
+__s>>=8;
+return _int8_8(__s);
 }
