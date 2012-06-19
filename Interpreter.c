@@ -27,18 +27,49 @@ Metadata* get_metadata()
 	return current_metadata;
 }
 
-void init_array(void** array, int format)
+int parse_input_as_int(char* input,int* output)
 {
-	if (format==FLOATING_POINT_FORMAT)
+	/* input is float if: [0-9]+.?[0-9]* */
+	char* crt = input;
+	int result=0;
+    int sign=1;
+	int state = 0; /*  0 - must be - or [0-9];1 - must be [0-9]; 2 - must be [0-9] or NULL */
+	while (*crt)
 	{
-		*array = (float*)malloc(1*sizeof(float));
-	}
-	if (format==FIXED_POINT_FORMAT)
-	{
-		*array = (Parsed_fixed_point*)malloc(1000*sizeof(Parsed_fixed_point));
-	}
-}
+		if (state==0)
+			if ((((int)(*crt)< '0')||((int)(*crt)> '9')) && (*crt!='-'))
+				return 1;
+		if ((state==1)||(state==2))
+			if (((int)(*crt)< '0')||((int)(*crt)> '9'))
+				return 1;
 
+		if (state==0)
+		{
+			if (*crt=='-')
+			{
+				sign=-1;
+				state=1;
+			}else{
+				result *=10;
+				result += (*crt-'0');
+				state=2;
+			}
+		}else if (state==1)
+		{
+			result *=10;
+			result += (*crt-'0');
+			state = 2;
+		}else if (state==2)
+		{
+				result *=10;
+				result += (*crt-'0');
+		}
+		crt++ ;
+	}
+	if ((state==0)||(state==1)) return 1;
+	*output = (result*sign);
+	return 0;
+}
 
 /* if returns 1 is error in parsing, 0 parsing ok */
 int parse_input_as_float(char* input,float* output)
@@ -148,6 +179,7 @@ int parse_input(char* input,int* output,int format)
 	int k=0;
 	if (format==FLOATING_POINT_FORMAT) k=parse_input_as_float(input,(float*)output);
 	if (format==FIXED_POINT_FORMAT) k=parse_input_as_binary_fixed_point(input,(Parsed_fixed_point*)output);
+	if (format==INTEGER_FORMAT) k=parse_input_as_int(input,(int*)output);
 	return k;
 }
 void parse_file()
@@ -211,8 +243,8 @@ Metadata* parse_metadata()
 		{
 			if (cnt==0) strcpy(meta->test_title,crt+1);
 			if (cnt==2) meta->number_of_operands=atoi(crt+1);
-			if (cnt==4) meta->type_of_operands = (strcmp(crt+2,"FLOATING POINT")? FIXED_POINT_FORMAT : FLOATING_POINT_FORMAT );
-			if (cnt==6) meta->type_of_result = (strcmp(crt+2,"FLOATING POINT")? FIXED_POINT_FORMAT : FLOATING_POINT_FORMAT );
+			if (cnt==4) meta->type_of_operands = parse_type_of_input(crt+2);
+			if (cnt==6) meta->type_of_result = parse_type_of_input(crt+2);
 			cnt++;
 		}
 		crt++;
@@ -237,6 +269,13 @@ meta->type_of_result = FIXED_POINT_FORMAT;*/
 	meta->accepts_error = 0;//strcmp(aux,"FALSE");
 
 	return meta;
+}
+
+int parse_type_of_input(char* type)
+{
+	if (strcmp(type,"FLOATING POINT")==0) return FLOATING_POINT_FORMAT;
+	if (strcmp(type,"FIXED POINT BINARY")==0) return FIXED_POINT_FORMAT;
+	if (strcmp(type,"INTEGER")==0) return INTEGER_FORMAT;
 }
 void init_file(const char* file_name)
 {

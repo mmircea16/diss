@@ -8,6 +8,7 @@
 
 #define FLOATING_POINT_FORMAT 1 // "Floating point format"
 #define FIXED_POINT_FORMAT 2 //"Fixed point"
+#define INTEGER_FORMAT 3 //"Fixed point"
 
 struct _metadata
 {

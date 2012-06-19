@@ -223,18 +223,20 @@ char* test_multiply()
 char* test_floor()
 {
 	mu_test_title("Integer part");
-	init_file("tests/gen/constructor.test");
-	int8_8 y;
-	float input;
-	Parsed_fixed_point output;
+	init_file("tests/gen/floor.test");
+	int y;
+	int8_8 x;
+	x=*(int8_8*)malloc(sizeof(int8_8));
+	Parsed_fixed_point input;
+	int output;
 	int i=0;
 	while (get_operand(i,1)!=NULL)
 	{
-	   input=(*(float*)get_operand(i,1));
-	  output=*(Parsed_fixed_point*)get_result(i);
-      (output.fractional_part) >>=8;
-	  y = int8_8_new(input);
-	  mu_assert("error",((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	   input=(*(Parsed_fixed_point*)get_operand(i,1));
+	  output=*(int*)get_result(i);
+	  x.p=input.integer_part;x.q=input.fractional_part;
+	  y = floor8_8(x);
+	  mu_assert("error",y==output);
 	  i++;
 	}
 
@@ -294,8 +296,8 @@ char * test_foo() {
      mu_run_test(test_constructor);
 	 mu_run_test(test_add);
      mu_run_test(test_subtract);
-     mu_run_test(test_multiply);/*
-     mu_run_test(test_floor);
+     mu_run_test(test_multiply);
+     mu_run_test(test_floor);/*
      mu_run_test(test_fractional_part);*/
      return 0;
  }
