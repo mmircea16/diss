@@ -42,7 +42,6 @@ typedef struct __int8_8 int8_8;
 
 /*utility macros*/
 #define floor8_8(X) ((int)(_int(X)>>8))
-#define fract8_8(X,Y) (Y)=(X);(Y).p=0; //use mask to return res
 /*ceil,trunc,round,fix*/
 
 /*arithmetic macros*/
@@ -56,5 +55,6 @@ __inline__ int8_8 int8_8_new(const float X);
 __inline__ int8_8 add8_8(int8_8 x,int8_8 y);
 __inline__ int8_8 sub8_8(int8_8 x,int8_8 y);
 __inline__ int8_8 mul8_8(int8_8 x,int8_8 y);
+__inline__ int8_8 fract8_8(int8_8 x);
 #endif
 

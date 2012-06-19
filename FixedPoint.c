@@ -30,3 +30,9 @@ int __s = _int(x) * _int(y);
 __s>>=8;
 return _int8_8(__s);
 }
+
+inline int8_8 fract8_8(int8_8 x)
+{
+ x.p = 0;
+ return x;
+}

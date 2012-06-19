@@ -246,38 +246,25 @@ char* test_floor()
 
 char* test_fractional_part()
 {
-  mu_test_title("Fractional part function");
-  int8_8 res;
-  int8_8 *x,*y;
-  int8_8_alloc(x);
-  int8_8_alloc(y);
-  y->p=0;
+	mu_test_title("Fractional part");
+	init_file("tests/gen/fractional.test");
+	int8_8 x,y;
+	x=*(int8_8*)malloc(sizeof(int8_8));
+	y=*(int8_8*)malloc(sizeof(int8_8));
+	Parsed_fixed_point input;
+	Parsed_fixed_point output;
+	int i=0;
+	while (get_operand(i,1)!=NULL)
+	{
+	   input=(*(Parsed_fixed_point*)get_operand(i,1));
+	   output=*(Parsed_fixed_point*)get_result(i);
+	   x.p=input.integer_part;x.q=input.fractional_part;
+	   y = fract8_8(x);
+	   mu_assert("error",((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	   i++;
+	}
 
-  x->p=1;x->q=0x12;y->q=0x12;
-  fract8_8(*x,res);
-  mu_assert("error: fractional part failed for 1.sth",comp_eq(res,*y));
-
-  x->p=0;x->q=0x52;y->q=0x52;
-  fract8_8(*x,res);
-  mu_assert("error: fractional part failed for 0.sth",comp_eq(res,*y));
-
-  x->p=138;x->q=0x00;y->q=0x00;
-  fract8_8(*x,res);
-  mu_assert("error: fractional part failed for 138.0",comp_eq(res,*y));
-
-  //int8_8_new(-1.25,*x);//int8_8_new(0.75,*y);
-  fract8_8(*x,res);
-  mu_assert("error: fractional part failed for -1.25",comp_eq(res,*y));
-
-  //int8_8_new(-0.75,*x);//int8_8_new(0.25,*y);
-  fract8_8(*x,res);
-  mu_assert("error: fractional part failed for -0.75",comp_eq(res,*y));
-
-  //int8_8_new(-123.0,*x);//int8_8_new(0.0,*y);
-  fract8_8(*x,res);
-  mu_assert("error: fractional part failed for -123.0",comp_eq(res,*y));
-
-  mu_final();
+	mu_final();
   return 0;
 }
 
@@ -297,7 +284,7 @@ char * test_foo() {
 	 mu_run_test(test_add);
      mu_run_test(test_subtract);
      mu_run_test(test_multiply);
-     mu_run_test(test_floor);/*
-     mu_run_test(test_fractional_part);*/
+     mu_run_test(test_floor);
+     mu_run_test(test_fractional_part);
      return 0;
  }
