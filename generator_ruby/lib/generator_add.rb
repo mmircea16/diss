@@ -5,12 +5,12 @@ class GeneratorAdd < Generator
  attr_accessor :test_title
  
  def initialize test_file_name
-  @test_file_name = test_file_name
+  init_generator() 
+  @test_file_name = "#{@path_to_tests_folder}/#{test_file_name}"
   @no_of_operands = 2
   @test_title = "Non-saturated add test"
   @type_of_operands = "FIXED POINT BINARY"
   @type_of_result = "FIXED POINT BINARY"
-  init_generator()
  end
  
  def generate_test test_no
@@ -35,5 +35,5 @@ class GeneratorAdd < Generator
  
 end
 
-gen = GeneratorAdd.new("../tests/gen/add.test");
+gen = GeneratorAdd.new("#{@path_to_tests_folder}/add.test");
 gen.make_tests()

@@ -5,12 +5,12 @@ class GeneratorMultiply < Generator
  attr_accessor :test_title
  
  def initialize test_file_name
-  @test_file_name = test_file_name
+  init_generator() 
+  @test_file_name = "#{@path_to_tests_folder}/#{test_file_name}"
   @no_of_operands = 2
   @test_title = "Non-saturated multiply test"
   @type_of_operands = "FIXED POINT BINARY"
   @type_of_result = "FIXED POINT BINARY"
-  init_generator()
  end
  
  def generate_test test_no
@@ -35,5 +35,5 @@ class GeneratorMultiply < Generator
  
 end
 
-gen = GeneratorMultiply.new("../tests/gen/multiply.test");
+gen = GeneratorMultiply.new("#{@path_to_tests_folder}/multiply.test");
 gen.make_tests()
