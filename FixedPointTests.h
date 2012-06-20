@@ -234,7 +234,9 @@ char* test_floor()
 	{
 	   input=(*(Parsed_fixed_point*)get_operand(i,1));
 	  output=*(int*)get_result(i);
-	  x.p=input.integer_part;x.q=input.fractional_part;
+	  (input.fractional_part) >>=8;
+	  x.p=input.integer_part;
+	  x.q=input.fractional_part;
 	  y = floor8_8(x);
 	  mu_assert("error",y==output);
 	  i++;
@@ -258,7 +260,10 @@ char* test_fractional_part()
 	{
 	   input=(*(Parsed_fixed_point*)get_operand(i,1));
 	   output=*(Parsed_fixed_point*)get_result(i);
-	   x.p=input.integer_part;x.q=input.fractional_part;
+	   (output.fractional_part) >>=8;
+	   (input.fractional_part) >>=8;
+	   x.p=input.integer_part;
+	   x.q=input.fractional_part;
 	   y = fract8_8(x);
 	   mu_assert("error",((y.p==output.integer_part)&&(y.q==output.fractional_part)));
 	   i++;

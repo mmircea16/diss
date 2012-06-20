@@ -20,6 +20,10 @@ class GeneratorFract < Generator
    k = @gen.generate_fixed_point_8_8
    test["first_operand"] = k
    n = @util.signed_binary_to_float(k)
+   puts n
+   puts @util.float_to_signed_8_8(n)
+   puts n-n.floor
+   puts @util.float_to_signed_8_8(n-n.floor)
    test["result"] = @util.float_to_signed_8_8(n-n.floor)
    return test
  end

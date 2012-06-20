@@ -33,6 +33,8 @@ return _int8_8(__s);
 
 inline int8_8 fract8_8(int8_8 x)
 {
- x.p = 0;
- return x;
+ int8_8 s=x;
+ int ss = *(int*)&s;
+ ss &=0xFFFF00FF;
+ return _int8_8(ss);
 }
