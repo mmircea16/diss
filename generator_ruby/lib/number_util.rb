@@ -36,7 +36,6 @@ def signed_binary_to_float binary_string
    
  end
  x -= (q*binary_string.chars.to_a[0].to_i)
- puts x
  x /= p
  return x
 end
@@ -54,6 +53,13 @@ def float_to_unsigned_8_8 x
 	  s +="."
 	 end
    end
+   if p<8
+     (p..7).each do |k|
+       s += "0"
+     end 
+     s += "."
+     p=8 
+   end
    (p..15).each do |k|
      s += "0"
    end
@@ -66,10 +72,7 @@ def float_to_signed_8_8 x
   return float_to_unsigned_8_8 x
  end
  x +=2**8
- s = float_to_unsigned_8_8 x
- y = unsigned_binary_to_float s
- y += 2**(-8)
- s = float_to_unsigned_8_8 y
+ s = float_to_unsigned_8_8 x 
  s[0] = '1'
  return s
 end
