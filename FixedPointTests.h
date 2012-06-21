@@ -10,89 +10,6 @@
 #ifndef FIXEDPOINTTESTS_H_
 #define FIXEDPOINTTESTS_H_
 
-
-#endif /* FIXEDPOINTTESTS_H_ */
-
-/* test for comparison functions */
-char* test_compare_equal()
-{
-	mu_test_title("Comparison for equality");
-
-	int8_8* x=(int8_8*) malloc(sizeof(int8_8));
-	int8_8* y=(int8_8*) malloc(sizeof(int8_8));
-
-    x->p=1;x->q=0x80;
-	y->p=0;y->q=0x40;
-	int8_8 xx=*x;
-	int8_8 yy=*y;
-	mu_assert("error: comparing 1.5 and 0.25 for equality failed",(comp_eq(xx,yy))==0);
-
-	x->p=1;x->q=0x80;
-	y->p=1;y->q=0x80;
-	xx=*x;
-	yy=*y;
-	mu_assert("error: comparing 1.5 and 1.5 for equality failed",(comp_eq(xx,yy))==1);
-
-	x->p=-1;x->q=0x80;
-	y->p=-1;y->q=0x80;
-	xx=*x;
-	yy=*y;
-	mu_assert("error: comparing -0.5 and -0.5 for equality failed",(comp_eq(xx,yy))==1);
-
-	mu_final();
-	return 0;
-}
-
-char* test_compare_lesser_and_greater()
-{
-	mu_test_title("Comparison for greater and lesser");
-
-	int8_8* x=(int8_8*) malloc(sizeof(int8_8));
-	int8_8* y=(int8_8*) malloc(sizeof(int8_8));
-
-    x->p=1;x->q=0x80;
-	y->p=0;y->q=0x40;
-	int8_8 xx=*x;
-	int8_8 yy=*y;
-
-	mu_assert("error: 1.5 > 0.25  failed",(comp_gt(xx,yy))==1);
-	mu_assert("error: 1.5 < 0.25  failed",(comp_lt(xx,yy))==0);
-	x->p=1;x->q=0x80;
-	y->p=1;y->q=0x80;
-	xx=*x;
-	yy=*y;
-	mu_assert("error: 1.5 > 1.5  wrong",(comp_gt(xx,yy))==0);
-	mu_assert("error: 1.5 < 1.5  wrong",(comp_lt(xx,yy))==0);
-
-	xx.p=2;xx.q=0x66;
-	yy.p=2;yy.q=0x67;
-	mu_assert("error: 2.sth > 2.sth+2^-8  wrong",(comp_gt(xx,yy))==0);
-	mu_assert("error: 2.sth < 2.sth+2^-8  wrong",(comp_lt(xx,yy))==1);
-
-	x->p=0xFE;x->q=0x80;
-	y->p=0;y->q=0x40;
-	xx=*x;
-	yy=*y;
-
-	mu_assert("error: -1.5 > 0.25  failed",(comp_gt(xx,yy))==0);
-	mu_assert("error: -1.5 < 0.25  failed",(comp_lt(xx,yy)));
-
-	x->p=0xFE;x->q=0x80;
-	y->p=0xFD;y->q=0x80;
-	xx=*x;
-	yy=*y;
-	mu_assert("error: -1.5 > -2.5  wrong",(comp_gt(xx,yy)));
-	mu_assert("error: -1.5 < -2.5  wrong",(comp_lt(xx,yy))==0);
-
-	xx.p=0xFE;xx.q=0x00;
-	yy.p=0xFF;yy.q=0x00;
-	mu_assert("error: -2 > -1  wrong",(comp_gt(xx,yy))==0);
-	mu_assert("error: -2 < -1  wrong",(comp_lt(xx,yy)));
-
-	mu_final();
-	return 0;
-}
-
 char* test_comparison()
 {
   mu_test_title("Comparison");
@@ -124,12 +41,12 @@ char* test_comparison()
   	r_gt_eq = (output > -1);
   	r_lt_eq = (output < 1);
 
-  	mu_assert("error",comp_eq(x1,x2)==r_eq);
-  	mu_assert("error",comp_not_eq(x1,x2)==r_not_eq);
-  	mu_assert("error",comp_gt(x1,x2)==r_gt);
-  	mu_assert("error",comp_lt(x1,x2)==r_lt);
-  	mu_assert("error",comp_gt_eq(x1,x2)==r_gt_eq);
-  	mu_assert("error",comp_lt_eq(x1,x2)==r_lt_eq);
+  	mu_assert_line("error",i,comp_eq(x1,x2)==r_eq);
+  	mu_assert_line("error",i,comp_not_eq(x1,x2)==r_not_eq);
+  	mu_assert_line("error",i,comp_gt(x1,x2)==r_gt);
+  	mu_assert_line("error",i,comp_lt(x1,x2)==r_lt);
+  	mu_assert_line("error",i,comp_gt_eq(x1,x2)==r_gt_eq);
+  	mu_assert_line("error",i,comp_lt_eq(x1,x2)==r_lt_eq);
   	i++;
   	}
 
@@ -155,7 +72,7 @@ char* test_constructor()
 
 		(output.fractional_part) >>=8;
 		y = int8_8_new(input);
-		mu_assert("error",((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+		mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
 		i++;
 	}
 
@@ -189,7 +106,7 @@ char* test_add()
 
   	y = add8_8(x1,x2);
 
-  	mu_assert("error",((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+  	mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
   	i++;
   	}
 
@@ -224,7 +141,7 @@ char* test_subtract()
 
 	  	y = sub8_8(x1,x2);
 
-	  	mu_assert("error",((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	  	mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
 	  	i++;
 	  }
 
@@ -258,7 +175,7 @@ char* test_multiply()
 
 	  	y = mul8_8(x1,x2);
 
-	  	mu_assert("error",((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	  	mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
 	  	i++;
 	  	}
 
@@ -285,7 +202,7 @@ char* test_floor()
 	  x.p=input.integer_part;
 	  x.q=input.fractional_part;
 	  y = floor8_8(x);
-	  mu_assert("error",y==output);
+	  mu_assert_line("error",i,y==output);
 	  i++;
 	}
 
@@ -312,7 +229,7 @@ char* test_fractional_part()
 	   x.p=input.integer_part;
 	   x.q=input.fractional_part;
 	   y = fract8_8(x);
-	   mu_assert("error",((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	   mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
 	   i++;
 	}
 
@@ -339,3 +256,5 @@ char * test_foo() {
      mu_run_test(test_fractional_part);
      return 0;
  }
+
+#endif /* FIXEDPOINTTESTS_H_ */
