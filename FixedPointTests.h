@@ -116,6 +116,42 @@ char* test_add()
   return 0;
 }
 
+char* test_saturated_add()
+{
+  mu_test_title("Saturated add test");
+  init_file("tests/gen/saturated_add.test");
+  int8_8 x1,x2,y;
+  x1=*(int8_8*)malloc(sizeof(int8_8));
+  x2=*(int8_8*)malloc(sizeof(int8_8));
+  Parsed_fixed_point input1;
+  Parsed_fixed_point input2;
+  Parsed_fixed_point output;
+  int i=0;
+  while (get_operand(i,1)!=NULL)
+  {
+  	input1=*(Parsed_fixed_point*)get_operand(i,1);
+  	input2=*(Parsed_fixed_point*)get_operand(i,2);
+  	output=*(Parsed_fixed_point*)get_result(i);
+
+  	(output.fractional_part) >>=8;
+  	(input1.fractional_part) >>=8;
+  	(input2.fractional_part) >>=8;
+  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
+  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
+
+  	y = sadd8_8(x1,x2);
+
+  	mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+  	i++;
+  	}
+
+
+  mu_final();
+
+  return 0;
+}
+
+
 char* test_subtract()
 {
 	  mu_test_title("Subtracting");
@@ -277,6 +313,7 @@ char * test_foo() {
 	 mu_run_test(test_comparison);
      mu_run_test(test_constructor);
 	 mu_run_test(test_add);
+	 mu_run_test(test_saturated_add);
      mu_run_test(test_subtract);
      mu_run_test(test_multiply);
      mu_run_test(test_floor);
