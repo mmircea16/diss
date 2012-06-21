@@ -1,4 +1,4 @@
-generator_ruby/rspec/vendor
-generator_ruby/rspec/Gemfile*
+generator_ruby/spec/vendor
+generator_ruby/spec/Gemfile*
 .settings
-generator_ruby/rspec/.bundle
+generator_ruby/spec/.bundle
