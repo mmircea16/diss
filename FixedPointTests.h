@@ -93,6 +93,53 @@ char* test_compare_lesser_and_greater()
 	return 0;
 }
 
+char* test_comparison()
+{
+  mu_test_title("Comparison");
+  init_file("tests/gen/comparison.test");
+  int8_8 x1,x2;
+  int r_eq,r_not_eq,r_gt,r_lt,r_gt_eq,r_lt_eq;
+
+  x1=*(int8_8*)malloc(sizeof(int8_8));
+  x2=*(int8_8*)malloc(sizeof(int8_8));
+  Parsed_fixed_point input1;
+  Parsed_fixed_point input2;
+  int output;
+  int i=0;
+  while (get_operand(i,1)!=NULL)
+  {
+  	input1=*(Parsed_fixed_point*)get_operand(i,1);
+  	input2=*(Parsed_fixed_point*)get_operand(i,2);
+  	output=*(int*)get_result(i);
+
+  	(input1.fractional_part) >>=8;
+  	(input2.fractional_part) >>=8;
+  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
+  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
+
+  	r_eq = (output == 0);
+  	r_not_eq = (output != 0);
+  	r_gt = (output == 1);
+  	r_lt = (output == -1);
+  	r_gt_eq = (output > -1);
+  	r_lt_eq = (output < 1);
+
+  	mu_assert("error",comp_eq(x1,x2)==r_eq);
+  	mu_assert("error",comp_not_eq(x1,x2)==r_not_eq);
+  	mu_assert("error",comp_gt(x1,x2)==r_gt);
+  	mu_assert("error",comp_lt(x1,x2)==r_lt);
+  	mu_assert("error",comp_gt_eq(x1,x2)==r_gt_eq);
+  	mu_assert("error",comp_lt_eq(x1,x2)==r_lt_eq);
+  	i++;
+  	}
+
+
+  mu_final();
+
+  return 0;
+}
+
+
 char* test_constructor()
 {
 	mu_test_title("Constructor for 8.8 format");
@@ -282,9 +329,8 @@ char * test_foo() {
 /* all_tests function is from: http://www.jera.com/techinfo/jtns/jtn002.html */
  char * all_tests_fixed_point() {
      //mu_run_test(test_foo);
-	 set_no_debug();/*
-     mu_run_test(test_compare_equal);
-     mu_run_test(test_compare_lesser_and_greater);*/
+	 set_no_debug();
+	 mu_run_test(test_comparison);
      mu_run_test(test_constructor);
 	 mu_run_test(test_add);
      mu_run_test(test_subtract);

@@ -29,7 +29,7 @@ typedef struct __int8_8 int8_8;
 
 #define  _int(X) ((int)(((X).p<128)?((*(int*)&X)&0x0000FFFF):((*(int*)&X)|0xFFFF0000)))
 
-#define  _int8_8(X) *(int8_8*)&X //this is not good because it will keep residues from other formats
+#define  _int8_8(X) *(int8_8*)&X
 
 #define print8_8(X) printf("%d : %d\n",(X).p,(X).q)
 
@@ -37,6 +37,7 @@ typedef struct __int8_8 int8_8;
 #define comp_gt(X,Y) (_int(X)) > (_int(Y))
 #define comp_lt(X,Y) (_int(X)) < (_int(Y))
 #define comp_eq(X,Y) ((_int(X)) == (_int(Y)))
+#define comp_not_eq(X,Y) ((_int(X)) != (_int(Y)))
 #define comp_gt_eq(X,Y) (_int(X)) >= (_int(Y))
 #define comp_lt_eq(X,Y) (_int(X)) <= (_int(Y))
 

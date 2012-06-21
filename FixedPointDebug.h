@@ -52,7 +52,7 @@ typedef struct __int8_8 int8_8;
 /*init and alloc macros*/
 #define int8_8_alloc(X) if(1){int __xx=0; X=(int8_8*)&__xx;}
 
-int8_8 int8_8_new2(const float X)
+int8_8 int8_8_new(const float X)
 {
 	int __yy =(int)(X*256);
     verify_overflow(__yy);
