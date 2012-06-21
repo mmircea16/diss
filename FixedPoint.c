@@ -38,3 +38,11 @@ inline int8_8 fract8_8(int8_8 x)
  ss &=0xFFFF00FF;
  return _int8_8(ss);
 }
+
+inline int8_8 floor8_8(int8_8 x)
+{
+ int8_8 s=x;
+ int ss = *(int*)&s;
+ ss &=0xFFFFFF00;
+ return _int8_8(ss);
+}

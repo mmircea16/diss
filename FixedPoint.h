@@ -42,7 +42,7 @@ typedef struct __int8_8 int8_8;
 #define comp_lt_eq(X,Y) (_int(X)) <= (_int(Y))
 
 /*utility macros*/
-#define floor8_8(X) ((int)(_int(X)>>8))
+#define floor(X) ((int)(_int(X)>>8))
 /*ceil,trunc,round,fix*/
 
 /*arithmetic macros*/
@@ -57,5 +57,6 @@ __inline__ int8_8 add8_8(int8_8 x,int8_8 y);
 __inline__ int8_8 sub8_8(int8_8 x,int8_8 y);
 __inline__ int8_8 mul8_8(int8_8 x,int8_8 y);
 __inline__ int8_8 fract8_8(int8_8 x);
+__inline__ int8_8 floor8_8(int8_8 x);
 #endif
 
