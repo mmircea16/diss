@@ -37,6 +37,19 @@ inline int8_8 sub8_8(int8_8 x,int8_8 y)
     return _int8_8(__s);
 }
 
+inline int8_8 ssub8_8(int8_8 x,int8_8 y)
+{
+    int __s = *(int*)(&x) - *(int*)(&y);
+    int xx = *(int*)(&x);
+    int yy = *(int*)(&y) * (-1);
+    if ((xx & 0x00008000)==(yy & 0x00008000))
+    {
+        if ((xx & 0x00008000) && !(__s & 0x00008000)) __s = 0x00008000;
+    	if (!(xx & 0x00008000) && (__s & 0x00008000)) __s = 0x00007FFF;
+   	}
+    return _int8_8(__s);
+}
+
 inline int8_8 mul8_8(int8_8 x,int8_8 y)
 {
 int __s = _int(x) * _int(y);
