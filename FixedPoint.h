@@ -58,6 +58,7 @@ __inline__ int8_8 sadd8_8(int8_8 x,int8_8 y);
 __inline__ int8_8 sub8_8(int8_8 x,int8_8 y);
 __inline__ int8_8 ssub8_8(int8_8 x,int8_8 y);
 __inline__ int8_8 mul8_8(int8_8 x,int8_8 y);
+__inline__ int8_8 smul8_8(int8_8 x,int8_8 y);
 __inline__ int8_8 fract8_8(int8_8 x);
 __inline__ int8_8 floor8_8(int8_8 x);
 #endif
