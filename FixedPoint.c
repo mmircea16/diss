@@ -59,9 +59,26 @@ return _int8_8(__s);
 
 inline int8_8 smul8_8(int8_8 x,int8_8 y)
 {
-if
-int __s = _int(x) * _int(y);
+int sign = 1;
+int xx = _int(x);
+if (xx<0)
+{
+  xx = (-1)* xx;
+  sign *= -1;
+}
+int yy = _int(y);
+if (yy<0)
+{
+ yy = (-1)*yy;
+ sign *= -1;
+}
+int __s = xx * yy;
 __s>>=8;
+int rez = (sign == -1? (1<<15) : ((1<<15) -1));
+if (__s > 1<<15)
+{
+	__s = rez;
+}else sign==-1?__s=__s*sign-1:0;
 return _int8_8(__s);
 }
 
