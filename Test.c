@@ -6,18 +6,22 @@
  */
 #include <stdio.h>
 
-#include "Info.h"
 
+
+#define DEBUG_FLAG
 
 #ifdef DEBUG_FLAG
-
+  #include "FixedPointDebug.h"
+  #include "Info.h"
+  #include "FixedPointWithInfoTests.h"
+  #include "InfoTests.h"
 #else
- #include "FixedPoint.h"
+  #include "FixedPoint.h"
+  #include "FixedPointTests.h"
 #endif
 
-#include "FixedPointTests.h"
-#include "FixedPointWithInfoTests.h"
-#include "InfoTests.h"
+
+
 #include "minunit.h"
 
 int tests_run = 0;
@@ -29,8 +33,8 @@ int main()
 {
 	 printf("intro to main\n");
 	 //char* result="as";
-	 char *result = all_tests_fixed_point();
-	 //char *result = all_tests_fixed_point_with_info();
+	// char *result = all_tests_fixed_point();
+	 char *result = all_tests_fixed_point_with_info();
 	 //char *result = all_tests_info();
 	 if (result != 0) {
 	     printf("%s\n", result);
