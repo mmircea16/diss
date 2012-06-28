@@ -77,6 +77,45 @@ def float_to_signed_8_8 x
  return s
 end
 
+def float_to_unsigned_16_16 x
+   x *= 2**16
+   x = x.floor
+   p = 0
+   s = ""
+   while (x>0)
+     s += (x%2).to_s
+   x /= 2
+   p += 1
+   if (p==16) 
+    s +="."
+   end
+   end
+   
+   if p<16
+     (p..15).each do |k|
+       s += "0"
+     end 
+     s += "."
+     p=16 
+   end
+   (p..31).each do |k|
+     s += "0"
+   end
+   s.reverse!
+   return s
+end
+
+
+def float_to_signed_16_16 x
+ if x>=0 
+  return float_to_unsigned_16_16 x
+ end
+ x +=2**16
+ s = float_to_unsigned_16_16 x 
+ s[0] = '1'
+ return s
+end
+
 
 end
 

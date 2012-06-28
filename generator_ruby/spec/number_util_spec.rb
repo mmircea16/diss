@@ -150,4 +150,11 @@ describe NumberUtil do
     @util.float_to_signed_8_8(-101.0281).should eq("10011010.11111000")
   end
   
+  it "should return correct values for real numbers into signed binary 16.16" do
+     @util.float_to_signed_16_16(-13.587).should eq("1111111111110010.0110100110111010")  
+     @util.float_to_signed_16_16(-6.375).should eq("1111111111111001.1010000000000000")
+     @util.float_to_signed_16_16(-82.59375).should eq("1111111110101101.0110100000000000") 
+     @util.float_to_signed_16_16(101.0281).should eq("0000000001100101.0000011100110001")
+   end
+  
 end
