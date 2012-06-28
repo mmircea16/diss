@@ -6,7 +6,7 @@
  */
 
 #include "minunit.h"
-
+#include "FixedPointDebug.h"
 #ifndef FIXEDPOINTWITHINFOTESTS_H_
 #define FIXEDPOINTWITHINFOTESTS_H_
 

@@ -97,3 +97,9 @@ inline int8_8 floor8_8(int8_8 x)
  ss &=0xFFFFFF00;
  return _int8_8(ss);
 }
+
+inline int16_16 cast8_8_to_16_16(int8_8 x)
+{
+	int y = _int(x)<<8;
+	return _int16_16(y);
+}

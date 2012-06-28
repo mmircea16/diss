@@ -390,6 +390,33 @@ char* test_fractional_part()
   return 0;
 }
 
+char* test_cast_8_8_to_16_16()
+{
+	mu_test_title("Integer part (result in 8.8 format)");
+	init_file("tests/gen/floor8_8.test");
+	int8_8 y;
+	int8_8 x;
+	x=*(int8_8*)malloc(sizeof(int8_8));
+	Parsed_fixed_point input;
+	Parsed_fixed_point output;
+	int i=0;
+	while (get_operand(i,1)!=NULL)
+	{
+	   input=(*(Parsed_fixed_point*)get_operand(i,1));
+	  output=*(Parsed_fixed_point*)get_result(i);
+	  (input.fractional_part) >>=8;
+	  (output.fractional_part) >>=8;
+	  x.p=input.integer_part;
+	  x.q=input.fractional_part;
+	  y = floor8_8(x);
+	  mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	  i++;
+	}
+
+	mu_final();
+    return 0;
+}
+
 char * test_foo() {
 	 int foo = 7;
      mu_assert("error, foo != 7", foo == 7);

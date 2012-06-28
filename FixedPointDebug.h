@@ -5,6 +5,7 @@
  *      Author: Mircea
  */
 
+#include "Info.h"
 
 #ifndef FIXEDPOINTDEBUG_H_
 #define FIXEDPOINTDEBUG_H_
