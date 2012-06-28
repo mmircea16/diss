@@ -57,7 +57,7 @@ char* test_comparison()
 }
 
 
-char* test_constructor()
+char* test_constructor_8_8()
 {
 	mu_test_title("Constructor for 8.8 format");
     init_file("tests/gen/constructor.test");
@@ -72,6 +72,28 @@ char* test_constructor()
 
 		(output.fractional_part) >>=8;
 		y = int8_8_new(input);
+		mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+		i++;
+	}
+
+	mu_final();
+	return 0;
+}
+
+char* test_constructor_16_16()
+{
+	mu_test_title("Constructor for 16.16 format");
+    init_file("tests/gen/constructor16_16.test");
+	int8_8 y;
+	float input;
+	Parsed_fixed_point output;
+	int i=0;
+	while (get_operand(i,1)!=NULL)
+	{
+	   input=(*(float*)get_operand(i,1));
+	   output=*(Parsed_fixed_point*)get_result(i);
+
+	//	y = int16_16_new(input);
 		mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
 		i++;
 	}
@@ -379,7 +401,7 @@ char * test_foo() {
      //mu_run_test(test_foo);
 	 set_no_debug();
 	 mu_run_test(test_comparison);
-     mu_run_test(test_constructor);
+     mu_run_test(test_constructor_8_8);
 	 mu_run_test(test_add);
 	 mu_run_test(test_saturated_add);
      mu_run_test(test_subtract);

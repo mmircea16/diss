@@ -26,6 +26,15 @@ struct __int8_8
 
 typedef struct __int8_8 int8_8;
 
+struct __int16_16
+{
+	unsigned q:16;
+	unsigned p:16;
+};
+
+typedef struct __int16_16 int16_16;
+
+
 
 #define  _int(X) ((int)(((X).p<128)?((*(int*)&X)&0x0000FFFF):((*(int*)&X)|0xFFFF0000)))
 
