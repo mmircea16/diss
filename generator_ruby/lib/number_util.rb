@@ -110,6 +110,8 @@ def float_to_signed_16_16 x
  if x>=0 
   return float_to_unsigned_16_16 x
  end
+ 
+ 
  x +=2**16
  s = float_to_unsigned_16_16 x 
  s[0] = '1'
