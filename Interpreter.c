@@ -80,6 +80,7 @@ int parse_input_as_float(char* input,float* output)
     float sign=1;
 	float p = 0.1;
 	int state = 4; /* 0 - must be [0-9]; 1 - must be [0-9] or . or NULL; 2 - must be [0-9] or NULL; 4- must be - or [0-9] */
+	//printf(":%s",input);
 	while (*crt)
 	{
 		if ((state==0)||(state==2))
@@ -125,7 +126,9 @@ int parse_input_as_float(char* input,float* output)
 		}
 		crt++ ;
 	}
+	//printf(">> %f %d",result*sign,state);
 	if (state==0) return 1;
+
 	*output = (result*sign);
 	return 0;
 }
@@ -168,7 +171,9 @@ int parse_input_as_binary_fixed_point(char* input,Parsed_fixed_point* output)
 		}
 		crt++ ;
 	}
+
 	if (state==0) return 1;
+
 	output->integer_part = integer_part;
 	output->fractional_part = fractional_part;
 	return 0;
@@ -177,6 +182,7 @@ int parse_input_as_binary_fixed_point(char* input,Parsed_fixed_point* output)
 int parse_input(char* input,int* output,int format)
 {
 	int k=0;
+	//printf(">>>> %s",input);
 	if (format==FLOATING_POINT_FORMAT) k=parse_input_as_float(input,(float*)output);
 	if (format==FIXED_POINT_FORMAT) k=parse_input_as_binary_fixed_point(input,(Parsed_fixed_point*)output);
 	if (format==INTEGER_FORMAT) k=parse_input_as_int(input,(int*)output);

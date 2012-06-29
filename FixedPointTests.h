@@ -84,7 +84,7 @@ char* test_constructor_16_16()
 {
 	mu_test_title("Constructor for 16.16 format");
     init_file("tests/gen/constructor16_16.test");
-	int8_8 y;
+	int16_16 y;
 	float input;
 	Parsed_fixed_point output;
 	int i=0;
@@ -93,7 +93,10 @@ char* test_constructor_16_16()
 	   input=(*(float*)get_operand(i,1));
 	   output=*(Parsed_fixed_point*)get_result(i);
 
-	//	y = int16_16_new(input);
+		y = int16_16_new(input);
+		printf("--- %f\n",input);
+		printf("--- %d %d\n",y.p,y.q);
+		printf("--- %d %d\n",output.integer_part,output.fractional_part);
 		mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
 		i++;
 	}
@@ -428,6 +431,7 @@ char * test_foo() {
      //mu_run_test(test_foo);
 	 mu_run_test(test_comparison);
      mu_run_test(test_constructor_8_8);
+     mu_run_test(test_constructor_16_16);
 	 mu_run_test(test_add);
 	 mu_run_test(test_saturated_add);
      mu_run_test(test_subtract);
