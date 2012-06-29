@@ -41,5 +41,5 @@ class GeneratorSaturatedSubtract < Generator
  
 end
 
-gen = GeneratorSaturatedSubtract.new("#{@path_to_tests_folder}/saturated_subtract.test");
+gen = GeneratorSaturatedSubtract.new("8_8/saturated_subtract.test");
 gen.make_tests()

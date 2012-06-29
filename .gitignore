@@ -2,3 +2,5 @@ generator_ruby/spec/vendor
 generator_ruby/spec/Gemfile*
 .settings
 generator_ruby/spec/.bundle
+Debug
+Release

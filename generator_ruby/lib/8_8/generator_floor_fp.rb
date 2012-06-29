@@ -34,5 +34,5 @@ class GeneratorFloorFp < Generator
 
 end
 
-gen = GeneratorFloorFp.new("#{@path_to_tests_folder}/floor8_8.test");
+gen = GeneratorFloorFp.new("8_8/floor8_8.test");
 gen.make_tests()

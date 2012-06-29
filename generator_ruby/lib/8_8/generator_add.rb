@@ -35,5 +35,5 @@ class GeneratorAdd < Generator
  
 end
 
-gen = GeneratorAdd.new("#{@path_to_tests_folder}/add.test");
+gen = GeneratorAdd.new("8_8/add.test");
 gen.make_tests()

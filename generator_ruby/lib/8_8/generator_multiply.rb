@@ -35,5 +35,5 @@ class GeneratorMultiply < Generator
  
 end
 
-gen = GeneratorMultiply.new("#{@path_to_tests_folder}/multiply.test");
+gen = GeneratorMultiply.new("8_8//multiply.test");
 gen.make_tests()

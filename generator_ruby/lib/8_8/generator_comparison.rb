@@ -47,5 +47,5 @@ class GeneratorComparison < Generator
  
 end
 
-gen = GeneratorComparison.new("#{@path_to_tests_folder}/comparison.test");
+gen = GeneratorComparison.new("8_8/comparison.test");
 gen.make_tests()

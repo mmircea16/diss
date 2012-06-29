@@ -35,5 +35,5 @@ class GeneratorSubtract < Generator
  
 end
 
-gen = GeneratorSubtract.new("#{@path_to_tests_folder}/subtract.test");
+gen = GeneratorSubtract.new("8_8/subtract.test");
 gen.make_tests()

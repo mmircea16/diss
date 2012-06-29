@@ -42,5 +42,5 @@ class GeneratorSaturatedAdd < Generator
  
 end
 
-gen = GeneratorSaturatedAdd.new("#{@path_to_tests_folder}/saturated_add.test");
+gen = GeneratorSaturatedAdd.new("8_8/saturated_add.test");
 gen.make_tests()

@@ -41,5 +41,5 @@ class GeneratorSaturatedMultiply < Generator
  
 end
 
-gen = GeneratorSaturatedMultiply.new("#{@path_to_tests_folder}/saturated_multiply.test");
+gen = GeneratorSaturatedMultiply.new("8_8/saturated_multiply.test");
 gen.make_tests()

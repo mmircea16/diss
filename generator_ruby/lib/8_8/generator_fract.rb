@@ -38,5 +38,5 @@ class GeneratorFract < Generator
 
 end
 
-gen = GeneratorFract.new("fractional.test");
+gen = GeneratorFract.new("8_8/fractional.test");
 gen.make_tests()

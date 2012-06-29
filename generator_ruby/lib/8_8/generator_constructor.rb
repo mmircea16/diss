@@ -33,5 +33,5 @@ class GeneratorConstructor < Generator
 
 end
 
-gen = GeneratorConstructor.new("#{@path_to_tests_folder}/constructor.test");
+gen = GeneratorConstructor.new("8_8/constructor.test");
 gen.make_tests()
