@@ -1,4 +1,4 @@
-require "./generator.rb"
+require "../generator.rb"
 
 class GeneratorSaturatedSubtract < Generator
  
