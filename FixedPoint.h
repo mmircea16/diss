@@ -80,5 +80,6 @@ __inline__ int8_8 smul8_8(int8_8 x,int8_8 y);
 __inline__ int8_8 fract8_8(int8_8 x);
 __inline__ int8_8 floor8_8(int8_8 x);
 __inline__ int16_16 cast8_8_to_16_16(int8_8 x);
+__inline__ int16_16 add16_16(int16_16 x,int16_16 y);
 #endif
 

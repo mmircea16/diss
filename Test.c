@@ -8,7 +8,7 @@
 
 
 
-#define DEBUG_FLAG
+
 
 #ifdef DEBUG_FLAG
   #include "FixedPointDebug.h"
@@ -32,8 +32,8 @@ int tests_run = 0;
 int main()
 {
 	 //char* result="as";
-	// char *result = all_tests_fixed_point();
-	 char *result = all_tests_fixed_point_with_info();
+	char *result = all_tests_fixed_point();
+	 //char *result = all_tests_fixed_point_with_info();
 	 //char *result = all_tests_info();
 	 if (result != 0) {
 	     printf("%s\n", result);
