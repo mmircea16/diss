@@ -12,6 +12,12 @@ inline int8_8 int8_8_new(const float X)
     return *(int8_8*)&__yy;
 }
 
+inline int16_16 int16_16_new(const float X)
+{
+	int __yy =(int)(X*(1<<16));
+    return *(int16_16*)&__yy;
+}
+
 inline int8_8 add8_8(int8_8 x,int8_8 y)
 {
 	int __s = *(int*)(&x) + *(int*)(&y);
@@ -103,3 +109,10 @@ inline int16_16 cast8_8_to_16_16(int8_8 x)
 	int y = _int(x)<<8;
 	return _int16_16(y);
 }
+
+inline int16_16 add16_16(int16_16 x,int16_16 y)
+{
+	int __s = *(int*)(&x) + *(int*)(&y);
+	return _int16_16(__s);
+}
+

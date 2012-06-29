@@ -6,7 +6,7 @@
  */
 #include "minunit.h"
 #include "Interpreter.h"
-
+#include "FixedPoint.h"
 #ifndef FIXEDPOINTTESTS_H_
 #define FIXEDPOINTTESTS_H_
 
@@ -84,7 +84,7 @@ char* test_constructor_16_16()
 {
 	mu_test_title("Constructor for 16.16 format");
     init_file("tests/gen/constructor16_16.test");
-	int8_8 y;
+	int16_16 y;
 	float input;
 	Parsed_fixed_point output;
 	int i=0;
@@ -93,7 +93,10 @@ char* test_constructor_16_16()
 	   input=(*(float*)get_operand(i,1));
 	   output=*(Parsed_fixed_point*)get_result(i);
 
-	//	y = int16_16_new(input);
+		y = int16_16_new(input);
+		printf("--- %f\n",input);
+		printf("--- %d %d\n",y.p,y.q);
+		printf("--- %d %d\n",output.integer_part,output.fractional_part);
 		mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
 		i++;
 	}
@@ -392,26 +395,98 @@ char* test_fractional_part()
 
 char* test_cast_8_8_to_16_16()
 {
-	mu_test_title("Integer part (result in 8.8 format)");
-	init_file("tests/gen/floor8_8.test");
-	int8_8 y;
-	int8_8 x;
-	x=*(int8_8*)malloc(sizeof(int8_8));
-	Parsed_fixed_point input;
-	Parsed_fixed_point output;
-	int i=0;
-	while (get_operand(i,1)!=NULL)
-	{
-	   input=(*(Parsed_fixed_point*)get_operand(i,1));
-	  output=*(Parsed_fixed_point*)get_result(i);
-	  (input.fractional_part) >>=8;
-	  (output.fractional_part) >>=8;
-	  x.p=input.integer_part;
-	  x.q=input.fractional_part;
-	  y = floor8_8(x);
-	  mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
-	  i++;
-	}
+	mu_test_title("Cast from 8_8 to 16_16");
+
+	int8_8* x;
+	int16_16* y;
+	int16_16 z;
+	int zz;
+	x = (int8_8*) malloc(sizeof(int8_8));
+	y = (int16_16*) malloc(sizeof(int16_16));
+
+	x->p = 1; x->q=0x80;
+	y->p = 1; y->q=0x8000;
+	z = cast8_8_to_16_16(*x);
+	mu_assert("error #1", ((z.p==y->p)&&(z.q==y->q)));
+
+	x->p = 5; x->q=0x83;
+	y->p = 5; y->q=0x8300;
+	z = cast8_8_to_16_16(*x);
+	mu_assert("error #2", ((z.p==y->p)&&(z.q==y->q)));
+
+	x->p = 12; x->q=0x0F;
+	y->p = 12; y->q=0x0F00;
+	z = cast8_8_to_16_16(*x);
+	mu_assert("error #3", ((z.p==y->p)&&(z.q==y->q)));
+
+	mu_final();
+    return 0;
+}
+
+char* test_add_16_16()
+{
+	mu_test_title("Add for 16_16");
+
+	int16_16 *y,*x,*sum;
+	int16_16 z;
+	x = (int16_16*) malloc(sizeof(int16_16));
+	y = (int16_16*) malloc(sizeof(int16_16));
+	sum = (int16_16*) malloc(sizeof(int16_16));
+
+	x->p = 1; x->q=0x0800;
+	y->p = 1; y->q=0x8000;
+	sum->p = 2; sum->q=0x8800;
+	z = add16_16(*x,*y);
+	mu_assert("error #1", ((z.p==sum->p)&&(z.q==sum->q)));
+
+	x->p = 5; x->q=0x301F;
+	y->p = 5; y->q=0x8201;
+	sum->p = 10; sum->q=0xB220;
+	z = add16_16(*x,*y);
+	mu_assert("error #2", ((z.p==sum->p)&&(z.q==sum->q)));
+
+	x->p = 12; x->q=0xF0E2;
+	y->p = 23; y->q=0x1F03;
+	sum->p = 36; sum->q=0x0FE5;
+	z = add16_16(*x,*y);
+	mu_assert("error #3", ((z.p==sum->p)&&(z.q==sum->q)));
+
+	mu_final();
+    return 0;
+}
+
+char* test_add_different_formats()
+{
+	mu_test_title("Add for different formats");
+
+	int8_8* t;
+
+	int16_16 *y,*sum;
+	int16_16 z,x;
+	t = (int8_8*) malloc(sizeof(int8_8));
+	y = (int16_16*) malloc(sizeof(int16_16));
+	sum = (int16_16*) malloc(sizeof(int16_16));
+
+	t->p = 1; t->q=0x08;
+	x = cast8_8_to_16_16(*t);
+	y->p = 1; y->q=0x8000;
+	sum->p = 2; sum->q=0x8800;
+	z = add16_16(x,*y);
+	mu_assert("error #1", ((z.p==sum->p)&&(z.q==sum->q)));
+
+	t->p = 5; t->q=0x30;
+	x = cast8_8_to_16_16(*t);
+	y->p = 5; y->q=0x8201;
+	sum->p = 10; sum->q=0xB201;
+	z = add16_16(x,*y);
+	mu_assert("error #2", ((z.p==sum->p)&&(z.q==sum->q)));
+
+	t->p = 12; t->q=0xF0;
+	x = cast8_8_to_16_16(*t);
+	y->p = 23; y->q=0x1F03;
+	sum->p = 36; sum->q=0x0F03;
+	z = add16_16(x,*y);
+	mu_assert("error #3", ((z.p==sum->p)&&(z.q==sum->q)));
 
 	mu_final();
     return 0;
@@ -428,6 +503,7 @@ char * test_foo() {
      //mu_run_test(test_foo);
 	 mu_run_test(test_comparison);
      mu_run_test(test_constructor_8_8);
+     //mu_run_test(test_constructor_16_16);
 	 mu_run_test(test_add);
 	 mu_run_test(test_saturated_add);
      mu_run_test(test_subtract);
@@ -437,6 +513,9 @@ char * test_foo() {
      mu_run_test(test_floor);
      mu_run_test(test_floor8_8);
      mu_run_test(test_fractional_part);
+     mu_run_test(test_cast_8_8_to_16_16);
+     mu_run_test(test_add_16_16);
+     mu_run_test(test_add_different_formats);
      return 0;
  }
 

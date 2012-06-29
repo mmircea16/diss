@@ -25,6 +25,7 @@ class NumberGenerator
  x = rand
  x *= (max-min)
  x += min
+ x = x.floor
  return x
 end
  
