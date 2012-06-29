@@ -4,14 +4,13 @@ require "./number_util.rb"
 class Generator
 
 def initialize test_file_name
-  @test_file_name = test_file_name
-  @path_to_tests_folder = "../../tests/gen"
+
 end
 
 def init_generator
   @gen = NumberGenerator.new
   @util = NumberUtil.new
-  @path_to_tests_folder = "../../tests/gen"
+  @path_to_tests_folder = "../../../tests/gen"
 end
  
 def write_metadata
