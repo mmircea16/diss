@@ -431,7 +431,7 @@ char * test_foo() {
      //mu_run_test(test_foo);
 	 mu_run_test(test_comparison);
      mu_run_test(test_constructor_8_8);
-     mu_run_test(test_constructor_16_16);
+     //mu_run_test(test_constructor_16_16);
 	 mu_run_test(test_add);
 	 mu_run_test(test_saturated_add);
      mu_run_test(test_subtract);

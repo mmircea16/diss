@@ -8,7 +8,7 @@
 
 
 
-
+#define DEBUG_FLAG
 
 #ifdef DEBUG_FLAG
   #include "FixedPointDebug.h"
@@ -31,12 +31,9 @@ int tests_run = 0;
 /* main function is from: http://www.jera.com/techinfo/jtns/jtn002.html */
 int main()
 {
-	 double f;
-	 scanf("%LE",&f);
-	 printf("%Le",f);
 	 //char* result="as";
-	 char *result = all_tests_fixed_point();
-	// char *result = all_tests_fixed_point_with_info();
+	// char *result = all_tests_fixed_point();
+	 char *result = all_tests_fixed_point_with_info();
 	 //char *result = all_tests_info();
 	 if (result != 0) {
 	     printf("%s\n", result);
