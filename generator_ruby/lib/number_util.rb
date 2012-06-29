@@ -118,6 +118,9 @@ def float_to_signed_16_16 x
  return s
 end
 
+def cast_8_8_to_16_16 x
+  return "0000#{x}0000"
+end
 
 end
 

@@ -1,5 +1,5 @@
-require "./number_generator.rb"
-require "./number_util.rb"
+require "../number_generator.rb"
+require "../number_util.rb"
 
 class Generator
 
@@ -35,6 +35,3 @@ end
 
  
 end
-
-gen = Generator.new "sda"
-gen.write_metadata

@@ -13,7 +13,7 @@
 char* test_comparison()
 {
   mu_test_title("Comparison");
-  init_file("tests/gen/comparison.test");
+  init_file("tests/gen/8_8/comparison.test");
   int8_8 x1,x2;
   int r_eq,r_not_eq,r_gt,r_lt,r_gt_eq,r_lt_eq;
 
@@ -60,7 +60,7 @@ char* test_comparison()
 char* test_constructor_8_8()
 {
 	mu_test_title("Constructor for 8.8 format");
-    init_file("tests/gen/constructor.test");
+    init_file("tests/gen/8_8/constructor.test");
 	int8_8 y;
 	float input;
 	Parsed_fixed_point output;
@@ -83,7 +83,7 @@ char* test_constructor_8_8()
 char* test_constructor_16_16()
 {
 	mu_test_title("Constructor for 16.16 format");
-    init_file("tests/gen/constructor16_16.test");
+    init_file("tests/gen/8_8/constructor16_16.test");
 	int16_16 y;
 	float input;
 	Parsed_fixed_point output;
@@ -109,7 +109,7 @@ char* test_constructor_16_16()
 char* test_add()
 {
   mu_test_title("Adding");
-  init_file("tests/gen/add.test");
+  init_file("tests/gen/8_8/add.test");
   int8_8 x1,x2,y;
   x1=*(int8_8*)malloc(sizeof(int8_8));
   x2=*(int8_8*)malloc(sizeof(int8_8));
@@ -144,7 +144,7 @@ char* test_add()
 char* test_saturated_add()
 {
   mu_test_title("Saturated add test");
-  init_file("tests/gen/saturated_add.test");
+  init_file("tests/gen/8_8/saturated_add.test");
   int8_8 x1,x2,y;
   x1=*(int8_8*)malloc(sizeof(int8_8));
   x2=*(int8_8*)malloc(sizeof(int8_8));
@@ -180,7 +180,7 @@ char* test_saturated_add()
 char* test_subtract()
 {
 	  mu_test_title("Subtracting");
-	  init_file("tests/gen/subtract.test");
+	  init_file("tests/gen/8_8/subtract.test");
 	  int8_8 x1,x2,y;
 	  x1=*(int8_8*)malloc(sizeof(int8_8));
 	  x2=*(int8_8*)malloc(sizeof(int8_8));
@@ -214,7 +214,7 @@ char* test_subtract()
 char* test_saturated_subtract()
 {
 	  mu_test_title("Saturated subtract");
-	  init_file("tests/gen/saturated_subtract.test");
+	  init_file("tests/gen/8_8/saturated_subtract.test");
 	  int8_8 x1,x2,y;
 	  x1=*(int8_8*)malloc(sizeof(int8_8));
 	  x2=*(int8_8*)malloc(sizeof(int8_8));
@@ -248,7 +248,7 @@ char* test_saturated_subtract()
 char* test_multiply()
 {
 	  mu_test_title("Multiplying");
-	  init_file("tests/gen/multiply.test");
+	  init_file("tests/gen/8_8/multiply.test");
 	  int8_8 x1,x2,y;
 	  x1=*(int8_8*)malloc(sizeof(int8_8));
 	  x2=*(int8_8*)malloc(sizeof(int8_8));
@@ -282,7 +282,7 @@ char* test_multiply()
 char* test_saturated_multiply()
 {
 	  mu_test_title("Saturated Multiplying");
-	  init_file("tests/gen/saturated_multiply.test");
+	  init_file("tests/gen/8_8/saturated_multiply.test");
 	  int8_8 x1,x2,y;
 	  x1=*(int8_8*)malloc(sizeof(int8_8));
 	  x2=*(int8_8*)malloc(sizeof(int8_8));
@@ -316,7 +316,7 @@ char* test_saturated_multiply()
 char* test_floor()
 {
 	mu_test_title("Integer part");
-	init_file("tests/gen/floor.test");
+	init_file("tests/gen/8_8/floor.test");
 	int y;
 	int8_8 x;
 	x=*(int8_8*)malloc(sizeof(int8_8));
@@ -342,7 +342,7 @@ char* test_floor()
 char* test_floor8_8()
 {
 	mu_test_title("Integer part (result in 8.8 format)");
-	init_file("tests/gen/floor8_8.test");
+	init_file("tests/gen/8_8/floor8_8.test");
 	int8_8 y;
 	int8_8 x;
 	x=*(int8_8*)malloc(sizeof(int8_8));
@@ -369,7 +369,7 @@ char* test_floor8_8()
 char* test_fractional_part()
 {
 	mu_test_title("Fractional part");
-	init_file("tests/gen/fractional.test");
+	init_file("tests/gen/8_8/fractional.test");
 	int8_8 x,y;
 	x=*(int8_8*)malloc(sizeof(int8_8));
 	y=*(int8_8*)malloc(sizeof(int8_8));
@@ -397,27 +397,25 @@ char* test_cast_8_8_to_16_16()
 {
 	mu_test_title("Cast from 8_8 to 16_16");
 
-	int8_8* x;
-	int16_16* y;
-	int16_16 z;
-	int zz;
-	x = (int8_8*) malloc(sizeof(int8_8));
-	y = (int16_16*) malloc(sizeof(int16_16));
+	init_file("tests/gen/16_16/cast_from_8_8.test");
+	int8_8 x;
+	x=*(int8_8*)malloc(sizeof(int8_8));
+	int16_16 y;
+	Parsed_fixed_point input;
+	Parsed_fixed_point output;
+	int i=0;
+	while (get_operand(i,1)!=NULL)
+	{
+	   input=(*(Parsed_fixed_point*)get_operand(i,1));
+	   output=*(Parsed_fixed_point*)get_result(i);
 
-	x->p = 1; x->q=0x80;
-	y->p = 1; y->q=0x8000;
-	z = cast8_8_to_16_16(*x);
-	mu_assert("error #1", ((z.p==y->p)&&(z.q==y->q)));
-
-	x->p = 5; x->q=0x83;
-	y->p = 5; y->q=0x8300;
-	z = cast8_8_to_16_16(*x);
-	mu_assert("error #2", ((z.p==y->p)&&(z.q==y->q)));
-
-	x->p = 12; x->q=0x0F;
-	y->p = 12; y->q=0x0F00;
-	z = cast8_8_to_16_16(*x);
-	mu_assert("error #3", ((z.p==y->p)&&(z.q==y->q)));
+	   (input.fractional_part) >>=8;
+	   x.p=input.integer_part;
+	   x.q=input.fractional_part;
+	   y = cast8_8_to_16_16(x);
+	   mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	   i++;
+	}
 
 	mu_final();
     return 0;
@@ -426,7 +424,7 @@ char* test_cast_8_8_to_16_16()
 char* test_add_16_16()
 {
 	mu_test_title("Add for 16_16");
-
+	//init_file("tests/gen/16_16/cast_from_8_8.test");
 	int16_16 *y,*x,*sum;
 	int16_16 z;
 	x = (int16_16*) malloc(sizeof(int16_16));
