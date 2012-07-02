@@ -132,3 +132,10 @@ inline int16_16 sadd16_16(int16_16 x,int16_16 y)
 	return _int16_16(__s);
 }
 
+inline int16_16 sub16_16(int16_16 x,int16_16 y)
+{
+	int __s = *(int*)(&x) - *(int*)(&y);
+	return _int16_16(__s);
+
+}
+
