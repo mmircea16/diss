@@ -119,3 +119,16 @@ inline int16_16 add16_16(int16_16 x,int16_16 y)
 	return _int16_16(__s);
 }
 
+inline int16_16 sadd16_16(int16_16 x,int16_16 y)
+{
+	int __s = *(int*)(&x) + *(int*)(&y);
+	int xx = *(int*)(&x);
+	int yy = *(int*)(&y);
+	if ((xx & 0x80000000)==(yy & 0x80000000))
+	{
+		if ((xx & 0x80000000) && !(__s & 0x80000000)) __s = 0x80000000;
+		if (!(xx & 0x80000000) && (__s & 0x80000000)) __s = 0x7FFFFFFF;
+	}
+	return _int16_16(__s);
+}
+

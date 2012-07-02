@@ -78,5 +78,5 @@ class GeneratorAdd < Generator
  
 end
 
-gen = GeneratorAdd.new({"test_file_name" => "16_16/add.test", "saturated" => false  , "type" => "16_16", "title" => "Non saturated 16.16 add"});
+gen = GeneratorAdd.new({"test_file_name" => "16_16/saturated_add.test", "saturated" => true  , "type" => "16_16", "title" => "Saturated 16.16 add"});
 gen.make_tests()
