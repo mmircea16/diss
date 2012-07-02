@@ -423,33 +423,33 @@ char* test_cast_8_8_to_16_16()
 
 char* test_add_16_16()
 {
-	mu_test_title("Add for 16_16");
-	//init_file("tests/gen/16_16/cast_from_8_8.test");
-	int16_16 *y,*x,*sum;
-	int16_16 z;
-	x = (int16_16*) malloc(sizeof(int16_16));
-	y = (int16_16*) malloc(sizeof(int16_16));
-	sum = (int16_16*) malloc(sizeof(int16_16));
+	 mu_test_title("Adding 16.16 numbers");
+	 init_file("tests/gen/16_16/add.test");
+	 int16_16 x1,x2,y;
+	 x1=*(int16_16*)malloc(sizeof(int16_16));
+	 x2=*(int16_16*)malloc(sizeof(int16_16));
+	 Parsed_fixed_point input1;
+	 Parsed_fixed_point input2;
+	 Parsed_fixed_point output;
+	 int i=0;
+	 while (get_operand(i,1)!=NULL)
+	 {
+	  	input1=*(Parsed_fixed_point*)get_operand(i,1);
+	  	input2=*(Parsed_fixed_point*)get_operand(i,2);
+	  	output=*(Parsed_fixed_point*)get_result(i);
 
-	x->p = 1; x->q=0x0800;
-	y->p = 1; y->q=0x8000;
-	sum->p = 2; sum->q=0x8800;
-	z = add16_16(*x,*y);
-	mu_assert("error #1", ((z.p==sum->p)&&(z.q==sum->q)));
+	  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
+	  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
 
-	x->p = 5; x->q=0x301F;
-	y->p = 5; y->q=0x8201;
-	sum->p = 10; sum->q=0xB220;
-	z = add16_16(*x,*y);
-	mu_assert("error #2", ((z.p==sum->p)&&(z.q==sum->q)));
+	  	y = add16_16(x1,x2);
 
-	x->p = 12; x->q=0xF0E2;
-	y->p = 23; y->q=0x1F03;
-	sum->p = 36; sum->q=0x0FE5;
-	z = add16_16(*x,*y);
-	mu_assert("error #3", ((z.p==sum->p)&&(z.q==sum->q)));
+	  	mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	  	i++;
+	  }
 
-	mu_final();
+
+	  mu_final();
+
     return 0;
 }
 
