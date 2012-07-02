@@ -77,5 +77,5 @@ def make_tests
 end
 
 end
-gen = GeneratorSubtract.new({"test_file_name" => "16_16/subtract.test", "saturated" => false  , "type" => "16_16", "title" => "16.16 subtract"});
+gen = GeneratorSubtract.new({"test_file_name" => "16_16/saturated_subtract.test", "saturated" => true  , "type" => "16_16", "title" => "16.16 subtract"});
 gen.make_tests()
