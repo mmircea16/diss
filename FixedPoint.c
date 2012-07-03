@@ -151,3 +151,27 @@ inline int16_16 ssub16_16(int16_16 x,int16_16 y)
     return _int16_16(__s);
 }
 
+inline int16_16 mul16_16(int16_16 x,int16_16 y)
+{
+	//int __s = (((int)x.p*(int)y.p) << 16)+(int)x.p*(int)y.q+(int)x.q*(int)y.p+(((int)x.q*(int)y.q)>> 16);
+	long long xx = 0;
+	xx = *(long long*)&x;
+	if (x.p<1<<15)
+		xx &= 0x00000000FFFFFFFF;
+	else
+	{
+		xx &= 0x00000000FFFFFFFF;
+		xx |= 0xFFFFFFFF00000000;
+	}
+	long long yy = 0;
+    yy = *(long long*)&y;
+    if (y.p<1<<15)
+    	yy &= 0x00000000FFFFFFFF;
+    else
+    {
+    	yy &= 0x00000000FFFFFFFF;
+    	yy |= 0xFFFFFFFF00000000;
+   	}
+	int __s = ((xx*yy)>>16);
+	return _int16_16(__s);
+}

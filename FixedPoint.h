@@ -84,5 +84,6 @@ __inline__ int16_16 add16_16(int16_16 x,int16_16 y);
 __inline__ int16_16 sadd16_16(int16_16 x,int16_16 y);
 __inline__ int16_16 sub16_16(int16_16 x,int16_16 y);
 __inline__ int16_16 ssub16_16(int16_16 x,int16_16 y);
+__inline__ int16_16 mul16_16(int16_16 x,int16_16 y);
 #endif
 

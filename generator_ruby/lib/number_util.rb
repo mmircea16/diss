@@ -41,30 +41,7 @@ def signed_binary_to_float binary_string
 end
 
 def float_to_unsigned_8_8 x
-   x *= 2**8
-   x = x.floor
-   p = 0
-   s = ""
-   while (x>0)
-     s += (x%2).to_s
-	 x /= 2
-	 p += 1
-	 if (p==8) 
-	  s +="."
-	 end
-   end
-   if p<8
-     (p..7).each do |k|
-       s += "0"
-     end 
-     s += "."
-     p=8 
-   end
-   (p..15).each do |k|
-     s += "0"
-   end
-   s.reverse!
-   return s
+ float_to_unsigned(x,8,8)
 end
 
 def float_to_signed_8_8 x
@@ -78,34 +55,52 @@ def float_to_signed_8_8 x
 end
 
 def float_to_unsigned_16_16 x
-   x *= 2**16
-   x = x.floor
-   p = 0
-   s = ""
-   while (x>0)
-     s += (x%2).to_s
-   x /= 2
-   p += 1
-   if (p==16) 
-    s +="."
-   end
-   end
-   
-   if p<16
-     (p..15).each do |k|
-       s += "0"
-     end 
-     s += "."
-     p=16 
-   end
-   (p..31).each do |k|
-     s += "0"
-   end
-   s.reverse!
-   return s
+ float_to_unsigned(x,16,16)
 end
 
 
+def float_to_unsigned(x,int_size,fract_size)
+  x *= 2**(fract_size)
+  x = x.floor
+  p = 0
+  s = ""
+  t = fract_size+int_size - 1
+  while ((x>0) and (p<=t))
+    s += (x%2).to_s
+    x /= 2
+    p += 1
+    if (p==fract_size) 
+     s +="."
+    end
+  end
+    
+  if p<fract_size
+    (p..fract_size-1).each do |k|
+        s+="0"
+     end
+  s+="."
+  p=fract_size
+  end
+  
+  (p..t).each do |k|
+      s += "0"
+  end
+    
+  s.reverse!
+  return s   
+end
+
+def float_to_signed(x,int_size,fract_size)
+  if x>=0 
+   return float_to_unsigned(x,int_size,fract_size)
+  end
+  
+  x +=2**int_size
+  s = float_to_unsigned(x,int_size,fract_size) 
+  s[0] = '1'
+  return s
+end
+  
 def float_to_signed_16_16 x
  if x>=0 
   return float_to_unsigned_16_16 x
