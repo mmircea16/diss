@@ -5,26 +5,37 @@ class GeneratorFract < Generator
  
  attr_accessor :test_title
  
- def initialize test_file_name
+ def initialize options
   init_generator() 
-  @test_file_name = "#{@path_to_tests_folder}/#{test_file_name}"
+  @test_file_name = "#{@path_to_tests_folder}/#{options["test_file_name"]}"
   @no_of_operands = 1
-  @test_title = "Fractional part test"
+  @test_title = options["title"];
   @type_of_result = "FIXED POINT BINARY"
   @type_of_operands = "FIXED POINT BINARY"
+  @operand_type = options["type"];
  end
  
  def generate_test test_no
    test = {}
    test["test_no"] = test_no
-   k = @gen.generate_fixed_point_8_8
+   case @operand_type
+   when "8_8":
+     k = @gen.generate_fixed_point(8,8)
+   when "16_16":
+     k = @gen.generate_fixed_point(16,16)   
+   end
+   
    test["first_operand"] = k
    n = @util.signed_binary_to_float(k)
-   puts n
-   puts @util.float_to_signed_8_8(n)
-   puts n-n.floor
-   puts @util.float_to_signed_8_8(n-n.floor)
-   test["result"] = @util.float_to_signed_8_8(n-n.floor)
+   
+   case @operand_type
+   when "8_8":
+     rez = @util.float_to_signed(n-n.floor,8,8)
+   when "16_16":
+     rez = @util.float_to_signed(n-n.floor,16,16)
+   end
+   
+   test["result"] = rez
    return test
  end
  
@@ -38,5 +49,5 @@ class GeneratorFract < Generator
 
 end
 
-gen = GeneratorFract.new("8_8/fractional.test");
+gen = GeneratorFract.new({"test_file_name"=>"16_16/fractional.test","title"=>"16.16 fractional test","type"=>"16_16"});
 gen.make_tests()

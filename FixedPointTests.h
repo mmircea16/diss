@@ -421,6 +421,34 @@ char* test_cast_8_8_to_16_16()
     return 0;
 }
 
+char* test_cast_16_16_to_8_8()
+{
+	mu_test_title("Cast from 16_16 to 8_8");
+
+	init_file("tests/gen/16_16/cast_to_8_8.test");
+	int16_16 x;
+	x=*(int16_16*)malloc(sizeof(int8_8));
+	int8_8 y;
+	Parsed_fixed_point input;
+	Parsed_fixed_point output;
+	int i=0;
+	while (get_operand(i,1)!=NULL)
+	{
+	   input=(*(Parsed_fixed_point*)get_operand(i,1));
+	   output=*(Parsed_fixed_point*)get_result(i);
+
+	   (output.fractional_part) >>=8;
+	   x.p=input.integer_part;
+	   x.q=input.fractional_part;
+	   y = cast16_16_to_8_8(x);
+	   mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	   i++;
+	}
+
+	mu_final();
+    return 0;
+}
+
 char* test_add_16_16()
 {
 	 mu_test_title("Adding 16.16 numbers");
@@ -618,6 +646,58 @@ char* test_saturated_multiply_16_16()
 	return 0;
 }
 
+char* test_fractional_part_16_16()
+{
+	mu_test_title("Fractional part 16.16");
+	init_file("tests/gen/16_16/fractional.test");
+	int16_16 x,y;
+	x=*(int16_16*)malloc(sizeof(int16_16));
+	y=*(int16_16*)malloc(sizeof(int16_16));
+	Parsed_fixed_point input;
+	Parsed_fixed_point output;
+	int i=0;
+	while (get_operand(i,1)!=NULL)
+	{
+	   input=(*(Parsed_fixed_point*)get_operand(i,1));
+	   output=*(Parsed_fixed_point*)get_result(i);
+
+	   x.p=input.integer_part;
+	   x.q=input.fractional_part;
+	   y = fract16_16(x);
+	   mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	   i++;
+	}
+
+	mu_final();
+  return 0;
+}
+
+char* test_integer_part_16_16()
+{
+	mu_test_title("Integer part 16.16");
+	init_file("tests/gen/16_16/integer_part.test");
+	int16_16 x,y;
+	x=*(int16_16*)malloc(sizeof(int16_16));
+	y=*(int16_16*)malloc(sizeof(int16_16));
+	Parsed_fixed_point input;
+	Parsed_fixed_point output;
+	int i=0;
+	while (get_operand(i,1)!=NULL)
+	{
+	   input=(*(Parsed_fixed_point*)get_operand(i,1));
+	   output=*(Parsed_fixed_point*)get_result(i);
+
+	   x.p=input.integer_part;
+	   x.q=input.fractional_part;
+	   y = floor16_16(x);
+	   mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	   i++;
+	}
+
+	mu_final();
+  return 0;
+}
+
 char* test_add_different_formats()
 {
 	mu_test_title("Add for different formats");
@@ -683,6 +763,9 @@ char * test_foo() {
      mu_run_test(test_saturated_subtract_16_16);
      mu_run_test(test_multiply_16_16);
      mu_run_test(test_saturated_multiply_16_16);
+     mu_run_test(test_cast_16_16_to_8_8);
+     mu_run_test(test_fractional_part_16_16);
+     mu_run_test(test_integer_part_16_16);
      mu_run_test(test_add_different_formats);
      return 0;
  }
