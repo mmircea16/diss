@@ -175,3 +175,39 @@ inline int16_16 mul16_16(int16_16 x,int16_16 y)
 	int __s = ((xx*yy)>>16);
 	return _int16_16(__s);
 }
+
+inline int16_16 smul16_16(int16_16 x,int16_16 y)
+{
+	//int __s = (((int)x.p*(int)y.p) << 16)+(int)x.p*(int)y.q+(int)x.q*(int)y.p+(((int)x.q*(int)y.q)>> 16);
+	long long xx = 0;
+	xx = *(long long*)&x;
+	int sign = 1;
+	if (x.p<1<<15)
+		xx &= 0x00000000FFFFFFFF;
+	else
+	{
+		sign *= -1;
+		xx &= 0x00000000FFFFFFFF;
+		xx |= 0xFFFFFFFF00000000;
+	}
+	long long yy = 0;
+    yy = *(long long*)&y;
+    if (y.p<1<<15)
+    	yy &= 0x00000000FFFFFFFF;
+    else
+    {
+    	sign *= -1;
+    	yy &= 0x00000000FFFFFFFF;
+    	yy |= 0xFFFFFFFF00000000;
+   	}
+	long long __s = ((xx*yy)>>16);
+	int rez = 0;
+	if (__s & 0xFFFFFFFF00000000)
+	{
+		if (sign==1)
+			rez = 0x7FFFFFFF;
+		else
+			rez = 0x80000000;
+	}else rez = __s;
+	return _int16_16(rez);
+}

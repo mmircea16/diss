@@ -42,10 +42,10 @@ class GeneratorMultiply < Generator
        
      r = (@util.signed_binary_to_float(t1)*@util.signed_binary_to_float(t2))  
     
-     puts "#{test_no}----"
-     puts @util.signed_binary_to_float(t1)
-     puts @util.signed_binary_to_float(t2)
-     puts r
+#     puts "#{test_no}----"
+#     puts @util.signed_binary_to_float(t1)
+#     puts @util.signed_binary_to_float(t2)
+#     puts r
      
      if @saturated
       
@@ -85,5 +85,5 @@ class GeneratorMultiply < Generator
  
 end
 
-gen = GeneratorMultiply.new({"test_file_name" => "16_16/multiply.test", "saturated" => false  , "type" => "16_16", "title" => "16.16 multiply"});
+gen = GeneratorMultiply.new({"test_file_name" => "16_16/saturated_multiply.test", "saturated" => true  , "type" => "16_16", "title" => "Saturated 16.16 multiply"});
 gen.make_tests()
