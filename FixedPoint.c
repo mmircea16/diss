@@ -211,3 +211,10 @@ inline int16_16 smul16_16(int16_16 x,int16_16 y)
 	}else rez = __s;
 	return _int16_16(rez);
 }
+
+inline int8_8 cast16_16_to_8_8(int16_16 x)
+{
+	short aux = 0;
+	aux = _int(x) >> 8;
+	return _int8_8(aux);
+}

@@ -88,11 +88,12 @@ void set_population_flag(int operation, int flag_position, int population_id)
 
 void timer_callback(uint ticks, uint null)
 {
-    long long current = 0;
-    long long rest = 0;
-    long long dv = 0;
-    long long input = 0;
-    long long integration = 0;
+	//MODIFIED:  replaced long long with int16_16; added
+    int16_16 current = _int16_16(0);
+    int16_16 rest = _int16_16(0);
+    int16_16 dv = _int16_16(0);
+    int16_16 input = _int16_16(0);
+    int16_16 integration = _int16_16(0);
 
     if(ticks >= app_data.run_time)
     {
@@ -108,8 +109,10 @@ void timer_callback(uint ticks, uint null)
         for(uint j = 0; j < population[i].num_neurons; j++)
         {
             // Get excitatory and inhibitory currents from synaptic inputs
-            long long exci_current = psp_buffer[j].exci[ticks % PSP_BUFFER_SIZE];
-            long long inhi_current = psp_buffer[j].inhi[ticks % PSP_BUFFER_SIZE];
+        	//MODIFIED: replaced long long with int16_16
+        	//supposed that psp_buffer[j].exci and inhi are 32-bits integers
+        	int16_16 exci_current = _int16_16(psp_buffer[j].exci[ticks % PSP_BUFFER_SIZE]);
+        	int16_16 inhi_current = _int16_16(psp_buffer[j].inhi[ticks % PSP_BUFFER_SIZE]);
 
             // Clear PSP buffers for this timestep
             psp_buffer[j].exci[ticks % PSP_BUFFER_SIZE] = 0;
@@ -119,25 +122,27 @@ void timer_callback(uint ticks, uint null)
 	        if(neuron[j].refrac_clock == 0)
 	        {
                 // ... compute the input current...
-                current = exci_current - inhi_current + neuron[j].bias_current;
-                input = current * neuron[j].v_resistance;
-                input = input >> LOG_P2;
+                //MODIFIED: used implemented operation; removed the last bit shifting
+	        	current = sadd16_16(ssub16_16(exci_current,inhi_current) , neuron[j].bias_current);
+                input = smul16_16(current,neuron[j].v_resistance);
+                //input = input >> LOG_P2;
 
                 // ... and its effect on membrane potential...
-                rest = neuron[j].v_rest - neuron[j].v;
-                dv = (rest + input) * neuron[j].v_decay;
-                dv = dv >> LOG_P2;
-                integration = neuron[j].v + dv;
+                rest = ssub16_16(neuron[j].v_rest,neuron[j].v);
+                dv = smul16_16(sadd16_16(rest,input),neuron[j].v_decay);
+                //dv = dv >> LOG_P2;
+                integration = sadd16_16(neuron[j].v,dv);
 
+                //MODIFIED: no need
                 // ... control for overflow...
-                if(integration < INT_MIN)       integration = INT_MIN;
-                else if(integration > INT_MAX)  integration = INT_MAX;
+                //if(integration < INT_MIN)       integration = INT_MIN;
+                //else if(integration > INT_MAX)  integration = INT_MAX;
 
                 // ... reduce the result back down to an integer...
-                neuron[j].v = (int) integration;
+                neuron[j].v = integration;
 
                 // ... and emit a spike if necessary
-                if(neuron[j].v >= neuron[j].v_thresh)
+                if(comp_gt_eq(neuron[j].v,neuron[j].v_thresh))
                 {
                     uint key = spin1_get_chip_id() << 16 |
                                app_data.virtual_core_id << 11 |
@@ -156,16 +161,21 @@ void timer_callback(uint ticks, uint null)
 	            neuron[j].refrac_clock--;
             }
 
+	        //MODIFIED: replaced long long with int16_16
             // Compute synapse dynamics (NB exci_decay is scaled up by 2^16 for precision)
-            long long exci_decay = exci_current * neuron[j].exci_decay;
-            long long inhi_decay = inhi_current * neuron[j].inhi_decay;
+	        int16_16 exci_decay = smul16_16(exci_current,neuron[j].exci_decay);
+	        int16_16 inhi_decay = smul16_16(inhi_current,neuron[j].inhi_decay);
             // Subtract the decay quantity from the current and shift back down
-            long long next_exci_current = exci_current - (exci_decay >> LOG_P2);
-            long long next_inhi_current = inhi_current - (inhi_decay >> LOG_P2);
+	        int16_16 next_exci_current = ssub16_16(exci_current,exci_decay);
+	        int16_16 next_inhi_current = ssub16_16(inhi_current,inhi_decay);
             // Write decayed values to next timestep's input bins
             uint cpsr = spin1_irq_disable();
-            psp_buffer[j].exci[(ticks + 1) % PSP_BUFFER_SIZE] += (int) next_exci_current;
-            psp_buffer[j].inhi[(ticks + 1) % PSP_BUFFER_SIZE] += (int) next_inhi_current;
+
+            int16_16 aux1 = sadd16_16(psp_buffer[j].exci[(ticks + 1) % PSP_BUFFER_SIZE],next_exci_current);
+            int16_16 aux2 = sadd16_16( psp_buffer[j].inhi[(ticks + 1) % PSP_BUFFER_SIZE],next_inhi_current);
+            psp_buffer[j].exci[(ticks + 1) % PSP_BUFFER_SIZE] = _int(aux1);
+            psp_buffer[j].inhi[(ticks + 1) % PSP_BUFFER_SIZE] = _int(aux2);
+
             spin1_mode_restore(cpsr);
 
             // Recording:
@@ -173,7 +183,7 @@ void timer_callback(uint ticks, uint null)
             // Optionally record voltage and current trace
             if(population[i].flags & RECORD_STATE_BIT)
             {
-                record_v[population[i].num_neurons * (ticks - 1) + j] = (short) (neuron[j].v >> LOG_P1);
+                record_v[population[i].num_neurons * (ticks - 1) + j] = cast16_16_to_8_8(neuron[j].v);
             }
 
         } // Cycle neurons in population i 
