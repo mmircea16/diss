@@ -32,7 +32,7 @@ int tests_run = 0;
 int main()
 {
 	 //char* result="as";
-	printf("sizeof long:%d",sizeof(long int));
+	//printf("sizeof int8_24:%d\n",sizeof(int8_8));
 	char *result = all_tests_fixed_point();
 	 //char *result = all_tests_fixed_point_with_info();
 	 //char *result = all_tests_info();

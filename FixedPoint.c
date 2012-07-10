@@ -234,3 +234,29 @@ inline int16_16 floor16_16(int16_16 x)
  ss &=0xFFFF0000;
  return _int16_16(ss);
 }
+
+inline int8_24 int8_24_new(const float X)
+{
+	int __yy =(int)(X*(1<<24));
+	return *(int8_24*)&__yy;
+}
+
+inline int8_24 add8_24(int8_24 x,int8_24 y)
+{
+	int __s = *(int*)(&x) + *(int*)(&y);
+    return _int8_24(__s);
+}
+
+inline int8_24 sadd8_24(int8_24 x,int8_24 y)
+{
+	int __s = *(int*)(&x) + *(int*)(&y);
+	int xx = *(int*)(&x);
+	int yy = *(int*)(&y);
+	if ((xx & 0x80000000)==(yy & 0x80000000))
+	{
+		if ((xx & 0x80000000) && !(__s & 0x80000000)) __s = 0x80000000;
+		if (!(xx & 0x80000000) && (__s & 0x80000000)) __s = 0x7FFFFFFF;
+	}
+	return _int8_24(__s);
+}
+

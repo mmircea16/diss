@@ -23,8 +23,8 @@ struct _metadata
 
 struct _parsed_fixed_point
 {
-	int integer_part;
-	int fractional_part; // actual fractional part * 2^16
+	unsigned int integer_part;
+	unsigned int fractional_part; // actual fractional part * 2^16
 };
 
 typedef struct _parsed_fixed_point Parsed_fixed_point;

@@ -34,13 +34,20 @@ struct __int16_16
 
 typedef struct __int16_16 int16_16;
 
+struct __int8_24
+{
+	unsigned int q:24;
+	unsigned char p:8;
+};
 
+typedef struct __int8_24 int8_24;
 
 #define  _int(X) ((int)(((X).p<128)?((*(int*)&X)&0x0000FFFF):((*(int*)&X)|0xFFFF0000)))
 
 
 #define  _int8_8(X) *(int8_8*)&X
 #define  _int16_16(X) *(int16_16*)&X
+#define  _int8_24(X) *(int8_24*)&X
 
 #define max_fract(X) ((X).q=0xFFFF)
 #define size_fract(X) (max_fract(X)==0xFFFF?16:(max_fract(X)==0x00FF?8:4))
@@ -70,7 +77,6 @@ typedef struct __int16_16 int16_16;
 #define int8_8_alloc(X) if(1){ int __xx=0; X=(int8_8*)&__xx;}
 
 __inline__ int8_8 int8_8_new(const float X);
-__inline__ int16_16 int16_16_new(const float X);
 __inline__ int8_8 add8_8(int8_8 x,int8_8 y);
 __inline__ int8_8 sadd8_8(int8_8 x,int8_8 y);
 __inline__ int8_8 sub8_8(int8_8 x,int8_8 y);
@@ -81,6 +87,7 @@ __inline__ int8_8 fract8_8(int8_8 x);
 __inline__ int8_8 floor8_8(int8_8 x);
 __inline__ int16_16 cast8_8_to_16_16(int8_8 x);
 __inline__ int8_8 cast16_16_to_8_8(int16_16 x);
+__inline__ int16_16 int16_16_new(const float X);
 __inline__ int16_16 add16_16(int16_16 x,int16_16 y);
 __inline__ int16_16 sadd16_16(int16_16 x,int16_16 y);
 __inline__ int16_16 sub16_16(int16_16 x,int16_16 y);
@@ -89,5 +96,8 @@ __inline__ int16_16 mul16_16(int16_16 x,int16_16 y);
 __inline__ int16_16 smul16_16(int16_16 x,int16_16 y);
 __inline__ int16_16 fract16_16(int16_16 x);
 __inline__ int16_16 floor16_16(int16_16 x);
+__inline__ int8_24 int8_24_new(const float X);
+__inline__ int8_24 add8_24(int8_24 x,int8_24 y);
+__inline__ int8_24 sadd8_24(int8_24 x,int8_24 y);
 #endif
 

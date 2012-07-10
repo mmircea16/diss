@@ -29,8 +29,8 @@ char* test_comparison()
   	input2=*(Parsed_fixed_point*)get_operand(i,2);
   	output=*(int*)get_result(i);
 
-  	(input1.fractional_part) >>=8;
-  	(input2.fractional_part) >>=8;
+  	(input1.fractional_part) >>=24;
+  	(input2.fractional_part) >>=24;
   	x1.p=input1.integer_part;x1.q=input1.fractional_part;
   	x2.p=input2.integer_part;x2.q=input2.fractional_part;
 
@@ -70,7 +70,7 @@ char* test_constructor_8_8()
 	   input=(*(float*)get_operand(i,1));
 	  output=*(Parsed_fixed_point*)get_result(i);
 
-		(output.fractional_part) >>=8;
+		(output.fractional_part) >>=24;
 		y = int8_8_new(input);
 		mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
 		i++;
@@ -93,6 +93,7 @@ char* test_constructor_16_16()
 	   input=(*(float*)get_operand(i,1));
 	   output=*(Parsed_fixed_point*)get_result(i);
 
+	   (output.fractional_part) >>=16;
 		y = int16_16_new(input);
 		printf("--- %f\n",input);
 		printf("--- %d %d\n",y.p,y.q);
@@ -123,9 +124,9 @@ char* test_add()
   	input2=*(Parsed_fixed_point*)get_operand(i,2);
   	output=*(Parsed_fixed_point*)get_result(i);
 
-  	(output.fractional_part) >>=8;
-  	(input1.fractional_part) >>=8;
-  	(input2.fractional_part) >>=8;
+  	(output.fractional_part) >>=24;
+  	(input1.fractional_part) >>=24;
+  	(input2.fractional_part) >>=24;
   	x1.p=input1.integer_part;x1.q=input1.fractional_part;
   	x2.p=input2.integer_part;x2.q=input2.fractional_part;
 
@@ -158,9 +159,9 @@ char* test_saturated_add()
   	input2=*(Parsed_fixed_point*)get_operand(i,2);
   	output=*(Parsed_fixed_point*)get_result(i);
 
-  	(output.fractional_part) >>=8;
-  	(input1.fractional_part) >>=8;
-  	(input2.fractional_part) >>=8;
+  	(output.fractional_part) >>=24;
+  	(input1.fractional_part) >>=24;
+  	(input2.fractional_part) >>=24;
   	x1.p=input1.integer_part;x1.q=input1.fractional_part;
   	x2.p=input2.integer_part;x2.q=input2.fractional_part;
 
@@ -194,9 +195,9 @@ char* test_subtract()
 	  	input2=*(Parsed_fixed_point*)get_operand(i,2);
 	  	output=*(Parsed_fixed_point*)get_result(i);
 
-	  	(output.fractional_part) >>=8;
-	  	(input1.fractional_part) >>=8;
-	  	(input2.fractional_part) >>=8;
+	  	(output.fractional_part) >>=24;
+	  	(input1.fractional_part) >>=24;
+	  	(input2.fractional_part) >>=24;
 	  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
 	  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
 
@@ -228,9 +229,9 @@ char* test_saturated_subtract()
 	  	input2=*(Parsed_fixed_point*)get_operand(i,2);
 	  	output=*(Parsed_fixed_point*)get_result(i);
 
-	  	(output.fractional_part) >>=8;
-	  	(input1.fractional_part) >>=8;
-	  	(input2.fractional_part) >>=8;
+	  	(output.fractional_part) >>=24;
+	  	(input1.fractional_part) >>=24;
+	  	(input2.fractional_part) >>=24;
 	  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
 	  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
 
@@ -262,9 +263,9 @@ char* test_multiply()
 	  	input2=*(Parsed_fixed_point*)get_operand(i,2);
 	  	output=*(Parsed_fixed_point*)get_result(i);
 
-	  	(output.fractional_part) >>=8;
-	  	(input1.fractional_part) >>=8;
-	  	(input2.fractional_part) >>=8;
+	  	(output.fractional_part) >>=24;
+	  	(input1.fractional_part) >>=24;
+	  	(input2.fractional_part) >>=24;
 	  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
 	  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
 
@@ -296,9 +297,9 @@ char* test_saturated_multiply()
 	  	input2=*(Parsed_fixed_point*)get_operand(i,2);
 	  	output=*(Parsed_fixed_point*)get_result(i);
 
-	  	(output.fractional_part) >>=8;
-	  	(input1.fractional_part) >>=8;
-	  	(input2.fractional_part) >>=8;
+	  	(output.fractional_part) >>=24;
+	  	(input1.fractional_part) >>=24;
+	  	(input2.fractional_part) >>=24;
 	  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
 	  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
 
@@ -327,7 +328,7 @@ char* test_floor()
 	{
 	   input=(*(Parsed_fixed_point*)get_operand(i,1));
 	  output=*(int*)get_result(i);
-	  (input.fractional_part) >>=8;
+	  (input.fractional_part) >>=24;
 	  x.p=input.integer_part;
 	  x.q=input.fractional_part;
 	  y = floor(x);
@@ -353,8 +354,8 @@ char* test_floor8_8()
 	{
 	   input=(*(Parsed_fixed_point*)get_operand(i,1));
 	  output=*(Parsed_fixed_point*)get_result(i);
-	  (input.fractional_part) >>=8;
-	  (output.fractional_part) >>=8;
+	  (input.fractional_part) >>=24;
+	  (output.fractional_part) >>=24;
 	  x.p=input.integer_part;
 	  x.q=input.fractional_part;
 	  y = floor8_8(x);
@@ -380,8 +381,8 @@ char* test_fractional_part()
 	{
 	   input=(*(Parsed_fixed_point*)get_operand(i,1));
 	   output=*(Parsed_fixed_point*)get_result(i);
-	   (output.fractional_part) >>=8;
-	   (input.fractional_part) >>=8;
+	   (output.fractional_part) >>=24;
+	   (input.fractional_part) >>=24;
 	   x.p=input.integer_part;
 	   x.q=input.fractional_part;
 	   y = fract8_8(x);
@@ -409,7 +410,8 @@ char* test_cast_8_8_to_16_16()
 	   input=(*(Parsed_fixed_point*)get_operand(i,1));
 	   output=*(Parsed_fixed_point*)get_result(i);
 
-	   (input.fractional_part) >>=8;
+	   (output.fractional_part) >>=16;
+	   (input.fractional_part) >>=24;
 	   x.p=input.integer_part;
 	   x.q=input.fractional_part;
 	   y = cast8_8_to_16_16(x);
@@ -437,7 +439,8 @@ char* test_cast_16_16_to_8_8()
 	   input=(*(Parsed_fixed_point*)get_operand(i,1));
 	   output=*(Parsed_fixed_point*)get_result(i);
 
-	   (output.fractional_part) >>=8;
+	   (input.fractional_part) >>=16;
+	   (output.fractional_part) >>=24;
 	   x.p=input.integer_part;
 	   x.q=input.fractional_part;
 	   y = cast16_16_to_8_8(x);
@@ -466,6 +469,9 @@ char* test_add_16_16()
 	  	input2=*(Parsed_fixed_point*)get_operand(i,2);
 	  	output=*(Parsed_fixed_point*)get_result(i);
 
+	  	(output.fractional_part) >>=16;
+	  	(input1.fractional_part) >>=16;
+	  	(input2.fractional_part) >>=16;
 	  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
 	  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
 
@@ -498,6 +504,9 @@ char* test_saturated_add_16_16()
   	input2=*(Parsed_fixed_point*)get_operand(i,2);
   	output=*(Parsed_fixed_point*)get_result(i);
 
+  	(output.fractional_part) >>=16;
+  	(input1.fractional_part) >>=16;
+  	(input2.fractional_part) >>=16;
   	x1.p=input1.integer_part;x1.q=input1.fractional_part;
   	x2.p=input2.integer_part;x2.q=input2.fractional_part;
 
@@ -530,7 +539,9 @@ char* test_subtract_16_16()
 	  	input2=*(Parsed_fixed_point*)get_operand(i,2);
 	  	output=*(Parsed_fixed_point*)get_result(i);
 
-
+	  	(output.fractional_part) >>=16;
+	  	(input1.fractional_part) >>=16;
+	  	(input2.fractional_part) >>=16;
 	  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
 	  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
 
@@ -562,7 +573,9 @@ char* test_saturated_subtract_16_16()
 	  	input2=*(Parsed_fixed_point*)get_operand(i,2);
 	  	output=*(Parsed_fixed_point*)get_result(i);
 
-
+	  	(output.fractional_part) >>=16;
+	  	(input1.fractional_part) >>=16;
+	  	(input2.fractional_part) >>=16;
 	  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
 	  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
 
@@ -597,7 +610,9 @@ char* test_multiply_16_16()
 	  	input2=*(Parsed_fixed_point*)get_operand(i,2);
 	  	output=*(Parsed_fixed_point*)get_result(i);
 
-
+	  	(output.fractional_part) >>=16;
+	  	(input1.fractional_part) >>=16;
+	  	(input2.fractional_part) >>=16;
 	  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
 	  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
 
@@ -631,7 +646,9 @@ char* test_saturated_multiply_16_16()
 	  	input2=*(Parsed_fixed_point*)get_operand(i,2);
 	  	output=*(Parsed_fixed_point*)get_result(i);
 
-
+	  	(output.fractional_part) >>=16;
+	  	(input1.fractional_part) >>=16;
+	  	(input2.fractional_part) >>=16;
 	  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
 	  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
 
@@ -661,6 +678,8 @@ char* test_fractional_part_16_16()
 	   input=(*(Parsed_fixed_point*)get_operand(i,1));
 	   output=*(Parsed_fixed_point*)get_result(i);
 
+	   (output.fractional_part) >>=16;
+	   (input.fractional_part) >>=16;
 	   x.p=input.integer_part;
 	   x.q=input.fractional_part;
 	   y = fract16_16(x);
@@ -687,6 +706,8 @@ char* test_integer_part_16_16()
 	   input=(*(Parsed_fixed_point*)get_operand(i,1));
 	   output=*(Parsed_fixed_point*)get_result(i);
 
+	   (output.fractional_part) >>=16;
+	   (input.fractional_part) >>=16;
 	   x.p=input.integer_part;
 	   x.q=input.fractional_part;
 	   y = floor16_16(x);
@@ -697,6 +718,77 @@ char* test_integer_part_16_16()
 	mu_final();
   return 0;
 }
+
+char* test_add_8_24()
+{
+	 mu_test_title("Adding 8.24 numbers");
+	 init_file("tests/gen/8_24/add.test");
+	 int8_24 x1,x2,y;
+	 x1=*(int8_24*)malloc(sizeof(int8_24));
+	 x2=*(int8_24*)malloc(sizeof(int8_24));
+	 Parsed_fixed_point input1;
+	 Parsed_fixed_point input2;
+	 Parsed_fixed_point output;
+	 int i=0;
+	 while (get_operand(i,1)!=NULL)
+	 {
+	  	input1=*(Parsed_fixed_point*)get_operand(i,1);
+	  	input2=*(Parsed_fixed_point*)get_operand(i,2);
+	  	output=*(Parsed_fixed_point*)get_result(i);
+
+	  	(output.fractional_part) >>=8;
+	  	(input1.fractional_part) >>=8;
+	  	(input2.fractional_part) >>=8;
+	  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
+	  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
+
+	  	y = add8_24(x1,x2);
+
+	  	mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	  	i++;
+	  }
+
+
+	  mu_final();
+
+    return 0;
+}
+
+char* test_saturated_add_8_24()
+{
+	 mu_test_title("Adding 8.24 numbers");
+	 init_file("tests/gen/8_24/saturated_add.test");
+	 int8_24 x1,x2,y;
+	 x1=*(int8_24*)malloc(sizeof(int8_24));
+	 x2=*(int8_24*)malloc(sizeof(int8_24));
+	 Parsed_fixed_point input1;
+	 Parsed_fixed_point input2;
+	 Parsed_fixed_point output;
+	 int i=0;
+	 while (get_operand(i,1)!=NULL)
+	 {
+	  	input1=*(Parsed_fixed_point*)get_operand(i,1);
+	  	input2=*(Parsed_fixed_point*)get_operand(i,2);
+	  	output=*(Parsed_fixed_point*)get_result(i);
+
+	  	(output.fractional_part) >>=8;
+	  	(input1.fractional_part) >>=8;
+	  	(input2.fractional_part) >>=8;
+	  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
+	  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
+
+	  	y = sadd8_24(x1,x2);
+
+	  	mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	  	i++;
+	  }
+
+
+	  mu_final();
+
+    return 0;
+}
+
 
 char* test_add_different_formats()
 {
@@ -734,6 +826,29 @@ char* test_add_different_formats()
 	mu_final();
     return 0;
 }
+/*
+char* test_constructor_8_24()
+{
+	mu_test_title("Constructor for 8.24 format");
+    init_file("tests/gen/8_24/constructor.test");
+	int8_24 y;
+	float input;
+	Parsed_fixed_point output;
+	int i=0;
+	while (get_operand(i,1)!=NULL)
+	{
+	   input=(*(float*)get_operand(i,1));
+	  output=*(Parsed_fixed_point*)get_result(i);
+
+		y = int8_24_new(input);
+		mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+		i++;
+	}
+
+	mu_final();
+	return 0;
+}*/
+
 
 char * test_foo() {
 	 int foo = 7;
@@ -744,7 +859,7 @@ char * test_foo() {
 /* all_tests function is from: http://www.jera.com/techinfo/jtns/jtn002.html */
  char * all_tests_fixed_point() {
      //mu_run_test(test_foo);
-	 mu_run_test(test_comparison);
+	// mu_run_test(test_comparison);
      mu_run_test(test_constructor_8_8);
      //mu_run_test(test_constructor_16_16);
 	 mu_run_test(test_add);
@@ -767,6 +882,8 @@ char * test_foo() {
      mu_run_test(test_fractional_part_16_16);
      mu_run_test(test_integer_part_16_16);
      mu_run_test(test_add_different_formats);
+     mu_run_test(test_add_8_24);
+     mu_run_test(test_saturated_add_8_24);
      return 0;
  }
 

@@ -137,10 +137,10 @@ int parse_input_as_float(char* input,float* output)
 int parse_input_as_binary_fixed_point(char* input,Parsed_fixed_point* output)
 {
 	char* crt = input;
-    int integer_part=0;
-    int fractional_part=0;
+	unsigned int integer_part=0;
+	unsigned int fractional_part=0;
 	int state = 0; /* 0 - must be [0-1]; 1 - must be [0-1] or . or NULL; 2 - must be [0-1] or NULL */
-	int p = 1<<15;
+	unsigned int p = 1<<31;
 	while (*crt)
 	{
 		if ((state==0)||(state==2))
