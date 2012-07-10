@@ -826,6 +826,76 @@ char* test_add_different_formats()
 	mu_final();
     return 0;
 }
+
+char* test_subtract_8_24()
+{
+	  mu_test_title("Subtracting 8.24");
+	  init_file("tests/gen/8_24/subtract.test");
+	  int8_24 x1,x2,y;
+	  x1=*(int8_24*)malloc(sizeof(int8_24));
+	  x2=*(int8_24*)malloc(sizeof(int8_24));
+	  Parsed_fixed_point input1;
+	  Parsed_fixed_point input2;
+	  Parsed_fixed_point output;
+	  int i=0;
+	  while (get_operand(i,1)!=NULL)
+	  {
+	  	input1=*(Parsed_fixed_point*)get_operand(i,1);
+	  	input2=*(Parsed_fixed_point*)get_operand(i,2);
+	  	output=*(Parsed_fixed_point*)get_result(i);
+
+	  	(output.fractional_part) >>=8;
+	  	(input1.fractional_part) >>=8;
+	  	(input2.fractional_part) >>=8;
+	  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
+	  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
+
+	  	y = sub8_24(x1,x2);
+
+	  	mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	  	i++;
+	  }
+
+
+	  mu_final();
+	return 0;
+}
+
+char* test_saturated_subtract_8_24()
+{
+	  mu_test_title("Saturated subtracting 8.24");
+	  init_file("tests/gen/8_24/saturated_subtract.test");
+	  int8_24 x1,x2,y;
+	  x1=*(int8_24*)malloc(sizeof(int8_24));
+	  x2=*(int8_24*)malloc(sizeof(int8_24));
+	  Parsed_fixed_point input1;
+	  Parsed_fixed_point input2;
+	  Parsed_fixed_point output;
+	  int i=0;
+	  while (get_operand(i,1)!=NULL)
+	  {
+	  	input1=*(Parsed_fixed_point*)get_operand(i,1);
+	  	input2=*(Parsed_fixed_point*)get_operand(i,2);
+	  	output=*(Parsed_fixed_point*)get_result(i);
+
+	  	(output.fractional_part) >>=8;
+	  	(input1.fractional_part) >>=8;
+	  	(input2.fractional_part) >>=8;
+	  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
+	  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
+
+	  	y = ssub8_24(x1,x2);
+
+	  	mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	  	i++;
+	  }
+
+
+	  mu_final();
+	return 0;
+}
+
+
 /*
 char* test_constructor_8_24()
 {
@@ -884,6 +954,8 @@ char * test_foo() {
      mu_run_test(test_add_different_formats);
      mu_run_test(test_add_8_24);
      mu_run_test(test_saturated_add_8_24);
+     mu_run_test(test_subtract_8_24);
+     mu_run_test(test_saturated_subtract_8_24);
      return 0;
  }
 

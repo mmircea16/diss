@@ -32,6 +32,12 @@ class GeneratorSubtract < Generator
        max = 2**15 - 2**(-16)
        t1 = @gen.generate_fixed_point(16,16)
        t2 = @gen.generate_fixed_point(16,16)
+     when "8_24":
+       range = 2**8
+       min = - 2**7
+       max = 2**7 - 2**(-24)
+       t1 = @gen.generate_fixed_point(8,24)
+       t2 = @gen.generate_fixed_point(8,24)
      else 
        
      end    
@@ -61,6 +67,8 @@ class GeneratorSubtract < Generator
        rez = @util.float_to_signed_8_8(r)
      when "16_16":
        rez = @util.float_to_signed_16_16(r)
+     when "8_24":
+       rez = @util.float_to_signed(r,8,24)
      end
      
      test["result"] = rez 
@@ -77,5 +85,5 @@ def make_tests
 end
 
 end
-gen = GeneratorSubtract.new({"test_file_name" => "16_16/saturated_subtract.test", "saturated" => true  , "type" => "16_16", "title" => "16.16 subtract"});
+gen = GeneratorSubtract.new({"test_file_name" => "8_24/saturated_subtract.test", "saturated" => true  , "type" => "8_24", "title" => "Saturated 8.24 subtract"});
 gen.make_tests()

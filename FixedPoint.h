@@ -99,5 +99,7 @@ __inline__ int16_16 floor16_16(int16_16 x);
 __inline__ int8_24 int8_24_new(const float X);
 __inline__ int8_24 add8_24(int8_24 x,int8_24 y);
 __inline__ int8_24 sadd8_24(int8_24 x,int8_24 y);
+__inline__ int8_24 sub8_24(int8_24 x,int8_24 y);
+__inline__ int8_24 ssub8_24(int8_24 x,int8_24 y);
 #endif
 

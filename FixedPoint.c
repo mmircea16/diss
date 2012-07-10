@@ -260,3 +260,22 @@ inline int8_24 sadd8_24(int8_24 x,int8_24 y)
 	return _int8_24(__s);
 }
 
+inline int8_24 sub8_24(int8_24 x,int8_24 y)
+{
+	int __s = *(int*)(&x) - *(int*)(&y);
+    return _int8_24(__s);
+}
+
+inline int8_24 ssub8_24(int8_24 x,int8_24 y)
+{
+    int __s = *(int*)(&x) - *(int*)(&y);
+    int xx = *(int*)(&x);
+    int yy = *(int*)(&y) * (-1);
+    if ((xx & 0x80000000)==(yy & 0x80000000))
+    {
+        if ((xx & 0x80000000) && !(__s & 0x80000000)) __s = 0x80000000;
+    	if (!(xx & 0x80000000) && (__s & 0x80000000)) __s = 0x7FFFFFFF;
+   	}
+    return _int8_24(__s);
+}
+
