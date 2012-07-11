@@ -103,5 +103,7 @@ __inline__ int8_24 sub8_24(int8_24 x,int8_24 y);
 __inline__ int8_24 ssub8_24(int8_24 x,int8_24 y);
 __inline__ int8_24 mul8_24(int8_24 x,int8_24 y);
 __inline__ int8_24 smul8_24(int8_24 x,int8_24 y);
+__inline__ int8_24 floor8_24(int8_24 x);
+__inline__ int8_24 fract8_24(int8_24 x);
 #endif
 

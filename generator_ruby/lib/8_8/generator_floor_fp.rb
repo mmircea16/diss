@@ -23,6 +23,8 @@ class GeneratorFloorFp < Generator
        k = @gen.generate_fixed_point(8,8)
      when "16_16":
        k = @gen.generate_fixed_point(16,16)   
+     when "8_24":
+       k = @gen.generate_fixed_point(8,24)
      end
      
      test["first_operand"] = k
@@ -33,6 +35,8 @@ class GeneratorFloorFp < Generator
        rez = @util.float_to_signed(n.floor,8,8)
      when "16_16":
        rez = @util.float_to_signed(n.floor,16,16)
+     when "8_24":
+       rez = @util.float_to_signed(n.floor,8,24);
      end
      
      test["result"] = rez
@@ -49,5 +53,5 @@ class GeneratorFloorFp < Generator
 
 end
 
-gen = GeneratorFloorFp.new({"test_file_name"=>"16_16/integer_part.test","title"=>"16.16 floor test","type"=>"16_16"});
+gen = GeneratorFloorFp.new({"test_file_name"=>"8_24/integer_part.test","title"=>"8.24 floor test","type"=>"8_24"});
 gen.make_tests()

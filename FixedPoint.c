@@ -341,3 +341,21 @@ inline int8_24 smul8_24(int8_24 x,int8_24 y)
 	return _int8_24(rez);
 }
 
+inline int8_24 floor8_24(int8_24 x)
+{
+ int8_24 s=x;
+ int ss = *(int*)&s;
+ ss &=0xFF000000;
+ return _int8_24(ss);
+}
+
+inline int8_24 fract8_24(int8_24 x)
+{
+ int8_24 s=x;
+ int ss = *(int*)&s;
+ ss &=0x00FFFFFF;
+ return _int8_24(ss);
+}
+
+
+
