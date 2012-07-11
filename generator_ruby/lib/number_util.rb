@@ -121,6 +121,14 @@ def cast_16_16_to_8_8 x
   return x[8..-9]
 end
 
+def multiply(t1,t2)
+  t1_i = t1.floor; t1_f = t1 - t1.floor;
+  t2_i = t2.floor; t2_f = t2 - t2.floor;
+  rez_i = t1_i * t2_i + (t1_i * t2_f + t1_f * t2_i + t1_f * t2_f).floor 
+  rez_f = t1_i * t2_f + t1_f * t2_i + t1_f * t2_f - (t1_i * t2_f + t1_f * t2_i + t1_f * t2_f).floor
+  return [rez_i,rez_f]
+end
+  
 end
 
 

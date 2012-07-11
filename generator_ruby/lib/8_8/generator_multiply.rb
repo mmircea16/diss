@@ -32,6 +32,12 @@ class GeneratorMultiply < Generator
        max = 2**15 - 2**(-16)
        t1 = @gen.generate_fixed_point(16,16)
        t2 = @gen.generate_fixed_point(16,16)
+     when "8_24":
+       range = 2**8
+       min = - 2**7
+       max = 2**7 - 2**(-24)
+       t1 = @gen.generate_fixed_point(8,24)
+       t2 = @gen.generate_fixed_point(8,24)
      else 
        
      end    
@@ -40,20 +46,28 @@ class GeneratorMultiply < Generator
      test["first_operand"] = t1
      test["second_operand"] = t2
        
-     r = (@util.signed_binary_to_float(t1)*@util.signed_binary_to_float(t2))  
+     t=0
+     r =[]
+     if @operand_type == "8_8"
+       t = (@util.signed_binary_to_float(t1)*@util.signed_binary_to_float(t2))
+       r = [t.floor,t-t.floor]
+     else
+       r = @util.multiply(@util.signed_binary_to_float(t1),@util.signed_binary_to_float(t2))
+     end
+       
     
 #     puts "#{test_no}----"
 #     puts @util.signed_binary_to_float(t1)
 #     puts @util.signed_binary_to_float(t2)
 #     puts r
-     
+     rr = 0;
      if @saturated
       
-       if r >= max
-         r = max
+       if r[0] >= max
+         r = [max.floor,max - max.floor]
        end
-       if r < min
-         r = min
+       if r[0] < min
+         r = [min.floor,min - min.floor]
        end
   
      else 
@@ -65,11 +79,13 @@ class GeneratorMultiply < Generator
      rez = ""
      case @operand_type
      when "8_8":
-       rez = @util.float_to_signed_8_8(r)
+       rez = @util.float_to_signed_8_8(r[0]+r[1])
      when "16_16":
-       rez = @util.float_to_signed(r,32,16)[-33..-1]
+       rez = @util.float_to_signed(r[0],32,16)[-33..-17]+@util.float_to_signed(r[1],32,16)[-16..-1]
+     when "8_24":
+       rez = @util.float_to_signed(r[0],16,24)[-33..-25]+@util.float_to_signed(r[1],16,24)[-24..-1]
      end
-     puts @util.signed_binary_to_float(rez)
+ 
      test["result"] = rez 
      
      return test
@@ -85,5 +101,5 @@ class GeneratorMultiply < Generator
  
 end
 
-gen = GeneratorMultiply.new({"test_file_name" => "16_16/saturated_multiply.test", "saturated" => true  , "type" => "16_16", "title" => "Saturated 16.16 multiply"});
+gen = GeneratorMultiply.new({"test_file_name" => "8_24/saturated_multiply.test", "saturated" => true  , "type" => "8_24", "title" => "Saturated 8.24 multiply"});
 gen.make_tests()

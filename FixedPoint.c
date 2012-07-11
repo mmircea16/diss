@@ -279,3 +279,65 @@ inline int8_24 ssub8_24(int8_24 x,int8_24 y)
     return _int8_24(__s);
 }
 
+inline int8_24 mul8_24(int8_24 x,int8_24 y)
+{
+	//int __s = (((int)x.p*(int)y.p) << 16)+(int)x.p*(int)y.q+(int)x.q*(int)y.p+(((int)x.q*(int)y.q)>> 16);
+	long long xx = 0;
+	xx = *(long long*)&x;
+	if (x.p<1<<7)
+		xx &= 0x00000000FFFFFFFF;
+	else
+	{
+		xx &= 0x00000000FFFFFFFF;
+		xx |= 0xFFFFFFFF00000000;
+	}
+	long long yy = 0;
+    yy = *(long long*)&y;
+    if (y.p<1<<7)
+    	yy &= 0x00000000FFFFFFFF;
+    else
+    {
+    	yy &= 0x00000000FFFFFFFF;
+    	yy |= 0xFFFFFFFF00000000;
+   	}
+	int __s = ((xx*yy)>>24);
+	return _int8_24(__s);
+}
+
+inline int8_24 smul8_24(int8_24 x,int8_24 y)
+{
+	//int __s = (((int)x.p*(int)y.p) << 16)+(int)x.p*(int)y.q+(int)x.q*(int)y.p+(((int)x.q*(int)y.q)>> 16);
+	long long xx = 0;
+	xx = *(long long*)&x;
+	int sign = 1;
+	if (x.p<1<<7)
+		xx &= 0x00000000FFFFFFFF;
+	else
+	{
+		sign *= -1;
+		xx &= 0x00000000FFFFFFFF;
+		xx |= 0xFFFFFFFF00000000;
+	}
+	long long yy = 0;
+    yy = *(long long*)&y;
+    if (y.p<1<<7)
+    	yy &= 0x00000000FFFFFFFF;
+    else
+    {
+    	sign *= -1;
+    	yy &= 0x00000000FFFFFFFF;
+    	yy |= 0xFFFFFFFF00000000;
+   	}
+	long long __s = ((xx*yy)>>24);
+	int rez = 0;
+	long long ok = (sign==1)?(__s & 0xFFFFFFFF80000000):((~__s) & 0xFFFFFFFF80000000);
+	if (ok)
+	{
+		if (sign==1)
+			rez = 0x7FFFFFFF;
+		else
+			rez = 0x80000000;
+	}else rez = __s;
+	return _int8_24(rez);
+}
+
