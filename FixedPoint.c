@@ -462,3 +462,20 @@ inline int24_8 smul24_8(int24_8 x,int24_8 y)
 	}else rez = __s;
 	return _int24_8(rez);
 }
+
+inline int24_8 floor24_8(int24_8 x)
+{
+ int24_8 s=x;
+ int ss = *(int*)&s;
+ ss &=0xFFFFFF00;
+ return _int24_8(ss);
+}
+
+inline int24_8 fract24_8(int24_8 x)
+{
+ int24_8 s=x;
+ int ss = *(int*)&s;
+ ss &=0x000000FF;
+ return _int24_8(ss);
+}
+
