@@ -120,5 +120,7 @@ __inline__ int24_8 add24_8(int24_8 x,int24_8 y);
 __inline__ int24_8 sadd24_8(int24_8 x,int24_8 y);
 __inline__ int24_8 sub24_8(int24_8 x,int24_8 y);
 __inline__ int24_8 ssub24_8(int24_8 x,int24_8 y);
+__inline__ int24_8 mul24_8(int24_8 x,int24_8 y);
+__inline__ int24_8 smul24_8(int24_8 x,int24_8 y);
 #endif
 

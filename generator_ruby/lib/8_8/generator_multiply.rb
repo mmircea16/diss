@@ -38,6 +38,12 @@ class GeneratorMultiply < Generator
        max = 2**7 - 2**(-24)
        t1 = @gen.generate_fixed_point(8,24)
        t2 = @gen.generate_fixed_point(8,24)
+     when "24_8":
+       range = 2**24
+       min = - 2**23
+       max = 2**23 - 2**(-8)
+       t1 = @gen.generate_fixed_point(24,8)
+       t2 = @gen.generate_fixed_point(24,8)      
      else 
        
      end    
@@ -84,6 +90,8 @@ class GeneratorMultiply < Generator
        rez = @util.float_to_signed(r[0],32,16)[-33..-17]+@util.float_to_signed(r[1],32,16)[-16..-1]
      when "8_24":
        rez = @util.float_to_signed(r[0],16,24)[-33..-25]+@util.float_to_signed(r[1],16,24)[-24..-1]
+     when "24_8":
+       rez = @util.float_to_signed(r[0],48,8)[-33..-9]+@util.float_to_signed(r[1],24,8)[-8..-1]
      end
  
      test["result"] = rez 
@@ -101,5 +109,5 @@ class GeneratorMultiply < Generator
  
 end
 
-gen = GeneratorMultiply.new({"test_file_name" => "8_24/saturated_multiply.test", "saturated" => true  , "type" => "8_24", "title" => "Saturated 8.24 multiply"});
+gen = GeneratorMultiply.new({"test_file_name" => "24_8/saturated_multiply.test", "saturated" => true  , "type" => "24_8", "title" => "Saturated 24.8 multiply"});
 gen.make_tests()
