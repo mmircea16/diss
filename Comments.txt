@@ -3,3 +3,5 @@ Comment file
 - lost of precision needs to be considered (at least when writing tests)
 - use parantheses as often as possible to avoid incorrect assignments
 - need to consider sign representation
+
+Branch and try: typedef int int16_16;

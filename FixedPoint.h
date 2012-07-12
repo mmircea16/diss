@@ -42,12 +42,22 @@ struct __int8_24
 
 typedef struct __int8_24 int8_24;
 
+struct __int24_8
+{
+	unsigned char q:8;
+	unsigned int p:24;
+};
+
+typedef struct __int24_8 int24_8;
+
+
 #define  _int(X) ((int)(((X).p<128)?((*(int*)&X)&0x0000FFFF):((*(int*)&X)|0xFFFF0000)))
 
 
 #define  _int8_8(X) *(int8_8*)&X
 #define  _int16_16(X) *(int16_16*)&X
 #define  _int8_24(X) *(int8_24*)&X
+#define  _int24_8(X) *(int24_8*)&X
 
 #define max_fract(X) ((X).q=0xFFFF)
 #define size_fract(X) (max_fract(X)==0xFFFF?16:(max_fract(X)==0x00FF?8:4))
@@ -105,5 +115,8 @@ __inline__ int8_24 mul8_24(int8_24 x,int8_24 y);
 __inline__ int8_24 smul8_24(int8_24 x,int8_24 y);
 __inline__ int8_24 floor8_24(int8_24 x);
 __inline__ int8_24 fract8_24(int8_24 x);
+__inline__ int24_8 int24_8_new(const float X);
+__inline__ int24_8 add24_8(int24_8 x,int24_8 y);
+__inline__ int24_8 sadd24_8(int24_8 x,int24_8 y);
 #endif
 

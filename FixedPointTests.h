@@ -1021,6 +1021,75 @@ char* test_fractional_part_8_24()
   return 0;
 }
 
+char* test_add_24_8()
+{
+  mu_test_title("Adding");
+  init_file("tests/gen/24_8/add.test");
+  int24_8 x1,x2,y;
+  x1=*(int24_8*)malloc(sizeof(int24_8));
+  x2=*(int24_8*)malloc(sizeof(int24_8));
+  Parsed_fixed_point input1;
+  Parsed_fixed_point input2;
+  Parsed_fixed_point output;
+  int i=0;
+  while (get_operand(i,1)!=NULL)
+  {
+  	input1=*(Parsed_fixed_point*)get_operand(i,1);
+  	input2=*(Parsed_fixed_point*)get_operand(i,2);
+  	output=*(Parsed_fixed_point*)get_result(i);
+
+  	(output.fractional_part) >>=24;
+  	(input1.fractional_part) >>=24;
+  	(input2.fractional_part) >>=24;
+  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
+  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
+
+  	y = add24_8(x1,x2);
+
+  	mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+  	i++;
+  	}
+
+
+  mu_final();
+
+  return 0;
+}
+
+char* test_saturated_add_24_8()
+{
+  mu_test_title("Saturated adding 24.8");
+  init_file("tests/gen/24_8/saturated_add.test");
+  int24_8 x1,x2,y;
+  x1=*(int24_8*)malloc(sizeof(int24_8));
+  x2=*(int24_8*)malloc(sizeof(int24_8));
+  Parsed_fixed_point input1;
+  Parsed_fixed_point input2;
+  Parsed_fixed_point output;
+  int i=0;
+  while (get_operand(i,1)!=NULL)
+  {
+  	input1=*(Parsed_fixed_point*)get_operand(i,1);
+  	input2=*(Parsed_fixed_point*)get_operand(i,2);
+  	output=*(Parsed_fixed_point*)get_result(i);
+
+  	(output.fractional_part) >>=24;
+  	(input1.fractional_part) >>=24;
+  	(input2.fractional_part) >>=24;
+  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
+  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
+
+  	y = sadd24_8(x1,x2);
+
+  	mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+  	i++;
+  	}
+
+
+  mu_final();
+
+  return 0;
+}
 
 /*
 char* test_constructor_8_24()
@@ -1086,6 +1155,8 @@ char * test_foo() {
      mu_run_test(test_saturared_multiply_8_24);
      mu_run_test(test_integer_part_8_24);
      mu_run_test(test_fractional_part_8_24);
+     mu_run_test(test_add_24_8);
+     mu_run_test(test_saturated_add_24_8);
      return 0;
  }
 

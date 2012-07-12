@@ -357,5 +357,28 @@ inline int8_24 fract8_24(int8_24 x)
  return _int8_24(ss);
 }
 
+inline int24_8 int24_8_new(const float X)
+{
+	int __yy =(int)(X*256);
+    return *(int24_8*)&__yy;
+}
 
+inline int24_8 add24_8(int24_8 x,int24_8 y)
+{
+	int __s = *(int*)(&x) + *(int*)(&y);
+	return _int24_8(__s);
+}
+
+inline int24_8 sadd24_8(int24_8 x,int24_8 y)
+{
+	int __s = *(int*)(&x) + *(int*)(&y);
+	int xx = *(int*)(&x);
+	int yy = *(int*)(&y);
+	if ((xx & 0x80000000)==(yy & 0x80000000))
+	{
+		if ((xx & 0x80000000) && !(__s & 0x80000000)) __s = 0x80000000;
+		if (!(xx & 0x80000000) && (__s & 0x80000000)) __s = 0x7FFFFFFF;
+	}
+	return _int24_8(__s);
+}
 
