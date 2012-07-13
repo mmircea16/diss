@@ -15,7 +15,7 @@ inline int8_8 int8_8_new(const float X)
 inline int16_16 int16_16_new(const float X)
 {
 	int __yy =(int)(X*(1<<16));
-    return *(int16_16*)&__yy;
+    return (int16_16)__yy;
 }
 
 inline int8_8 add8_8(int8_8 x,int8_8 y)
@@ -103,7 +103,7 @@ inline int8_8 floor8_8(int8_8 x)
  ss &=0xFFFFFF00;
  return _int8_8(ss);
 }
-
+/*
 inline int16_16 cast8_8_to_16_16(int8_8 x)
 {
 	int y = 0;
@@ -111,46 +111,41 @@ inline int16_16 cast8_8_to_16_16(int8_8 x)
 	yy.p = x.p;
 	yy.q = x.q << 8;
 	return yy;
-}
+}*/
 
 inline int16_16 add16_16(int16_16 x,int16_16 y)
 {
-	int __s = *(int*)(&x) + *(int*)(&y);
-	return _int16_16(__s);
+	return (int16_16)((int)x+(int)y);
 }
 
 inline int16_16 sadd16_16(int16_16 x,int16_16 y)
 {
-	int __s = *(int*)(&x) + *(int*)(&y);
-	int xx = *(int*)(&x);
-	int yy = *(int*)(&y);
-	if ((xx & 0x80000000)==(yy & 0x80000000))
+	int __s = (int)(x) + (int)(y);
+	if ((x & 0x80000000)==(y & 0x80000000))
 	{
-		if ((xx & 0x80000000) && !(__s & 0x80000000)) __s = 0x80000000;
-		if (!(xx & 0x80000000) && (__s & 0x80000000)) __s = 0x7FFFFFFF;
+		if ((x & 0x80000000) && !(__s & 0x80000000)) __s = 0x80000000;
+		if (!(x & 0x80000000) && (__s & 0x80000000)) __s = 0x7FFFFFFF;
 	}
-	return _int16_16(__s);
+	return (int16_16)(__s);
 }
 
 inline int16_16 sub16_16(int16_16 x,int16_16 y)
 {
-	int __s = *(int*)(&x) - *(int*)(&y);
-	return _int16_16(__s);
+	int __s = (int)(x) - (int)(y);
+	return (int16_16)(__s);
 }
 
 inline int16_16 ssub16_16(int16_16 x,int16_16 y)
 {
-    int __s = *(int*)(&x) - *(int*)(&y);
-    int xx = *(int*)(&x);
-    int yy = *(int*)(&y) * (-1);
-    if ((xx & 0x80000000)==(yy & 0x80000000))
+    int __s = (int)(x) - (int)(y);
+    if ((x & 0x80000000)==(((-1)*y) & 0x80000000))
     {
-        if ((xx & 0x80000000) && !(__s & 0x80000000)) __s = 0x80000000;
-    	if (!(xx & 0x80000000) && (__s & 0x80000000)) __s = 0x7FFFFFFF;
+        if ((x & 0x80000000) && !(__s & 0x80000000)) __s = 0x80000000;
+    	if (!(x & 0x80000000) && (__s & 0x80000000)) __s = 0x7FFFFFFF;
    	}
-    return _int16_16(__s);
+    return (int16_16)(__s);
 }
-
+/*
 inline int16_16 mul16_16(int16_16 x,int16_16 y)
 {
 	//int __s = (((int)x.p*(int)y.p) << 16)+(int)x.p*(int)y.q+(int)x.q*(int)y.p+(((int)x.q*(int)y.q)>> 16);
@@ -234,7 +229,7 @@ inline int16_16 floor16_16(int16_16 x)
  ss &=0xFFFF0000;
  return _int16_16(ss);
 }
-
+*/
 inline int8_24 int8_24_new(const float X)
 {
 	int __yy =(int)(X*(1<<24));
