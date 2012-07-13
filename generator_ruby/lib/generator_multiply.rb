@@ -54,12 +54,12 @@ class GeneratorMultiply < Generator
        
      t=0
      r =[]
-     if @operand_type == "8_8"
-       t = (@util.signed_binary_to_float(t1)*@util.signed_binary_to_float(t2))
-       r = [t.floor,t-t.floor]
-     else
+    # if @operand_type == "8_8"
+    #   t = (@util.signed_binary_to_float(t1)*@util.signed_binary_to_float(t2))
+    #   r = [t.floor,t-t.floor]
+    # else
        r = @util.multiply(@util.signed_binary_to_float(t1),@util.signed_binary_to_float(t2))
-     end
+    # end
        
     
 #     puts "#{test_no}----"
@@ -85,7 +85,7 @@ class GeneratorMultiply < Generator
      rez = ""
      case @operand_type
      when "8_8":
-       rez = @util.float_to_signed_8_8(r[0]+r[1])
+       rez = @util.float_to_signed(r[0],16,8)[-17..-9]+@util.float_to_signed(r[1],8,8)[-8..-1]
      when "16_16":
        rez = @util.float_to_signed(r[0],32,16)[-33..-17]+@util.float_to_signed(r[1],32,16)[-16..-1]
      when "8_24":
