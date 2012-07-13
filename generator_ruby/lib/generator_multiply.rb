@@ -109,5 +109,3 @@ class GeneratorMultiply < Generator
  
 end
 
-gen = GeneratorMultiply.new({"test_file_name" => "24_8/saturated_multiply.test", "saturated" => true  , "type" => "24_8", "title" => "Saturated 24.8 multiply"});
-gen.make_tests()

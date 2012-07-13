@@ -1,6 +1,6 @@
-require "./number_generator.rb"
 require "./number_util.rb"
-
+require "./number_generator.rb"
+  
 class Generator
 
 def initialize test_file_name

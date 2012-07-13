@@ -1,4 +1,4 @@
-require "./generator.rb"
+require "../lib/generator.rb"
 
 class GeneratorAdd < Generator
  
@@ -94,5 +94,3 @@ class GeneratorAdd < Generator
  
 end
 
-gen = GeneratorAdd.new({"test_file_name" => "24_8/saturated_add.test", "saturated" => true  , "type" => "24_8", "title" => "24.8 add"});
-gen.make_tests()

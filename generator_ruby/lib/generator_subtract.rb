@@ -93,5 +93,3 @@ def make_tests
 end
 
 end
-gen = GeneratorSubtract.new({"test_file_name" => "24_8/saturated_subtract.test", "saturated" => true  , "type" => "24_8", "title" => "24.8 subtract"});
-gen.make_tests()

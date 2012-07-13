@@ -57,5 +57,3 @@ class GeneratorFloorFp < Generator
 
 end
 
-gen = GeneratorFloorFp.new({"test_file_name"=>"24_8/integer_part.test","title"=>"24.8 floor test","type"=>"24_8"});
-gen.make_tests()
