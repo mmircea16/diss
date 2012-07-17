@@ -9,6 +9,7 @@
 #ifndef FIXEDPOINT_H_
 #define FIXEDPOINT_H_
 
+#include <stdint.h>
 /*structures*/
 struct __float{
 	 int mantissa :23;
@@ -18,13 +19,9 @@ struct __float{
 
 typedef struct __float _float;
 
-struct __int8_8
-{
-	unsigned char q:8;
-	unsigned char p:8;
-};
 
-typedef struct __int8_8 int8_8;
+
+typedef  uint16_t int8_8;
 
 
 typedef int int16_16;
@@ -40,6 +37,11 @@ struct __int24_8
 };
 
 typedef struct __int24_8 int24_8;
+
+#define set_int_part_8_8(X,Y) ((X & 0x00FF) | (Y<<8))
+#define set_fract_part_8_8(X,Y) ((X & 0xFF00) | (Y))
+#define get_int_part_8_8(X) ((X & 0xFF00) >> 8)
+#define get_fract_part_8_8(X) (X & 0x00FF)
 
 #define set_int_part_16_16(X,Y) ((X & 0x0000FFFF) | (Y<<16))
 #define set_fract_part_16_16(X,Y) ((X & 0xFFFF0000) | (Y))

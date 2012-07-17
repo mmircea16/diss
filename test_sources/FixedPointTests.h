@@ -9,7 +9,7 @@
 #include "FixedPoint.h"
 #ifndef FIXEDPOINTTESTS_H_
 #define FIXEDPOINTTESTS_H_
-
+/*
 char* test_comparison()
 {
   mu_test_title("Comparison");
@@ -54,7 +54,7 @@ char* test_comparison()
   mu_final();
 
   return 0;
-}
+}*/
 
 
 char* test_constructor_8_8()
@@ -72,7 +72,7 @@ char* test_constructor_8_8()
 
 		(output.fractional_part) >>=24;
 		y = int8_8_new(input);
-		mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+		mu_assert_line("error",i,((get_int_part_8_8(y)==output.integer_part)&&(get_fract_part_8_8(y)==output.fractional_part)));
 		i++;
 	}
 
@@ -112,8 +112,7 @@ char* test_add()
   mu_test_title("Adding");
   init_file("tests/gen/8_8/add.test");
   int8_8 x1,x2,y;
-  x1=*(int8_8*)malloc(sizeof(int8_8));
-  x2=*(int8_8*)malloc(sizeof(int8_8));
+
   Parsed_fixed_point input1;
   Parsed_fixed_point input2;
   Parsed_fixed_point output;
@@ -127,12 +126,14 @@ char* test_add()
   	(output.fractional_part) >>=24;
   	(input1.fractional_part) >>=24;
   	(input2.fractional_part) >>=24;
-  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
-  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
+  	x1 = set_int_part_8_8(x1,input1.integer_part);
+  	x1 = set_fract_part_8_8(x1,input1.fractional_part);
+  	x2 = set_int_part_8_8(x2,input2.integer_part);
+  	x2 = set_fract_part_8_8(x2,input2.fractional_part);
 
   	y = add8_8(x1,x2);
 
-  	mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+  	mu_assert_line("error",i,((get_int_part_8_8(y)==output.integer_part)&&(get_fract_part_8_8(y)==output.fractional_part)));
   	i++;
   	}
 
@@ -147,8 +148,7 @@ char* test_saturated_add()
   mu_test_title("Saturated add test");
   init_file("tests/gen/8_8/saturated_add.test");
   int8_8 x1,x2,y;
-  x1=*(int8_8*)malloc(sizeof(int8_8));
-  x2=*(int8_8*)malloc(sizeof(int8_8));
+
   Parsed_fixed_point input1;
   Parsed_fixed_point input2;
   Parsed_fixed_point output;
@@ -162,12 +162,14 @@ char* test_saturated_add()
   	(output.fractional_part) >>=24;
   	(input1.fractional_part) >>=24;
   	(input2.fractional_part) >>=24;
-  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
-  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
+  	x1 = set_int_part_8_8(x1,input1.integer_part);
+  	x1 = set_fract_part_8_8(x1,input1.fractional_part);
+  	x2 = set_int_part_8_8(x2,input2.integer_part);
+  	x2 = set_fract_part_8_8(x2,input2.fractional_part);
 
   	y = sadd8_8(x1,x2);
 
-  	mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+  	mu_assert_line("error",i,((get_int_part_8_8(y)==output.integer_part)&&(get_fract_part_8_8(y)==output.fractional_part)));
   	i++;
   	}
 
@@ -183,8 +185,7 @@ char* test_subtract()
 	  mu_test_title("Subtracting");
 	  init_file("tests/gen/8_8/subtract.test");
 	  int8_8 x1,x2,y;
-	  x1=*(int8_8*)malloc(sizeof(int8_8));
-	  x2=*(int8_8*)malloc(sizeof(int8_8));
+
 	  Parsed_fixed_point input1;
 	  Parsed_fixed_point input2;
 	  Parsed_fixed_point output;
@@ -198,12 +199,14 @@ char* test_subtract()
 	  	(output.fractional_part) >>=24;
 	  	(input1.fractional_part) >>=24;
 	  	(input2.fractional_part) >>=24;
-	  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
-	  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
+	  	x1 = set_int_part_8_8(x1,input1.integer_part);
+	  	x1 = set_fract_part_8_8(x1,input1.fractional_part);
+	  	x2 = set_int_part_8_8(x2,input2.integer_part);
+	  	x2 = set_fract_part_8_8(x2,input2.fractional_part);
 
 	  	y = sub8_8(x1,x2);
 
-	  	mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	  	mu_assert_line("error",i,((get_int_part_8_8(y)==output.integer_part)&&(get_fract_part_8_8(y)==output.fractional_part)));
 	  	i++;
 	  }
 
@@ -217,8 +220,7 @@ char* test_saturated_subtract()
 	  mu_test_title("Saturated subtract");
 	  init_file("tests/gen/8_8/saturated_subtract.test");
 	  int8_8 x1,x2,y;
-	  x1=*(int8_8*)malloc(sizeof(int8_8));
-	  x2=*(int8_8*)malloc(sizeof(int8_8));
+
 	  Parsed_fixed_point input1;
 	  Parsed_fixed_point input2;
 	  Parsed_fixed_point output;
@@ -232,12 +234,14 @@ char* test_saturated_subtract()
 	  	(output.fractional_part) >>=24;
 	  	(input1.fractional_part) >>=24;
 	  	(input2.fractional_part) >>=24;
-	  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
-	  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
+	  	x1 = set_int_part_8_8(x1,input1.integer_part);
+	  	x1 = set_fract_part_8_8(x1,input1.fractional_part);
+	  	x2 = set_int_part_8_8(x2,input2.integer_part);
+	  	x2 = set_fract_part_8_8(x2,input2.fractional_part);
 
 	  	y = ssub8_8(x1,x2);
 
-	  	mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	  	mu_assert_line("error",i,((get_int_part_8_8(y)==output.integer_part)&&(get_fract_part_8_8(y)==output.fractional_part)));
 	  	i++;
 	  }
 
@@ -251,8 +255,7 @@ char* test_multiply()
 	  mu_test_title("Multiplying");
 	  init_file("tests/gen/8_8/multiply.test");
 	  int8_8 x1,x2,y;
-	  x1=*(int8_8*)malloc(sizeof(int8_8));
-	  x2=*(int8_8*)malloc(sizeof(int8_8));
+
 	  Parsed_fixed_point input1;
 	  Parsed_fixed_point input2;
 	  Parsed_fixed_point output;
@@ -266,12 +269,14 @@ char* test_multiply()
 	  	(output.fractional_part) >>=24;
 	  	(input1.fractional_part) >>=24;
 	  	(input2.fractional_part) >>=24;
-	  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
-	  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
+	  	x1 = set_int_part_8_8(x1,input1.integer_part);
+	  	x1 = set_fract_part_8_8(x1,input1.fractional_part);
+	  	x2 = set_int_part_8_8(x2,input2.integer_part);
+	  	x2 = set_fract_part_8_8(x2,input2.fractional_part);
 
 	  	y = mul8_8(x1,x2);
 
-	  	mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	  	mu_assert_line("error",i,((get_int_part_8_8(y)==output.integer_part)&&(get_fract_part_8_8(y)==output.fractional_part)));
 	  	i++;
 	  	}
 
@@ -300,12 +305,14 @@ char* test_saturated_multiply()
 	  	(output.fractional_part) >>=24;
 	  	(input1.fractional_part) >>=24;
 	  	(input2.fractional_part) >>=24;
-	  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
-	  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
+	  	x1 = set_int_part_8_8(x1,input1.integer_part);
+	  	x1 = set_fract_part_8_8(x1,input1.fractional_part);
+	  	x2 = set_int_part_8_8(x2,input2.integer_part);
+	  	x2 = set_fract_part_8_8(x2,input2.fractional_part);
 
 	  	y = smul8_8(x1,x2);
 
-	  	mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	  	mu_assert_line("error",i,((get_int_part_8_8(y)==output.integer_part)&&(get_fract_part_8_8(y)==output.fractional_part)));
 	  	i++;
 	  	}
 
@@ -313,7 +320,7 @@ char* test_saturated_multiply()
 	  mu_final();
 	return 0;
 }
-
+/*
 char* test_floor()
 {
 	mu_test_title("Integer part");
@@ -329,8 +336,9 @@ char* test_floor()
 	   input=(*(Parsed_fixed_point*)get_operand(i,1));
 	  output=*(int*)get_result(i);
 	  (input.fractional_part) >>=24;
-	  x.p=input.integer_part;
-	  x.q=input.fractional_part;
+	  x = set_int_part_8_8(x1,input1.integer_part);
+	  x = set_fract_part_8_8(x1,input1.fractional_part);
+
 	  y = floor(x);
 	  mu_assert_line("error",i,y==output);
 	  i++;
@@ -339,14 +347,14 @@ char* test_floor()
 	mu_final();
     return 0;
 }
-
+*/
 char* test_floor8_8()
 {
 	mu_test_title("Integer part (result in 8.8 format)");
 	init_file("tests/gen/8_8/floor8_8.test");
 	int8_8 y;
 	int8_8 x;
-	x=*(int8_8*)malloc(sizeof(int8_8));
+
 	Parsed_fixed_point input;
 	Parsed_fixed_point output;
 	int i=0;
@@ -356,10 +364,11 @@ char* test_floor8_8()
 	  output=*(Parsed_fixed_point*)get_result(i);
 	  (input.fractional_part) >>=24;
 	  (output.fractional_part) >>=24;
-	  x.p=input.integer_part;
-	  x.q=input.fractional_part;
+	  x = set_int_part_8_8(x,input.integer_part);
+	  x = set_fract_part_8_8(x,input.fractional_part);
+
 	  y = floor8_8(x);
-	  mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	  mu_assert_line("error",i,((get_int_part_8_8(y)==output.integer_part)&&(get_fract_part_8_8(y)==output.fractional_part)));
 	  i++;
 	}
 
@@ -372,8 +381,7 @@ char* test_fractional_part()
 	mu_test_title("Fractional part");
 	init_file("tests/gen/8_8/fractional.test");
 	int8_8 x,y;
-	x=*(int8_8*)malloc(sizeof(int8_8));
-	y=*(int8_8*)malloc(sizeof(int8_8));
+
 	Parsed_fixed_point input;
 	Parsed_fixed_point output;
 	int i=0;
@@ -383,10 +391,10 @@ char* test_fractional_part()
 	   output=*(Parsed_fixed_point*)get_result(i);
 	   (output.fractional_part) >>=24;
 	   (input.fractional_part) >>=24;
-	   x.p=input.integer_part;
-	   x.q=input.fractional_part;
+	   x = set_int_part_8_8(x,input.integer_part);
+	   x = set_fract_part_8_8(x,input.fractional_part);
 	   y = fract8_8(x);
-	   mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	   mu_assert_line("error",i,((get_int_part_8_8(y)==output.integer_part)&&(get_fract_part_8_8(y)==output.fractional_part)));
 	   i++;
 	}
 
@@ -1334,17 +1342,17 @@ char * test_foo() {
  char * all_tests_fixed_point() {
      //mu_run_test(test_foo);
 	// mu_run_test(test_comparison);
-//     mu_run_test(test_constructor_8_8);
+     mu_run_test(test_constructor_8_8);
 //     //mu_run_test(test_constructor_16_16);
-//	 mu_run_test(test_add);
-//	 mu_run_test(test_saturated_add);
-//     mu_run_test(test_subtract);
-//     mu_run_test(test_saturated_subtract);
-//     mu_run_test(test_multiply);
-//     mu_run_test(test_saturated_multiply);
+	 mu_run_test(test_add);
+	 mu_run_test(test_saturated_add);
+     mu_run_test(test_subtract);
+     mu_run_test(test_saturated_subtract);
+     mu_run_test(test_multiply);
+     mu_run_test(test_saturated_multiply);
 //     mu_run_test(test_floor);
-//     mu_run_test(test_floor8_8);
-//     mu_run_test(test_fractional_part);
+    mu_run_test(test_floor8_8);
+    mu_run_test(test_fractional_part);
 //     mu_run_test(test_cast_8_8_to_16_16);
     mu_run_test(test_add_16_16);
 //     mu_run_test(test_saturated_add_16_16);

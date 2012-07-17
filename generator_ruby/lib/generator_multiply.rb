@@ -79,13 +79,18 @@ class GeneratorMultiply < Generator
      else 
        
      end
+      
      
-     
-     
+     puts @util.signed_binary_to_float(t1)*@util.signed_binary_to_float(t2)
+     puts r[0]+r[1]
      rez = ""
      case @operand_type
      when "8_8":
        rez = @util.float_to_signed(r[0],16,8)[-17..-9]+@util.float_to_signed(r[1],8,8)[-8..-1]
+       puts @util.float_to_signed(r[0],16,8)
+       puts @util.float_to_signed(r[1],8,8)
+       puts rez
+       puts "------"
      when "16_16":
        rez = @util.float_to_signed(r[0],32,16)[-33..-17]+@util.float_to_signed(r[1],32,16)[-16..-1]
      when "8_24":
