@@ -21,7 +21,7 @@ typedef struct __float _float;
 
 
 
-typedef  uint16_t int8_8;
+typedef  int16_t int8_8;
 
 
 typedef int int16_16;

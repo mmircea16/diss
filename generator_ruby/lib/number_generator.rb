@@ -23,7 +23,7 @@ class NumberGenerator
  
  def generate_fixed_point(int_size, fract_size)
    x = rand(2**(int_size+fract_size))
-   puts x>=2**(int_size+fract_size-1)?x-2**(int_size+fract_size):x
+   puts (x>=2**(int_size+fract_size-1)?x-2**(int_size+fract_size):x)/(2**fract_size * 1.0)
    p = 0
    s = ""
    while (x>0)
