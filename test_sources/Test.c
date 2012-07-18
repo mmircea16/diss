@@ -18,6 +18,8 @@
 #else
   #include "FixedPoint.h"
   #include "FixedPointTests.h"
+  #include "FixedPointMath.h"
+  #include "FixedPointMathTests.h"
 #endif
 
 
@@ -33,8 +35,9 @@ int main()
 {
 	 //char* result="as";
 	printf("sizeof short:%d\n",sizeof(int64_t));
-	char *result = all_tests_fixed_point();
-	 //char *result = all_tests_fixed_point_with_info();
+	//char *result = all_tests_fixed_point();
+	char *result = all_tests_fixed_point_math();
+	//char *result = all_tests_fixed_point_with_info();
 	 //char *result = all_tests_info();
 	 if (result != 0) {
 	     printf("%s\n", result);
