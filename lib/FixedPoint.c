@@ -148,7 +148,7 @@ inline int16_16 smul16_16(int16_16 x,int16_16 y)
 	__s >>= 16;
 	if ((x^y)&0x80000000)
 	{
-		if (~__s & 0xFFFFFFFF8000000)
+		if (~__s & 0xFFFFFFFF80000000)
 		{
 			r = 0x80000000;
 		}else
@@ -183,19 +183,19 @@ inline int16_16 floor16_16(int16_16 x)
 
 inline int8_24 int8_24_new(const float X)
 {
-	int __yy =(int)(X*(1<<24));
+	int32_t __yy =(int32_t)(X*(1<<24));
 	return (int8_24)__yy;
 }
 
 inline int8_24 add8_24(int8_24 x,int8_24 y)
 {
-	int __s = (int)(x) + (int)(y);
+	int32_t __s = (int32_t)(x) + (int32_t)(y);
     return (int8_24)__s;
 }
 
 inline int8_24 sadd8_24(int8_24 x,int8_24 y)
 {
-	int __s = (int)(x) + (int)(y);
+	int32_t __s = (int32_t)(x) + (int32_t)(y);
 	if ((x & 0x80000000)==(y & 0x80000000))
 	{
 		if ((x & 0x80000000) && !(__s & 0x80000000)) __s = 0x80000000;
@@ -206,98 +206,61 @@ inline int8_24 sadd8_24(int8_24 x,int8_24 y)
 
 inline int8_24 sub8_24(int8_24 x,int8_24 y)
 {
-	int __s = (int)(x) - (int)(y);
+	int32_t __s = (int32_t)(x) - (int32_t)(y);
     return (int8_24)__s;
 }
 
 inline int8_24 ssub8_24(int8_24 x,int8_24 y)
 {
-    int __s = (int)(x) - (int)(y);
+	int32_t __s = (int32_t)(x) - (int32_t)(y);
 
-    if ((x & 0x80000000)==(((-1)*y) & 0x80000000))
+    if ((x & 0x80000000)==(~y & 0x80000000))
     {
         if ((x & 0x80000000) && !(__s & 0x80000000)) __s = 0x80000000;
     	if (!(x & 0x80000000) && (__s & 0x80000000)) __s = 0x7FFFFFFF;
    	}
     return (int8_24)__s;
 }
-/*
+
 inline int8_24 mul8_24(int8_24 x,int8_24 y)
 {
-	//int __s = (((int)x.p*(int)y.p) << 16)+(int)x.p*(int)y.q+(int)x.q*(int)y.p+(((int)x.q*(int)y.q)>> 16);
-	long long xx = 0;
-	xx = *(long long*)&x;
-	if (x.p<1<<7)
-		xx &= 0x00000000FFFFFFFF;
-	else
-	{
-		xx &= 0x00000000FFFFFFFF;
-		xx |= 0xFFFFFFFF00000000;
-	}
-	long long yy = 0;
-    yy = *(long long*)&y;
-    if (y.p<1<<7)
-    	yy &= 0x00000000FFFFFFFF;
-    else
-    {
-    	yy &= 0x00000000FFFFFFFF;
-    	yy |= 0xFFFFFFFF00000000;
-   	}
-	int __s = ((xx*yy)>>24);
-	return _int8_24(__s);
+    int64_t __s = (int64_t)(x) * (int64_t)(y);
+    int32_t r = __s>>24;
+    return (int8_24)r;
 }
 
 inline int8_24 smul8_24(int8_24 x,int8_24 y)
 {
-	//int __s = (((int)x.p*(int)y.p) << 16)+(int)x.p*(int)y.q+(int)x.q*(int)y.p+(((int)x.q*(int)y.q)>> 16);
-	long long xx = 0;
-	xx = *(long long*)&x;
-	int sign = 1;
-	if (x.p<1<<7)
-		xx &= 0x00000000FFFFFFFF;
-	else
+	int64_t __s = (int64_t)(x) * (int64_t)(y);
+	int32_t r;
+	__s >>= 24;
+	if ((x^y)&0x80000000)
 	{
-		sign *= -1;
-		xx &= 0x00000000FFFFFFFF;
-		xx |= 0xFFFFFFFF00000000;
+		if (~__s & 0xFFFFFFFF80000000)
+		{
+			r = 0x80000000;
+		}else
+			r = __s;
+	}else{
+		if (__s & 0xFFFFFFFF80000000)
+		{
+			r = 0x7FFFFFFF;
+		}else
+			r = __s;
 	}
-	long long yy = 0;
-    yy = *(long long*)&y;
-    if (y.p<1<<7)
-    	yy &= 0x00000000FFFFFFFF;
-    else
-    {
-    	sign *= -1;
-    	yy &= 0x00000000FFFFFFFF;
-    	yy |= 0xFFFFFFFF00000000;
-   	}
-	long long __s = ((xx*yy)>>24);
-	int rez = 0;
-	long long ok = (sign==1)?(__s & 0xFFFFFFFF80000000):((~__s) & 0xFFFFFFFF80000000);
-	if (ok)
-	{
-		if (sign==1)
-			rez = 0x7FFFFFFF;
-		else
-			rez = 0x80000000;
-	}else rez = __s;
-	return _int8_24(rez);
+
+	return (int8_24)r;
 }
 
 inline int8_24 floor8_24(int8_24 x)
 {
- int8_24 s=x;
- int ss = *(int*)&s;
- ss &=0xFF000000;
- return _int8_24(ss);
+	return (int8_24)(x & 0xFF000000);
 }
 
 inline int8_24 fract8_24(int8_24 x)
 {
- int8_24 s=x;
- int ss = *(int*)&s;
- ss &=0x00FFFFFF;
- return _int8_24(ss);
+
+	return (int8_24)(x & 0x00FFFFFF);
 }
 
 inline int24_8 int24_8_new(const float X)
@@ -305,7 +268,7 @@ inline int24_8 int24_8_new(const float X)
 	int __yy =(int)(X*256);
     return *(int24_8*)&__yy;
 }
-*/
+
 inline int24_8 add24_8(int24_8 x,int24_8 y)
 {
 	int __s = *(int*)(&x) + *(int*)(&y);

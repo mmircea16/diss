@@ -26,7 +26,7 @@ typedef  int16_t int8_8;
 
 typedef int32_t int16_16;
 
-typedef int int8_24;
+typedef int32_t int8_24;
 
 
 

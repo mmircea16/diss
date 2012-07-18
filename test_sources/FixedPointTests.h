@@ -929,7 +929,7 @@ char* test_saturated_subtract_8_24()
 	  mu_final();
 	return 0;
 }
-/*
+
 char* test_multiply_8_24()
 {
 	mu_test_title("Multypling 8.24");
@@ -952,11 +952,13 @@ char* test_multiply_8_24()
 	  	(output.fractional_part) >>=8;
 	  	(input1.fractional_part) >>=8;
 	  	(input2.fractional_part) >>=8;
-	  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
-	  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
+	  	x1 = set_int_part_8_24(x1,input1.integer_part);
+		x1 = set_fract_part_8_24(x1,input1.fractional_part);
+	  	x2 = set_int_part_8_24(x2,input2.integer_part);
+		x2 = set_fract_part_8_24(x2,input2.fractional_part);
 
 	  	y = mul8_24(x1,x2);
-    	mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	  	mu_assert_line("error",i,((get_int_part_8_24(y)==output.integer_part)&&(get_fract_part_8_24(y)==output.fractional_part)));
 	  	i++;
 	}
 
@@ -987,11 +989,13 @@ char* test_saturared_multiply_8_24()
 	  	(output.fractional_part) >>=8;
 	  	(input1.fractional_part) >>=8;
 	  	(input2.fractional_part) >>=8;
-	  	x1.p=input1.integer_part;x1.q=input1.fractional_part;
-	  	x2.p=input2.integer_part;x2.q=input2.fractional_part;
+	  	x1 = set_int_part_8_24(x1,input1.integer_part);
+		x1 = set_fract_part_8_24(x1,input1.fractional_part);
+	  	x2 = set_int_part_8_24(x2,input2.integer_part);
+		x2 = set_fract_part_8_24(x2,input2.fractional_part);
 
 	  	y = smul8_24(x1,x2);
-    	mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	  	mu_assert_line("error",i,((get_int_part_8_24(y)==output.integer_part)&&(get_fract_part_8_24(y)==output.fractional_part)));
 	  	i++;
 	}
 
@@ -1017,10 +1021,10 @@ char* test_integer_part_8_24()
 
 	   (output.fractional_part) >>=8;
 	   (input.fractional_part) >>=8;
-	   x.p=input.integer_part;
-	   x.q=input.fractional_part;
+	   x = set_int_part_8_24(x,input.integer_part);
+	   x = set_fract_part_8_24(x,input.fractional_part);
 	   y = floor8_24(x);
-	   mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	   mu_assert_line("error",i,((get_int_part_8_24(y)==output.integer_part)&&(get_fract_part_8_24(y)==output.fractional_part)));
 	   i++;
 	}
 
@@ -1045,17 +1049,17 @@ char* test_fractional_part_8_24()
 
 	   (output.fractional_part) >>=8;
 	   (input.fractional_part) >>=8;
-	   x.p=input.integer_part;
-	   x.q=input.fractional_part;
+	   x = set_int_part_8_24(x,input.integer_part);
+	   x = set_fract_part_8_24(x,input.fractional_part);
 	   y = fract8_24(x);
-	   mu_assert_line("error",i,((y.p==output.integer_part)&&(y.q==output.fractional_part)));
+	   mu_assert_line("error",i,((get_int_part_8_24(y)==output.integer_part)&&(get_fract_part_8_24(y)==output.fractional_part)));
 	   i++;
 	}
 
 	mu_final();
   return 0;
 }
-*/
+
 char* test_add_24_8()
 {
   mu_test_title("Adding");
@@ -1383,10 +1387,10 @@ char * test_foo() {
      mu_run_test(test_saturated_add_8_24);
      mu_run_test(test_subtract_8_24);
      mu_run_test(test_saturated_subtract_8_24);
-//     mu_run_test(test_multiply_8_24);
-//     mu_run_test(test_saturared_multiply_8_24);
-//     mu_run_test(test_integer_part_8_24);
-//     mu_run_test(test_fractional_part_8_24);
+     mu_run_test(test_multiply_8_24);
+     mu_run_test(test_saturared_multiply_8_24);
+     mu_run_test(test_integer_part_8_24);
+     mu_run_test(test_fractional_part_8_24);
 //     mu_run_test(test_add_24_8);
 //     mu_run_test(test_saturated_add_24_8);
 //     mu_run_test(test_subtract_24_8);
