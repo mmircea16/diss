@@ -28,15 +28,7 @@ typedef int32_t int16_16;
 
 typedef int32_t int8_24;
 
-
-
-struct __int24_8
-{
-	unsigned char q:8;
-	unsigned int p:24;
-};
-
-typedef struct __int24_8 int24_8;
+typedef int32_t int24_8;
 
 #define set_int_part_8_8(X,Y) ((X & 0x00FF) | (Y<<8))
 #define set_fract_part_8_8(X,Y) ((X & 0xFF00) | (Y))
@@ -52,6 +44,11 @@ typedef struct __int24_8 int24_8;
 #define set_fract_part_8_24(X,Y) ((X & 0xFF000000) | (Y))
 #define get_int_part_8_24(X) ((X & 0xFF000000) >> 24)
 #define get_fract_part_8_24(X) (X & 0x00FFFFFF)
+
+#define set_int_part_24_8(X,Y) ((X & 0x000000FF) | (Y<<8))
+#define set_fract_part_24_8(X,Y) ((X & 0xFFFFFF00) | (Y))
+#define get_int_part_24_8(X) ((X & 0xFFFFFF00) >> 8)
+#define get_fract_part_24_8(X) (X & 0x000000FF)
 
 
 #define  _int(X) ((int)(((X).p<128)?((*(int*)&X)&0x0000FFFF):((*(int*)&X)|0xFFFF0000)))
