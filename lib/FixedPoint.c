@@ -103,12 +103,12 @@ inline int16_16 cast8_8_to_16_16(int8_8 x)
 
 inline int16_16 add16_16(int16_16 x,int16_16 y)
 {
-	return (int16_16)((int)x+(int)y);
+	return (int16_16)((int32_t)x+(int32_t)y);
 }
 
 inline int16_16 sadd16_16(int16_16 x,int16_16 y)
 {
-	int __s = (int)(x) + (int)(y);
+	int32_t __s = (int32_t)(x) + (int32_t)(y);
 	if ((x & 0x80000000)==(y & 0x80000000))
 	{
 		if ((x & 0x80000000) && !(__s & 0x80000000)) __s = 0x80000000;
@@ -119,105 +119,68 @@ inline int16_16 sadd16_16(int16_16 x,int16_16 y)
 
 inline int16_16 sub16_16(int16_16 x,int16_16 y)
 {
-	int __s = (int)(x) - (int)(y);
+	int32_t __s = (int32_t)(x) - (int32_t)(y);
 	return (int16_16)(__s);
 }
 
 inline int16_16 ssub16_16(int16_16 x,int16_16 y)
 {
-    int __s = (int)(x) - (int)(y);
-    if ((x & 0x80000000)==(((-1)*y) & 0x80000000))
+	int32_t __s = (int32_t)(x) - (int32_t)(y);
+    if ((x & 0x80000000)==(~y & 0x80000000))
     {
         if ((x & 0x80000000) && !(__s & 0x80000000)) __s = 0x80000000;
     	if (!(x & 0x80000000) && (__s & 0x80000000)) __s = 0x7FFFFFFF;
    	}
     return (int16_16)(__s);
 }
-/*
+
 inline int16_16 mul16_16(int16_16 x,int16_16 y)
 {
-	//int __s = (((int)x.p*(int)y.p) << 16)+(int)x.p*(int)y.q+(int)x.q*(int)y.p+(((int)x.q*(int)y.q)>> 16);
-	long long xx = 0;
-	xx = *(long long*)&x;
-	if (x.p<1<<15)
-		xx &= 0x00000000FFFFFFFF;
-	else
-	{
-		xx &= 0x00000000FFFFFFFF;
-		xx |= 0xFFFFFFFF00000000;
-	}
-	long long yy = 0;
-    yy = *(long long*)&y;
-    if (y.p<1<<15)
-    	yy &= 0x00000000FFFFFFFF;
-    else
-    {
-    	yy &= 0x00000000FFFFFFFF;
-    	yy |= 0xFFFFFFFF00000000;
-   	}
-	int __s = ((xx*yy)>>16);
-	return _int16_16(__s);
+	 int64_t __s = (int64_t)(x) * (int64_t)(y);
+	 int32_t r = __s>>16;
+	 return (int16_16)r;
 }
 
 inline int16_16 smul16_16(int16_16 x,int16_16 y)
 {
-	//int __s = (((int)x.p*(int)y.p) << 16)+(int)x.p*(int)y.q+(int)x.q*(int)y.p+(((int)x.q*(int)y.q)>> 16);
-	long long xx = 0;
-	xx = *(long long*)&x;
-	int sign = 1;
-	if (x.p<1<<15)
-		xx &= 0x00000000FFFFFFFF;
-	else
+	int64_t __s = (int64_t)(x) * (int64_t)(y);
+	int32_t r;
+	__s >>= 16;
+	if ((x^y)&0x80000000)
 	{
-		sign *= -1;
-		xx &= 0x00000000FFFFFFFF;
-		xx |= 0xFFFFFFFF00000000;
+		if (~__s & 0xFFFFFFFF8000000)
+		{
+			r = 0x80000000;
+		}else
+			r = __s;
+	}else{
+		if (__s & 0xFFFFFFFF8000000)
+		{
+			r = 0x7FFFFFFF;
+		}else
+			r = __s;
 	}
-	long long yy = 0;
-    yy = *(long long*)&y;
-    if (y.p<1<<15)
-    	yy &= 0x00000000FFFFFFFF;
-    else
-    {
-    	sign *= -1;
-    	yy &= 0x00000000FFFFFFFF;
-    	yy |= 0xFFFFFFFF00000000;
-   	}
-	long long __s = ((xx*yy)>>16);
-	int rez = 0;
-	if (__s & 0xFFFFFFFF00000000)
-	{
-		if (sign==1)
-			rez = 0x7FFFFFFF;
-		else
-			rez = 0x80000000;
-	}else rez = __s;
-	return _int16_16(rez);
-}
 
+	return (int16_16)r;
+}
+/*
 inline int8_8 cast16_16_to_8_8(int16_16 x)
 {
 	short aux = 0;
 	aux = (*(int*)&x) >> 8;
 	return _int8_8(aux);
 }
-
+*/
 inline int16_16 fract16_16(int16_16 x)
 {
- int16_16 s=x;
- int ss = *(int*)&s;
- ss &=0x0000FFFF;
- return _int16_16(ss);
+	return (int16_16)(x & 0x0000FFFF);
 }
 
 inline int16_16 floor16_16(int16_16 x)
 {
- int16_16 s=x;
- int ss = *(int*)&s;
- ss &=0xFFFF0000;
- return _int16_16(ss);
+	return (int16_16)(x & 0xFFFF0000);
 }
-*/
+
 inline int8_24 int8_24_new(const float X)
 {
 	int __yy =(int)(X*(1<<24));
