@@ -84,7 +84,7 @@ char* test_norm_8_8()
 }
 
 char * all_tests_fixed_point_math() {
-	//mu_run_test(test_div_8_8);
+	mu_run_test(test_div_8_8);
 	mu_run_test(test_bits4_most_significant);
 	mu_run_test(test_norm_8_8);
 	return 0;

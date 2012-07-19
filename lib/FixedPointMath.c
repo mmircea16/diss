@@ -20,7 +20,27 @@ short norm8_8(int8_8 x)
 
 int8_8 div8_8(int8_8 n, int8_8 m)
 {
-	return n;
+	short k = norm8_8(m);
+	if (!k) return 0;
+
+
+	int0_32 y = -(((int16_t)m) << (32-k));
+	int0_32 x = -((int16_t)m) << (32-k);
+	if (y==-32768) return (k>8?n>>(k-9):n<<(9-k));
+	int j;
+	int0_64 p;
+	for (j=0;j<8;j++){
+    p = x*x;
+	x = p >> 32;
+    p = x*y;
+    y = (p >> 32) + y;
+
+	}
+
+	int16_16 res = ((uint64_t)(y) >> 32)+(1<<16);
+	int64_t out = res * m;
+
+	return (int8_8)(out >> 16);
 };
 
 inline char bits4_most_significant(char x)

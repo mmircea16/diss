@@ -31,6 +31,9 @@ typedef int32_t int8_24;
 typedef int32_t int24_8;
 
 typedef int32_t int0_32;
+typedef int32_t int2_30;
+typedef int16_t int0_16;
+typedef int64_t int0_64;
 
 #define set_int_part_8_8(X,Y) ((X & 0x00FF) | (Y<<8))
 #define set_fract_part_8_8(X,Y) ((X & 0xFF00) | (Y))

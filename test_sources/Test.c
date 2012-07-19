@@ -34,7 +34,10 @@ int tests_run = 0;
 int main()
 {
 	 //char* result="as";
-	printf("sizeof short:%d\n",sizeof(int64_t));
+	//printf("sizeof short:%d\n",sizeof(int64_t));
+	int0_32 t1 = 0xFF000000;
+	int0_32 t2 = -t1;
+	printf("test: %x %x\n",t1,t2);
 	//char *result = all_tests_fixed_point();
 	char *result = all_tests_fixed_point_math();
 	//char *result = all_tests_fixed_point_with_info();
