@@ -42,9 +42,51 @@ char* test_div_8_8()
 
 	  return 0;
 }
+char* test_bits4_most_significant()
+{
+	mu_test_title("Testing detecting most significant bit");
+	char i;
+	char y;
+	char results[16]={0,1,2,2,3,3,3,3,4,4,4,4,4,4,4,4};
+	for (i=0;i<16;i++)
+	{
+        y = bits4_most_significant(i);
+        mu_assert_line("error",i,results[(int)i]==y);
+	}
+	mu_final();
+    return 0;
+}
+
+char* test_norm_8_8()
+{
+	mu_test_title("Testing normalization");
+	init_file("tests/short/8_8/norm.test");
+	int8_8 x,y;
+	Parsed_fixed_point input;
+	int output;
+	int i=0;
+	while (get_operand(i,1)!=NULL)
+	{
+	   input=(*(Parsed_fixed_point*)get_operand(i,1));
+	   output=*(int*)get_result(i);
+
+	   (input.fractional_part) >>=24;
+	   x = set_int_part_8_8(x,input.integer_part);
+	   x = set_fract_part_8_8(x,input.fractional_part);
+
+	   y = norm8_8(x);
+	   mu_assert_line("error",i,y==output);
+	   i++;
+	}
+
+	mu_final();
+  return 0;
+}
 
 char * all_tests_fixed_point_math() {
-	mu_run_test(test_div_8_8);
+	//mu_run_test(test_div_8_8);
+	mu_run_test(test_bits4_most_significant);
+	mu_run_test(test_norm_8_8);
 	return 0;
 }
 
