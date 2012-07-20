@@ -33,5 +33,3 @@ class GeneratorFloor < Generator
 
 end
 
-gen = GeneratorFloor.new("8_8/floor.test");
-gen.make_tests()

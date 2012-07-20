@@ -41,5 +41,3 @@ class GeneratorSaturatedSubtract < Generator
  
 end
 
-gen = GeneratorSaturatedSubtract.new("8_8/saturated_subtract.test");
-gen.make_tests()

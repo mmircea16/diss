@@ -41,5 +41,3 @@ class GeneratorSaturatedMultiply < Generator
  
 end
 
-gen = GeneratorSaturatedMultiply.new("8_8/saturated_multiply.test");
-gen.make_tests()

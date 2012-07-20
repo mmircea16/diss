@@ -20,17 +20,20 @@ short norm8_8(int8_8 x)
 
 int8_8 div8_8(int8_8 n, int8_8 m)
 {
+    char sign = 1;
+	if (m<0) {m = -m; sign = -1;}
+	if (n<0) {n = -n; sign *= -1;}
 	short k = norm8_8(m);
 	if (!k) return 0;
 
 
-	int0_16 y = -(((int16_t)m) << (16-k));
-	int0_16 x = -(((int16_t)m) << (16-k));
+	uint16_t y = -(((int16_t)m) << (16-k));
+	uint16_t x = -(((int16_t)m) << (16-k));
 	if (y==-32768) return (k>8?n>>(k-9):n<<(9-k));
 	int j;
-	int0_32 p;
+	uint32_t p;
 	float mm = (((int16_t)m) << (16-k))/65536.0;
-	printf("m:%f\n",mm);
+	//printf("m:%f\n",mm);
 	for (j=0;j<4;j++){
     p = x*x;
 	x = p >> 16;
@@ -38,15 +41,16 @@ int8_8 div8_8(int8_8 n, int8_8 m)
     y = p >> 16;
 	}
 
-	uint32_t res = y+(1<<16);
+	uint32_t res = (y&0x0000FFFF) | (0x00010000);
 	float rres = res / 65536.0;
-	printf("rres:%f\n",rres);
+	//printf("rres:%f\n",rres);
 	uint32_t out = res * n;
 
     out = (k>8?out>>(k-8):out<<(8-k));
     //out += (1<<15);
     out >>=16;
-    printf("return:%x %d\n",(out),out);
+    if (sign == -1) out = ~out;
+   // printf("return:%x %d\n",(out),out);
 	return (int8_8)(out);
 };
 

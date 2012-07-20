@@ -57,5 +57,4 @@ class GeneratorFract < Generator
 
 end
 
-gen = GeneratorFract.new({"test_file_name"=>"24_8/fractional.test","title"=>"24.8 fractional test","type"=>"24_8"});
-gen.make_tests()
+

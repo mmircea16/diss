@@ -42,5 +42,3 @@ class GeneratorSaturatedAdd < Generator
  
 end
 
-gen = GeneratorSaturatedAdd.new("8_8/saturated_add.test");
-gen.make_tests()
