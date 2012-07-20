@@ -27,28 +27,27 @@ int8_8 div8_8(int8_8 n, int8_8 m)
 	if (!k) return 0;
 
 
-	uint16_t y = -(((int16_t)m) << (16-k));
-	uint16_t x = -(((int16_t)m) << (16-k));
-	if (y==-32768) return (k>8?n>>(k-9):n<<(9-k));
+	uint64_t y = -(((int16_t)m) << (32-k));
+	uint64_t x = -(((int16_t)m) << (32-k));
+	if (y==2147483648) return (k>8?n>>(k-9):n<<(9-k));
 	int j;
-	uint32_t p;
+	uint64_t p=1ULL;
+
 	float mm = (((int16_t)m) << (16-k))/65536.0;
 	//printf("m:%f\n",mm);
-	for (j=0;j<4;j++){
+	for (j=0;j<3;j++){
     p = x*x;
-	x = p >> 16;
-    p = x*y + (x<<16) + (y<<16);
-    y = p >> 16;
+	x = p >> 32;
+    p = x*y ;
+    y = (p >> 32)+x+y;
 	}
 
-	uint32_t res = (y&0x0000FFFF) | (0x00010000);
-	float rres = res / 65536.0;
-	//printf("rres:%f\n",rres);
-	uint32_t out = res * n;
+	uint64_t res = y | (0x0000000100000000);
+	uint64_t out = res * n;
 
     out = (k>8?out>>(k-8):out<<(8-k));
     //out += (1<<15);
-    out >>=16;
+    out >>=32;
     if (sign == -1) out = ~out;
    // printf("return:%x %d\n",(out),out);
 	return (int8_8)(out);

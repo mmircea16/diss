@@ -34,8 +34,8 @@ char* test_div_8_8()
 	  	y = div8_8(x1,x2);
         //printf("output: %x %x\n",output.integer_part,output.fractional_part);
         //printf("output: %x %x\n",get_int_part_8_8(y),get_fract_part_8_8(y));
-	 	//mu_assert_line("error",i,((get_int_part_8_8(y)==output.integer_part)&&(get_fract_part_8_8(y)==output.fractional_part)));
-	  	printf("line: %d %x %x - %x %x\n",i,-get_int_part_8_8(y)+output.integer_part,-get_fract_part_8_8(y)+output.fractional_part,output.integer_part,output.fractional_part);
+	 	mu_assert_line("error",i,((get_int_part_8_8(y)==output.integer_part)&&(get_fract_part_8_8(y)==output.fractional_part)));
+	  	//printf("line: %d %x %x - %x %x\n",i,-get_int_part_8_8(y)+output.integer_part,-get_fract_part_8_8(y)+output.fractional_part,output.integer_part,output.fractional_part);
 	  	i++;
 	  	}
 
