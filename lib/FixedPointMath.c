@@ -24,23 +24,30 @@ int8_8 div8_8(int8_8 n, int8_8 m)
 	if (!k) return 0;
 
 
-	int0_32 y = -(((int16_t)m) << (32-k));
-	int0_32 x = -((int16_t)m) << (32-k);
+	int0_16 y = -(((int16_t)m) << (16-k));
+	int0_16 x = -(((int16_t)m) << (16-k));
 	if (y==-32768) return (k>8?n>>(k-9):n<<(9-k));
 	int j;
-	int0_64 p;
-	for (j=0;j<8;j++){
+	int0_32 p;
+	float mm = (((int16_t)m) << (16-k))/65536.0;
+	printf("m:%f\n",mm);
+	for (j=0;j<4;j++){
     p = x*x;
-	x = p >> 32;
-    p = x*y;
-    y = (p >> 32) + y;
-
+	x = p >> 16;
+    p = x*y + (x<<16) + (y<<16);
+    y = p >> 16;
 	}
 
-	int16_16 res = ((uint64_t)(y) >> 32)+(1<<16);
-	int64_t out = res * m;
+	uint32_t res = y+(1<<16);
+	float rres = res / 65536.0;
+	printf("rres:%f\n",rres);
+	uint32_t out = res * n;
 
-	return (int8_8)(out >> 16);
+    out = (k>8?out>>(k-8):out<<(8-k));
+    //out += (1<<15);
+    out >>=16;
+    printf("return:%x %d\n",(out),out);
+	return (int8_8)(out);
 };
 
 inline char bits4_most_significant(char x)

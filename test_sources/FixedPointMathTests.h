@@ -26,14 +26,15 @@ char* test_div_8_8()
 	  	(output.fractional_part) >>=24;
 	  	(input1.fractional_part) >>=24;
 	  	(input2.fractional_part) >>=24;
-	  	x1 = set_int_part_24_8(x1,input1.integer_part);
-		x1 = set_fract_part_24_8(x1,input1.fractional_part);
-	  	x2 = set_int_part_24_8(x2,input2.integer_part);
-		x2 = set_fract_part_24_8(x2,input2.fractional_part);
+	  	x1 = set_int_part_8_8(x1,input1.integer_part);
+		x1 = set_fract_part_8_8(x1,input1.fractional_part);
+	  	x2 = set_int_part_8_8(x2,input2.integer_part);
+		x2 = set_fract_part_8_8(x2,input2.fractional_part);
 
 	  	y = div8_8(x1,x2);
-
-	 	mu_assert_line("error",i,((get_int_part_24_8(y)==output.integer_part)&&(get_fract_part_24_8(y)==output.fractional_part)));
+        printf("output: %x %x\n",output.integer_part,output.fractional_part);
+        printf("output: %x %x\n",get_int_part_8_8(y),get_fract_part_8_8(y));
+	 	mu_assert_line("error",i,((get_int_part_8_8(y)==output.integer_part)&&(get_fract_part_8_8(y)==output.fractional_part)));
 	  	i++;
 	  	}
 
