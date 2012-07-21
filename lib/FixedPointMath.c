@@ -18,6 +18,56 @@ short norm8_8(int8_8 x)
 	return (pos + last);
 }
 
+int8_8 div8_8_v2(int8_8 n,int8_8 m)
+{
+    char sign = 1;
+	if (m<0) {m = -m; sign = -1;}
+	if (n<0) {n = -n; sign *= -1;}
+	short k = norm8_8(m);
+	if (!k) return 0;
+	int aaa_new = 1;
+	float mm = (float)(m << (32-k))/(1LL<<32);
+	uint64_t b =(m << (32-k))&(0x00000000FFFFFFFF);
+	unsigned int x_i = 3 - ((b&0x0000000080000000)>>31);
+	uint64_t x = (b<<1)&(0x00000000FFFFFFFF);
+	uint64_t p = ((b*x)>>32)&(0x00000000FFFFFFFF)+x_i*b;
+	printf("---x:%d %x\n",x_i,x);
+	int p_i = p>>32 ;
+    x = ((x*(-p))>>32)+((2-p_i)*x)+x_i*(-p);
+    x_i = x >> 32;
+    x &=0x00000000FFFFFFFF;
+    printf("---p:%x\n",p>>4);
+    printf("---x:%d %x\n",x_i,x);
+    p = ((b*x)>>32)&(0x00000000FFFFFFFF)+x_i*b;
+   	p_i = p >> 32;
+    x = ((x*(-p))>>32)+((2-p_i)*x)+x_i*(-p);
+    x_i = x >> 32;
+    x &=0x00000000FFFFFFFF;
+    printf("---x:%d %x\n",x_i,x);
+    p = ((b*x)>>32)&(0x00000000FFFFFFFF)+x_i*b;
+    p_i = p >> 32;
+    x = ((x*(-p))>>32)+((2-p_i)*x)+x_i*(-p);
+    x_i = x >> 32;
+    x &=0x00000000FFFFFFFF;
+
+    printf("---x:%d %x\n",x_i,x);
+    p = ((b*x)>>32)&(0x00000000FFFFFFFF)+x_i*b;
+    p_i = p >> 32;
+    x = ((x*(-p))>>32)+((2-p_i)*x)+x_i*(-p);
+    x_i = x >> 32;
+    x &=0x00000000FFFFFFFF;
+
+    printf("---x:%d %x\n",x_i,x);
+	x = (x*n)+(1LL<<32)*n;
+
+	x = (k>8?x>>(k-8):x<<(8-k));
+	x >>=32;
+
+	if (sign == -1) x = ~x;
+	printf("---x:%x\n",x);
+	return (int8_8)x;
+}
+
 int8_8 div8_8(int8_8 n, int8_8 m)
 {
     char sign = 1;

@@ -12,6 +12,7 @@
 
 short norm8_8(int8_8 x);
 int8_8 div8_8(int8_8 n, int8_8 m);
+int8_8 div8_8_v2(int8_8 n,int8_8 m);
 
 inline char bits4_most_significant(char x);
 
