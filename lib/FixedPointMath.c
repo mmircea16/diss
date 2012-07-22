@@ -107,7 +107,7 @@ int16_16 div16_16(int16_16 n, int16_16 m)
 
 	uint64_t y = -(((int32_t)m) << (32-k));
 	uint64_t x = -(((int32_t)m) << (32-k));
-	if (y==2147483648) return (k>8?n>>(k-9):n<<(9-k));
+	if (y==2147483648) return (k>16?n>>(k-17):n<<(17-k));
 	int j;
 	uint64_t p=1ULL;
 
@@ -158,6 +158,42 @@ int16_16 div16_16_v2(int16_16 n,int16_16 m)
 	//printf("---x:%x\n",x);
 	return (int16_16)x;
 }
+
+int8_24 div8_24(int8_24 n, int8_24 m)
+{
+    char sign = 1;
+	if (m<0) {m = -m; sign = -1;}
+	if (n<0) {n = -n; sign *= -1;}
+	short k = norm16_16(m);
+	if (!k) return 0;
+
+
+	uint64_t y = -(((int32_t)m) << (32-k));
+	uint64_t x = -(((int32_t)m) << (32-k));
+	if (y==2147483648) return (k>24?n>>(k-25):n<<(25-k));
+	int j;
+	uint64_t p=1ULL;
+
+	float mm = (((int32_t)m) << (32-k))/65536.0;
+	//printf("m:%f\n",mm);
+	for (j=0;j<10;j++){
+    p = x*x;
+	x = p >> 32;
+    p = x*y ;
+    y = (p >> 32)+x+y;
+	}
+
+	uint64_t res = y | (0x0000000100000000);
+	uint64_t out = res * n;
+
+    out = (k>24?out>>(k-24):out<<(24-k));
+    //out += (1<<15);
+    out >>=32;
+    if (sign == -1) out = ~out;
+    //printf("return:%x\n",out);
+	return (int8_24)(out);
+};
+
 
 inline char bits4_most_significant(char x)
 {
