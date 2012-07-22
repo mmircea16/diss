@@ -176,7 +176,7 @@ int8_24 div8_24(int8_24 n, int8_24 m)
 
 	float mm = (((int32_t)m) << (32-k))/65536.0;
 	//printf("m:%f\n",mm);
-	for (j=0;j<10;j++){
+	for (j=0;j<4;j++){
     p = x*x;
 	x = p >> 32;
     p = x*y ;
@@ -194,6 +194,33 @@ int8_24 div8_24(int8_24 n, int8_24 m)
 	return (int8_24)(out);
 };
 
+int8_24 div8_24_v2(int8_24 n,int8_24 m)
+{
+    char sign = 1;
+	if (m<0) {m = -m; sign = -1;}
+	if (n<0) {n = -n; sign *= -1;}
+	short k = norm16_16(m);
+	if (!k) return 0;
+
+	uint64_t b =(m << (32-k))&(0x00000000FFFFFFFF);
+	uint64_t x = (~((b<<1)&(0x00000000FFFFFFFF))+1)&(0x00000000FFFFFFFF);
+	uint64_t p = 1LL;
+    int i = 0;
+	for (i=0;i<10;i++){
+	  p = x << 1;
+	  x = ((((b*x)>>32)*x)>>32) + ((b*x)>>31) + b;
+	  x = p-x;
+	  x &=0x00000000FFFFFFFF;
+	}
+    x = (x*n)+(1LL<<32)*n;
+
+	x = (k>24?x>>(k-24):x<<(24-k));
+	x >>=32;
+
+	if (sign == -1) x = ~x;
+	//printf("---x:%x\n",x);
+	return (int8_24)x;
+}
 
 inline char bits4_most_significant(char x)
 {
