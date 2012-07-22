@@ -45,16 +45,11 @@ int8_8 div8_8_v2(int8_8 n,int8_8 m)
 	uint64_t p = 1LL;
 	unsigned int p_i = 1;
     int i = 0;
-	for (i=0;i<10;i++){
+	for (i=0;i<3;i++){
 	  p = x << 1;
 	  x = ((((b*x)>>32)*x)>>32) + ((b*x)>>31) + b;
 	  x = p-x;
 	  x &=0x00000000FFFFFFFF;
-	  //printf("---x:%d %x\n",x_i,x);
-	 /* p_i = p>>32 ;
-      x = ((x*(~p+1))>>32)+((2-p_i)*x)-x_i*p;
-      x_i = x >> 32;
-      x &=0x00000000FFFFFFFF;*/
 	}
     x = (x*n)+(1LL<<32)*n;
 
@@ -135,6 +130,34 @@ int16_16 div16_16(int16_16 n, int16_16 m)
     //printf("return:%x\n",out);
 	return (int16_16)(out);
 };
+
+int16_16 div16_16_v2(int16_16 n,int16_16 m)
+{
+    char sign = 1;
+	if (m<0) {m = -m; sign = -1;}
+	if (n<0) {n = -n; sign *= -1;}
+	short k = norm16_16(m);
+	if (!k) return 0;
+
+	uint64_t b =(m << (32-k))&(0x00000000FFFFFFFF);
+	uint64_t x = (~((b<<1)&(0x00000000FFFFFFFF))+1)&(0x00000000FFFFFFFF);
+	uint64_t p = 1LL;
+    int i = 0;
+	for (i=0;i<3;i++){
+	  p = x << 1;
+	  x = ((((b*x)>>32)*x)>>32) + ((b*x)>>31) + b;
+	  x = p-x;
+	  x &=0x00000000FFFFFFFF;
+	}
+    x = (x*n)+(1LL<<32)*n;
+
+	x = (k>16?x>>(k-16):x<<(16-k));
+	x >>=32;
+
+	if (sign == -1) x = ~x;
+	//printf("---x:%x\n",x);
+	return (int16_16)x;
+}
 
 inline char bits4_most_significant(char x)
 {
