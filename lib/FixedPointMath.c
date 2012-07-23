@@ -285,6 +285,38 @@ int24_8 div24_8_v2(int24_8 n,int24_8 m)
 	return (int24_8)x;
 }
 
+int8_8 sqrt8_8(int8_8 a)
+{
+    if (a<=0) return 0;
+    short k = norm8_8(a);
+    uint64_t aa = ((uint64_t)a<<(32-k))&0x00000000FFFFFFFF;
+    uint64_t c1 = 0x00000001C9A8AC5C; //1.77
+    uint64_t c2 = 0x00000000CF5B8130;//0.80
+    uint64_t x = (c1 - ((c2*aa)>>32))&0x00000000FFFFFFFF;
+    //x =0x00000000555097e1;
+    int i;
+    int p_i;
+    uint64_t p = 1ULL;
+    for (i=0;i<400;i++)
+    {
+    	p = ((x*x)>>32)+(x << 1) + (1LL << 32);
+    	p_i = p>>32;
+    	p  = p & 0x00000000FFFFFFFF;
+    	p = ((p*aa)>>32) + aa*p_i;
+    	p = (3LL << 32) - p;
+    	p_i = (p>>32);
+    	p = p & 0x00000000FFFFFFFF;
+        p = (p * x) >> 33;
+        x = p + ((p_i * x) >> 1);
+    }
+    x = ((x * aa)>>32)+aa;
+
+    uint64_t c3 = 0x000000006A09E668; //sqrt(2)
+    if (k%2) {x = ((x*c3)>>32)+x; }
+    x = (k>8?x << ((k-8)/2) : x >> ((8-k)/2));
+	return (int8_8)(x>>24);
+}
+
 inline char bits4_most_significant(char x)
 {
 	if (!x) return 0;
