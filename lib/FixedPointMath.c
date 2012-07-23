@@ -292,7 +292,10 @@ int8_8 sqrt8_8(int8_8 a)
     uint64_t aa = ((uint64_t)a<<(32-k))&0x00000000FFFFFFFF;
     uint64_t c1 = 0x00000001C9A8AC5C; //1.77
     uint64_t c2 = 0x00000000CF5B8130;//0.80
-    uint64_t x = (c1 - ((c2*aa)>>32))&0x00000000FFFFFFFF;
+    uint64_t x = (c1 - ((c2*aa)>>32));
+    if (x<(1ll<<32)) x = 0;
+    else x = x & 0x00000000FFFFFFFF;
+
     float xx = ((1LL<<32)+x)/(65536LL*65536LL);
     float faa =(float) aa/(65536LL*65536LL);
     //x =0x00000000555097e1;

@@ -257,7 +257,7 @@ char* test_sqrt_8_8()
 	  	y = sqrt8_8(x1);
 
 	  	int16_t out = (output.integer_part<<8)+output.fractional_part;
-	    mu_assert_line_with_error("error",i,(out - y),100);
+	    mu_assert_line_with_error("error",i,(out - y),4);
 	 	//mu_assert_line("error",i,((get_int_part_8_8(y)==output.integer_part)&&(get_fract_part_8_8(y)==output.fractional_part)));
 	  	i++;
 	  	}
