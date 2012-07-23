@@ -293,21 +293,25 @@ int8_8 sqrt8_8(int8_8 a)
     uint64_t c1 = 0x00000001C9A8AC5C; //1.77
     uint64_t c2 = 0x00000000CF5B8130;//0.80
     uint64_t x = (c1 - ((c2*aa)>>32))&0x00000000FFFFFFFF;
+    float xx = ((1LL<<32)+x)/(65536LL*65536LL);
+    float faa =(float) aa/(65536LL*65536LL);
     //x =0x00000000555097e1;
     int i;
     int p_i;
     uint64_t p = 1ULL;
-    for (i=0;i<400;i++)
+    for (i=0;i<3;i++)
     {
     	p = ((x*x)>>32)+(x << 1) + (1LL << 32);
     	p_i = p>>32;
-    	p  = p & 0x00000000FFFFFFFF;
+    	p = p & 0x00000000FFFFFFFF;
     	p = ((p*aa)>>32) + aa*p_i;
     	p = (3LL << 32) - p;
     	p_i = (p>>32);
     	p = p & 0x00000000FFFFFFFF;
-        p = (p * x) >> 33;
-        x = p + ((p_i * x) >> 1);
+        x = ((p * x) >> 33) + ((p_i * x) >> 1)+(p>>1)+(p_i<<31);
+        x = x & 0x00000000FFFFFFFF;
+        xx =(float) ((1LL<<32)+x)/(65536LL*65536LL);
+        faa =(float) aa/(65536LL*65536LL);
     }
     x = ((x * aa)>>32)+aa;
 
