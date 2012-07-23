@@ -320,7 +320,7 @@ int8_8 sqrt8_8(int8_8 a)
 
     uint64_t c3 = 0x000000006A09E668; //sqrt(2)
     if (k%2) {x = ((x*c3)>>32)+x; }
-    x = (k>8?x << ((k-8)/2) : x >> ((8-k)/2));
+    x = (k>8?x << ((k-8)/2) : x >> ((9-k)/2));
 	return (int8_8)(x>>24);
 }
 
@@ -356,8 +356,44 @@ int16_16 sqrt16_16(int16_16 a)
 
     uint64_t c3 = 0x000000006A09E668; //sqrt(2)
     if (k%2) {x = ((x*c3)>>32)+x; }
-    x = (k>16?x << ((k-16)/2) : x >> ((16-k)/2));
+    x = (k>16?x << ((k-16)/2) : x >> ((17-k)/2));
 	return (int16_16)(x>>16);
+}
+
+int8_24 sqrt8_24(int8_24 a)
+{
+    if (a<=0) return 0;
+    short k = norm16_16(a);
+    uint64_t aa = ((uint64_t)a<<(32-k))&0x00000000FFFFFFFF;
+    uint64_t c1 = 0x00000001C9A8AC5C; //1.77
+    uint64_t c2 = 0x00000000CF5B8130;//0.80
+    uint64_t x = (c1 - ((c2*aa)>>32));
+    if (x<(1ll<<32)) x = 0;
+    else x = x & 0x00000000FFFFFFFF;
+
+    //x =0x00000000555097e1;
+    int i;
+    int p_i;
+    uint64_t p = 1ULL;
+    for (i=0;i<3;i++)
+    {
+    	p = ((x*x)>>32)+(x << 1) + (1LL << 32);
+    	p_i = p>>32;
+    	p = p & 0x00000000FFFFFFFF;
+    	p = ((p*aa)>>32) + aa*p_i;
+    	p = (3LL << 32) - p;
+    	p_i = (p>>32);
+    	p = p & 0x00000000FFFFFFFF;
+        x = ((p * x) >> 33) + ((p_i * x) >> 1)+(p>>1)+(p_i<<31);
+        x = x & 0x00000000FFFFFFFF;
+
+    }
+    x = ((x * aa)>>32)+aa;
+
+    uint64_t c3 = 0x000000006A09E668; //sqrt(2)
+    if (k%2) {x = ((x*c3)>>32)+x; }
+    x = (k>24?x << ((k-24)/2) : x >> ((25-k)/2));
+	return (int8_24)(x>>8);
 }
 
 inline char bits4_most_significant(char x)
