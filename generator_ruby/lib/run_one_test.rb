@@ -6,6 +6,6 @@ require "./generator_floor_fp.rb"
 require "./generator_divide.rb"
 
 puts "=== Start ==="
-gen = GeneratorSqrt.new({"test_file_name" => "8_24/sqrt.test", "saturated" => false  , "type" => "8_24", "title" => "8_24 sqrt"});
+gen = GeneratorSqrt.new({"test_file_name" => "24_8/sqrt.test", "saturated" => false  , "type" => "24_8", "title" => "24_8 sqrt"});
 gen.make_tests()
 puts "=== Finish ==="
