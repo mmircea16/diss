@@ -222,6 +222,69 @@ int8_24 div8_24_v2(int8_24 n,int8_24 m)
 	return (int8_24)x;
 }
 
+int24_8 div24_8(int24_8 n, int24_8 m)
+{
+    char sign = 1;
+	if (m<0) {m = -m; sign = -1;}
+	if (n<0) {n = -n; sign *= -1;}
+	short k = norm16_16(m);
+	if (!k) return 0;
+
+
+	uint64_t y = -(((int32_t)m) << (32-k));
+	uint64_t x = -(((int32_t)m) << (32-k));
+	if (y==2147483648) return (k>24?n>>(k-25):n<<(25-k));
+	int j;
+	uint64_t p=1ULL;
+
+	float mm = (((int32_t)m) << (32-k))/65536.0;
+	//printf("m:%f\n",mm);
+	for (j=0;j<4;j++){
+    p = x*x;
+	x = p >> 32;
+    p = x*y ;
+    y = (p >> 32)+x+y;
+	}
+
+	uint64_t res = y | (0x0000000100000000);
+	uint64_t out = res * n;
+
+    out = (k>8?out>>(k-8):out<<(8-k));
+    //out += (1<<15);
+    out >>=32;
+    if (sign == -1) out = ~out;
+    //printf("return:%x\n",out);
+	return (int24_8)(out);
+};
+
+int24_8 div24_8_v2(int24_8 n,int24_8 m)
+{
+    char sign = 1;
+	if (m<0) {m = -m; sign = -1;}
+	if (n<0) {n = -n; sign *= -1;}
+	short k = norm16_16(m);
+	if (!k) return 0;
+
+	uint64_t b =(m << (32-k))&(0x00000000FFFFFFFF);
+	uint64_t x = (~((b<<1)&(0x00000000FFFFFFFF))+1)&(0x00000000FFFFFFFF);
+	uint64_t p = 1LL;
+    int i = 0;
+	for (i=0;i<10;i++){
+	  p = x << 1;
+	  x = ((((b*x)>>32)*x)>>32) + ((b*x)>>31) + b;
+	  x = p-x;
+	  x &=0x00000000FFFFFFFF;
+	}
+    x = (x*n)+(1LL<<32)*n;
+
+	x = (k>8?x>>(k-8):x<<(8-k));
+	x >>=32;
+
+	if (sign == -1) x = ~x;
+	//printf("---x:%x\n",x);
+	return (int24_8)x;
+}
+
 inline char bits4_most_significant(char x)
 {
 	if (!x) return 0;
