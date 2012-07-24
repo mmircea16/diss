@@ -524,7 +524,7 @@ int8_8 exp8_8(int8_8 a)
 
 	uint16_t key = (x>>28);
 	x = x - aa[key];
-	uint64_t app = (x+((x*x)>>33))&0x00000000FFFFFFFF; //has 1 as integer part
+	uint64_t app = (x+((x*x)>>33))&0x00000000FFFFFFFF;
     app = ((app*(expa[key]&0x00000000FFFFFFFF))>>32)+(x<0?0:expa[key])+app*(expa[key]>>32);
 
     if (t<24) app >>= (24-t);
@@ -543,7 +543,7 @@ int16_16 exp16_16(int16_16 a)
 
 	uint16_t key = (x>>28);
 	x = x - aa[key];
-	uint64_t app = (x+((x*x)>>33))&0x00000000FFFFFFFF; //has 1 as integer part
+	uint64_t app = (x+((x*x)>>33))&0x00000000FFFFFFFF;
     app = ((app*(expa[key]&0x00000000FFFFFFFF))>>32)+(x<0?0:expa[key])+app*(expa[key]>>32);
 
     if (t<16) app >>= (16-t);
@@ -562,7 +562,7 @@ int24_8 exp24_8(int24_8 a)
 
 	uint16_t key = (x>>28);
 	x = x - aa[key];
-	uint64_t app = (x+((x*x)>>33))&0x00000000FFFFFFFF; //has 1 as integer part
+	uint64_t app = (x+((x*x)>>33))&0x00000000FFFFFFFF;
     app = ((app*(expa[key]&0x00000000FFFFFFFF))>>32)+(x<0?0:expa[key])+app*(expa[key]>>32);
 
     if (t<24) app >>= (24-t);
