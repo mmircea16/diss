@@ -474,6 +474,27 @@ int16_16 log16_16(int16_16 aa)
 
 int8_24 log8_24(int8_24 aa)
 {
+	/*Needs to double the number of entries in the lookup tables to make the interval (0.99,1.01)*/
+	int64_t lna[16]={728633131983LL, 661975655366LL, 599129314724LL, 539681776256LL, 483284202650LL, 429638849824LL, 378489551710LL, 329614321888LL, 282819530961LL, 237935273317LL, 194811643155LL, 153315713702LL, 113329066061LL, 74745751895LL, 37470601627LL, 1417810161LL};
+	uint64_t a[16]={8332236554LL, 7842104992LL, 7406432492LL, 7016620256LL, 6665789243LL, 6348370707LL, 6059808403LL, 5796338472LL, 5554824369LL, 5332631394LL, 5127530187LL, 4937621661LL, 4761278030LL, 4597096029LL, 4443859495LL, 4300509189LL};
+	if (aa<=0) return 0;
+	short k = norm16_16(aa);
+	uint64_t x = ((uint64_t)aa)<<(32-k);
+	uint16_t key = (x>>27)-16;
+
+	x = (x*a[key])>>32;
+	uint64_t t;
+	if (x<(1LL<<31)) t=x;
+	else t = x - (1ULL<<32);
+
+	uint64_t app = t - ((t*t)>>33);
+	app = (app<<8) - lna[key];
+	app = app + (k-24)*(47632711549ULL<<4); //increased the precision with 4 bits
+	return (int8_24)(app>>16);
+}
+
+int24_8 log24_8(int24_8 aa)
+{
 	uint64_t a[16]={8332236554LL, 7842104992LL, 7406432492LL, 7016620256LL, 6665789243LL, 6348370707LL, 6059808403LL, 5796338472LL, 5554824369LL, 5332631394LL, 5127530187LL, 4937621661LL, 4761278030LL, 4597096029LL, 4443859495LL, 4300509189LL};
 	int64_t lna[16]={2846223171LL, 2585842403LL, 2340348885LL, 2108131938LL, 1887828916LL, 1678276757LL, 1478474811LL, 1287555944LL, 1104763792LL, 929434661LL, 760982981LL, 598889506LL, 442691664LL, 291975593LL, 146369537LL, 5538320LL};
 	if (aa<=0) return 0;
@@ -488,8 +509,8 @@ int8_24 log8_24(int8_24 aa)
 
 	uint64_t app = t - ((t*t)>>33);
 	app = app - lna[key];
-	app = (app<<4) + (k-24)*47632711549ULL; //increased the precision with 4 bits
-	return (int8_24)(app>>12);
+	app = app + (k-8)*2977044471ULL; //increased the precision with 4 bits
+	return (int24_8)(app>>24);
 }
 
 inline char bits4_most_significant(char x)

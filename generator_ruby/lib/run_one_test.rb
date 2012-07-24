@@ -7,6 +7,6 @@ require "./generator_divide.rb"
 require "./generator_log.rb"
 
 puts "=== Start ==="
-gen = GeneratorLog.new({"test_file_name" => "8_24/log.test", "saturated" => false  , "type" => "8_24", "title" => "8_24 log"});
+gen = GeneratorLog.new({"test_file_name" => "24_8/log.test", "saturated" => false  , "type" => "24_8", "title" => "24_8 log"});
 gen.make_tests()
 puts "=== Finish ==="
