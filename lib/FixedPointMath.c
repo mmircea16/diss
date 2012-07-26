@@ -493,6 +493,8 @@ int8_24 log8_24(int8_24 aa)
 	return (int8_24)(app>>16);
 }
 
+
+
 int24_8 log24_8(int24_8 aa)
 {
 	uint64_t a[16]={8332236554LL, 7842104992LL, 7406432492LL, 7016620256LL, 6665789243LL, 6348370707LL, 6059808403LL, 5796338472LL, 5554824369LL, 5332631394LL, 5127530187LL, 4937621661LL, 4761278030LL, 4597096029LL, 4443859495LL, 4300509189LL};
@@ -568,6 +570,37 @@ int24_8 exp24_8(int24_8 a)
     if (t<24) app >>= (24-t);
     else app <<= (t-24);
 	return (int24_8)app;
+}
+
+int8_24 log8_24_v2(int8_24 aa)
+{
+	/*Needs to double the number of entries in the lookup tables to make the interval (0.99,1.01)*/
+	int64_t lna[16]={728633131983LL, 661975655366LL, 599129314724LL, 539681776256LL, 483284202650LL, 429638849824LL, 378489551710LL, 329614321888LL, 282819530961LL, 237935273317LL, 194811643155LL, 153315713702LL, 113329066061LL, 74745751895LL, 37470601627LL, 1417810161LL};
+	uint64_t a[16]={8332236554LL, 7842104992LL, 7406432492LL, 7016620256LL, 6665789243LL, 6348370707LL, 6059808403LL, 5796338472LL, 5554824369LL, 5332631394LL, 5127530187LL, 4937621661LL, 4761278030LL, 4597096029LL, 4443859495LL, 4300509189LL};
+	if (aa<=0) return 0;
+	short k = norm16_16(aa);
+	uint64_t x = ((uint64_t)aa)<<(32-k);
+	uint16_t key = (x>>27)-16;
+
+	x = (x*a[key])>>32;
+	int64_t t;
+	char sign;
+	if (x<(1LL<<31)) {t=x;sign = -1;}
+	else {t = x - (1ULL<<32);sign = 1;}
+
+	int64_t app1 = t - ((t*t)>>33);
+	/* better approximation*/
+	int64_t lnt[4]={-101861706LL,-33686190LL,33424038LL,99501761LL};
+	int64_t invt[4]={4398046511LL,4328785936LL,4261672975LL,4196609266LL};
+	t += 0x0000000008000000;
+	short skey=(t&0x000000000C000000)>>26;
+	t = (t & 0x0000000003FFFFFF) - 0x0000000002000000;
+	t = (t*invt[skey])>>32;
+	int64_t app = lnt[skey]+t - ((t*t)>>33);
+	/* better approximation end*/
+	app = (app<<8) - lna[key];
+	app = app + (k-24)*(47632711549ULL<<4); //increased the precision with 4 bits
+	return (int8_24)(app>>16);
 }
 
 inline char bits4_most_significant(char x)

@@ -543,10 +543,10 @@ char* test_log_8_24()
 	  	x1 = set_int_part_8_24(x1,input1.integer_part);
 		x1 = set_fract_part_8_24(x1,input1.fractional_part);
 
-	  	y = log8_24(x1);
+	  	y = log8_24_v2(x1);
 
 	  	int32_t out = (output.integer_part<<24)+output.fractional_part;
-	    mu_assert_line_with_error("error",i,(out - y),256);
+	    mu_assert_line_with_error("error",i,(out - y),4);
 	 	//mu_assert_line("error",i,((get_int_part_8_8(y)==output.integer_part)&&(get_fract_part_8_8(y)==output.fractional_part)));
 	  	i++;
 	  	}
