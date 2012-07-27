@@ -572,6 +572,36 @@ int24_8 exp24_8(int24_8 a)
 	return (int24_8)app;
 }
 
+int24_8 exp24_8_v2(int24_8 a)
+{
+	int64_t x = ((((int64_t)a)*1901360722LL)>>8)+((int64_t)a<<24);
+	int32_t t = (x>>32);
+	int64_t f = (x&0x00000000FFFFFFFF);
+	x = (f*2977044471ULL)>>32;
+	uint64_t aa[16]={0LL, 268435456LL, 536870912LL, 805306368LL, 1073741824LL, 1342177280LL, 1610612736LL, 1879048192LL, 2147483648LL, 2415919104LL, 2684354560LL, 2952790016LL, 3221225472LL, 3489660928LL, 3758096384LL, 4026531840LL};
+	uint64_t expa[16]={4294967296LL, 4571968887LL, 4866835547LL, 5180719472LL, 5514847171LL, 5870524256LL, 6249140541LL, 6652175479LL, 7081203937LL, 7537902354LL, 8024055288LL, 8541562392LL, 9092445836LL, 9678858211LL, 10303090934LL, 10967583209LL};
+
+	uint16_t key = (x>>28);
+	x = x - aa[key];
+	/* better approximation */
+	uint64_t expx[8] = {4311777322LL, 4345595011LL, 4379677935LL, 4414028175LL, 4448647827LL, 4483539004LL, 4518703836LL, 4554144470LL};
+	short skey=(x&0x000000000E000000)>>25;
+	uint64_t xx = (x&0x0000000001FFFFFF) - 0x0000000001000000;
+	uint64_t app = (xx+((xx*xx)>>33));
+	short app_i = (app>>32)+1;
+	app &= 0x00000000FFFFFFFF;
+	app = (((app*expx[skey])>>32)+app_i*expx[skey]);
+	app &= 0x00000000FFFFFFFF;
+
+	/* end */
+	uint64_t app1 = (x+((x*x)>>33))&0x00000000FFFFFFFF;
+
+    app = ((app*(expa[key]&0x00000000FFFFFFFF))>>32)+ expa[key]+app*(expa[key]>>32);
+    if (t<24) app >>= (24-t);
+    else app <<= (t-24);
+	return (int24_8)app;
+}
+
 int8_24 log8_24_v2(int8_24 aa)
 {
 	/*Needs to double the number of entries in the lookup tables to make the interval (0.99,1.01)*/
@@ -590,9 +620,7 @@ int8_24 log8_24_v2(int8_24 aa)
 
 	int64_t app1 = t - ((t*t)>>33);
 	/* better approximation*/
-	//int64_t lnt[4]={-101861706LL,-33686190LL,33424038LL,99501761LL};
 	int64_t lnt[8] = {-119076027LL,-84716105LL,-50628884LL,-16810069LL,16744533LL,50039019LL,83077392LL,115863561LL};
-	//int64_t invt[4]={4398046511LL,4328785936LL,4261672975LL,4196609266LL};
 	int64_t invt[8] = {4415709348LL,4380524413LL,4345895761LL,4311810305LL,4278255360LL,4245218640LL,4212688229LL,4180652577LL};
 	t += 0x0000000008000000;
 	short skey=(t&0x000000000E000000)>>25;

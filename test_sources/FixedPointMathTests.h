@@ -446,7 +446,7 @@ char* test_exp_24_8()
 	  	x1 = set_int_part_24_8(x1,input1.integer_part);
 		x1 = set_fract_part_24_8(x1,input1.fractional_part);
 
-	  	y = exp24_8(x1);
+	  	y = exp24_8_v2(x1);
 
 	  	int32_t out = (output.integer_part<<8)+output.fractional_part;
 	    mu_assert_line_with_error("error",i,(out - y),10240);
