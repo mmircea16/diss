@@ -8,6 +8,6 @@ require "./generator_log.rb"
 require "./generator_exp.rb"
 
 puts "=== Start ==="
-gen = GeneratorExp.new({"test_file_name" => "8_24/exp.test", "saturated" => false  , "type" => "8_24", "title" => "8.24 exp"});
+gen = GeneratorExp.new({"test_file_name" => "24_8/exp.test", "saturated" => false  , "type" => "24_8", "title" => "24.8 exp"});
 gen.make_tests()
 puts "=== Finish ==="
