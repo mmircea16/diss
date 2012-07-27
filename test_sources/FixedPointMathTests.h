@@ -414,7 +414,7 @@ char* test_exp_16_16()
 	  	x1 = set_int_part_16_16(x1,input1.integer_part);
 		x1 = set_fract_part_16_16(x1,input1.fractional_part);
 
-	  	y = exp16_16(x1);
+	  	y = exp16_16_v2(x1);
 
 	  	int32_t out = (output.integer_part<<16)+output.fractional_part;
 	    mu_assert_line_with_error("error",i,(out - y),1024);

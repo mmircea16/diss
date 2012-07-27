@@ -553,6 +553,38 @@ int16_16 exp16_16(int16_16 a)
 	return (int16_16)app;
 }
 
+int16_16 exp16_16_v2(int16_16 a)
+{
+	int64_t x = (((int64_t)a)*6196328018LL)>>16;
+	int32_t t = (x>>32);
+	int64_t f = (x&0x00000000FFFFFFFF);
+	x = (f*2977044471ULL)>>32;
+	uint64_t aa[16]={0LL, 268435456LL, 536870912LL, 805306368LL, 1073741824LL, 1342177280LL, 1610612736LL, 1879048192LL, 2147483648LL, 2415919104LL, 2684354560LL, 2952790016LL, 3221225472LL, 3489660928LL, 3758096384LL, 4026531840LL};
+	uint64_t expa[16]={4294967296LL, 4571968887LL, 4866835547LL, 5180719472LL, 5514847171LL, 5870524256LL, 6249140541LL, 6652175479LL, 7081203937LL, 7537902354LL, 8024055288LL, 8541562392LL, 9092445836LL, 9678858211LL, 10303090934LL, 10967583209LL};
+
+	uint16_t key = (x>>28);
+	x = x - aa[key];
+	/* better approximation */
+	uint64_t expx[8] = {4311777322LL, 4345595011LL, 4379677935LL, 4414028175LL, 4448647827LL, 4483539004LL, 4518703836LL, 4554144470LL};
+	short skey=(x&0x000000000E000000)>>25;
+	uint64_t xx = (x&0x0000000001FFFFFF) - 0x0000000001000000;
+	uint64_t app = (xx+((xx*xx)>>33));
+	short app_i = (app>>32)+1;
+	app &= 0x00000000FFFFFFFF;
+	app = (((app*expx[skey])>>32)+app_i*expx[skey]);
+	app &= 0x00000000FFFFFFFF;
+
+    /* end */
+
+	uint64_t app1 = (x+((x*x)>>33))&0x00000000FFFFFFFF;
+
+    app = ((app*(expa[key]&0x00000000FFFFFFFF))>>32)+expa[key]+app*(expa[key]>>32);
+
+    if (t<16) app >>= (16-t);
+    else app <<= (t-16);
+	return (int16_16)app;
+}
+
 int24_8 exp24_8(int24_8 a)
 {
 	int64_t x = ((((int64_t)a)*1901360722LL)>>8)+((int64_t)a<<24);
