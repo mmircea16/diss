@@ -557,6 +557,38 @@ char* test_log_8_24()
 	  return 0;
 }
 
+char* test_exp_8_24()
+{
+	  mu_test_title("Exp for 8.24");
+	  init_file("tests/gen/8_24/exp.test");
+	  int8_24 x1,y;
+	  Parsed_fixed_point input1;
+	  Parsed_fixed_point output;
+	  int i=0;
+	  while (get_operand(i,1)!=NULL)
+	  {
+	  	input1=*(Parsed_fixed_point*)get_operand(i,1);
+	  	output=*(Parsed_fixed_point*)get_result(i);
+
+	  	(output.fractional_part) >>=8;
+	  	(input1.fractional_part) >>=8;
+	  	x1 = set_int_part_8_24(x1,input1.integer_part);
+		x1 = set_fract_part_8_24(x1,input1.fractional_part);
+
+	  	y = exp8_24_v2(x1);
+
+	  	int32_t out = (output.integer_part<<24)+output.fractional_part;
+	    mu_assert_line_with_error("error",i,(out - y),4);
+	 	//mu_assert_line("error",i,((get_int_part_8_8(y)==output.integer_part)&&(get_fract_part_8_8(y)==output.fractional_part)));
+	  	i++;
+	  	}
+
+
+	  mu_final();
+
+	  return 0;
+}
+
 char* test_log_24_8()
 {
 	  mu_test_title("Log for 24.8");
@@ -711,6 +743,7 @@ char * all_tests_fixed_point_math() {
 	mu_run_test(test_exp_8_8);
 	mu_run_test(test_exp_16_16);
 	mu_run_test(test_exp_24_8);
+	mu_run_test(test_exp_8_24);
 	mu_run_test(test_bits4_most_significant);
 	mu_run_test(test_norm_8_8);
 	return 0;
