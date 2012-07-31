@@ -83,10 +83,12 @@ int8_8 div8_8(int8_8 n, int8_8 m)
 	short k = norm8_8(m);
 	if (!k) return 0;
 
-
-	uint64_t y = -(((int16_t)m) << (32-k));
-	uint64_t x = -(((int16_t)m) << (32-k));
-	if (y==POW_2_31) return (k>8?n>>(k-9):n<<(9-k));
+    uint64_t z = (((uint16_t)m) << (32-k));
+	uint64_t y = -z;
+	uint64_t x = y;
+	if (z==POW_2_31){
+		return (sign==-1?~(k>8?n>>(k-9):n<<(9-k)):(k>8?n>>(k-9):n<<(9-k)));
+	}
 	int j;
 	uint64_t p=1ULL;
 
@@ -116,10 +118,13 @@ int16_16 div16_16(int16_16 n, int16_16 m)
 	short k = norm16_16(m);
 	if (!k) return 0;
 
-
-	uint64_t y = -(((int32_t)m) << (32-k));
-	uint64_t x = -(((int32_t)m) << (32-k));
-	if (y==POW_2_31) return (k>16?n>>(k-17):n<<(17-k));
+    uint64_t z = (((int32_t)m) << (32-k));
+	uint64_t y = -z;
+	uint64_t x = y;
+	//if (y==POW_2_31) return (k>16?n>>(k-17):n<<(17-k));
+	if (y==POW_2_31){
+			return (sign==-1?~(k>16?n>>(k-17):n<<(17-k)):(k>16?n>>(k-17):n<<(17-k)));
+		}
 	int j;
 	uint64_t p=1ULL;
 
@@ -175,10 +180,13 @@ int8_24 div8_24(int8_24 n, int8_24 m)
 	short k = norm16_16(m);
 	if (!k) return 0;
 
-
-	uint64_t y = -(((int32_t)m) << (32-k));
-	uint64_t x = -(((int32_t)m) << (32-k));
-	if (y==POW_2_31) return (k>24?n>>(k-25):n<<(25-k));
+    uint64_t z = (((int32_t)m) << (32-k));
+	uint64_t y = -z;
+	uint64_t x = y;
+//	if (y==POW_2_31) return (k>24?n>>(k-25):n<<(25-k));
+	if (z==POW_2_31){
+				return (sign==-1?~(k>24?n>>(k-25):n<<(25-k)):(k>24?n>>(k-25):n<<(25-k)));
+			}
 	int j;
 	uint64_t p=1ULL;
 
@@ -190,11 +198,11 @@ int8_24 div8_24(int8_24 n, int8_24 m)
 	}
 
 	uint64_t res = y | POW_2_32;
-	uint64_t out = res * n;
+	uint64_t out =(((uint64_t) (y * n))>>32)+n;
 
     out = (k>24?out>>(k-24):out<<(24-k));
-    out >>=32;
-    if (sign == -1) out = ~out;
+    //out >>=32;
+    if (sign == -1) {out&=(MASK_LOWER_32>>1);out = ~out;}
 	return (int8_24)(out);
 };
 
@@ -221,7 +229,7 @@ int8_24 div8_24_v2(int8_24 n,int8_24 m)
 	x = (k>24?x>>(k-24):x<<(24-k));
 	x >>=32;
 
-	if (sign == -1) x = ~x;
+	 if (sign == -1) {x&=(MASK_LOWER_32>>1);x = ~x;}
 	return (int8_24)x;
 }
 

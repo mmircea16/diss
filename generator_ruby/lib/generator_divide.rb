@@ -54,7 +54,9 @@ class GeneratorDivide < Generator
        
      r =  @util.signed_binary_to_float(t1)*1.0/ @util.signed_binary_to_float(t2); 
        
-    
+     if r > max or r<min
+       puts "out of range:#{r} - #{@util.float_to_signed(r,16,8)}"
+     end
 #     puts "#{test_no}----"
 #     puts @util.signed_binary_to_float(t1)
 #     puts @util.signed_binary_to_float(t2)
@@ -77,13 +79,17 @@ class GeneratorDivide < Generator
      rez = ""
      case @operand_type
      when "8_8":
-       rez = @util.float_to_signed(r,8,8);
+      # rez = @util.float_to_signed(r,16,8)[8..-1];
+       rez = @util.float_to_signed(r,8,8)
      when "16_16":
-       rez = @util.float_to_signed(r,16,16);
+       #rez = @util.float_to_signed(r,32,16)[16..-1];
+       rez = @util.float_to_signed(r,16,16)
      when "8_24":
-       rez = @util.float_to_signed(r,8,24);
+       #rez = @util.float_to_signed(r,32,24)[24..-1];
+       rez = @util.float_to_signed(r,8,24)
      when "24_8":
-       rez = @util.float_to_signed(r,24,8);
+       #rez = @util.float_to_signed(r,32,8)[8..-1];
+       rez = @util.float_to_signed(r,24,8)
      end
  
      test["result"] = rez 
@@ -93,7 +99,7 @@ class GeneratorDivide < Generator
  
  def make_tests
    write_metadata()
-   (0..100).each do |k|
+   (0..1000).each do |k|
       test_hash = generate_test(k)
       write_test(test_hash)
    end
