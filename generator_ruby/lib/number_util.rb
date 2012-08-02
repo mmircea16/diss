@@ -91,14 +91,23 @@ def float_to_unsigned(x,int_size,fract_size)
 end
 
 def float_to_signed(x,int_size,fract_size)
-  if x>=0 
-   return float_to_unsigned(x,int_size,fract_size)
+#  if x>=0 
+#   return float_to_unsigned(x,int_size,fract_size)
+#  end
+#  
+#  x +=2**int_size
+#  s = float_to_unsigned(x,int_size,fract_size) 
+#  s[0] = '1'
+#  return s
+  s = ""
+  if x >= 0
+    s = float_to_unsigned(x,64,fract_size)
+  else
+    s = float_to_unsigned(-x,64,fract_size)
+    s = complement_of_2(s)
   end
-  
-  x +=2**int_size
-  s = float_to_unsigned(x,int_size,fract_size) 
-  s[0] = '1'
-  return s
+  return s[(64-int_size)..-1]
+    
 end
   
 def float_to_signed_16_16 x
@@ -128,8 +137,26 @@ def multiply(t1,t2)
   rez_f = t1_i * t2_f + t1_f * t2_i + t1_f * t2_f - (t1_i * t2_f + t1_f * t2_i + t1_f * t2_f).floor
   return [rez_i,rez_f]
 end
-  
+
+def complement_of_2(string_no)
+  res = ""
+  string_no.chars.to_a.each do |c|
+    res += (c=="0"?"1":(c=="1"?"0":c))
+  end
+  a = res.reverse.chars.to_a
+  i = 0
+#  while a[i]=="1" or a[i]=="." do
+#    if a[i]=="1" 
+#      a[i] = "0"
+#    end
+#    i += 1
+#  end
+#  a[i] = "1"
+  return a.join.reverse
 end
 
+
+
+end
 
 

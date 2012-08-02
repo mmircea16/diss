@@ -156,5 +156,12 @@ describe NumberUtil do
      @util.float_to_signed_16_16(-82.59375).should eq("1111111110101101.0110100000000000") 
      @util.float_to_signed_16_16(101.0281).should eq("0000000001100101.0000011100110001")
    end
+   
+   it "should return correct values for complement of 2" do
+     @util.complement_of_2("0100010010.0001").should eq("1011101101.1111")
+     @util.complement_of_2("010001110.100").should eq("101110001.100")
+     @util.complement_of_2("1011110.0000").should eq("0100010.0000")
+       
+   end
   
 end

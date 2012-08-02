@@ -53,7 +53,7 @@ class GeneratorExp < Generator
  
  def make_tests
   write_metadata()
-  (0..100).each do |k|
+  (0..1000).each do |k|
      test_hash = generate_test(k)
      write_test(test_hash)
   end
