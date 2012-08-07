@@ -10,6 +10,10 @@
 #define FIXEDPOINT_H_
 
 #include <stdint.h>
+
+#define MAX_INT_8_8 0x7FFF;
+#define MIN_INT_8_8 0x8000;
+
 /*structures*/
 struct __float{
 	 int mantissa :23;

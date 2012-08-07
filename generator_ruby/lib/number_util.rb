@@ -61,6 +61,7 @@ end
 
 def float_to_unsigned(x,int_size,fract_size)
   x *= 2**(fract_size)
+
   x = x.floor
   p = 0
   s = ""
@@ -103,7 +104,12 @@ def float_to_signed(x,int_size,fract_size)
   if x >= 0
     s = float_to_unsigned(x,64,fract_size)
   else
-    s = float_to_unsigned(-x,64,fract_size)
+    if (x==(-1)*2**(int_size-1))
+      x = -x
+    else
+      x = -x+2**(-fract_size)
+    end
+    s = float_to_unsigned(x,64,fract_size)
     s = complement_of_2(s)
   end
   return s[(64-int_size)..-1]
@@ -145,13 +151,15 @@ def complement_of_2(string_no)
   end
   a = res.reverse.chars.to_a
   i = 0
-#  while a[i]=="1" or a[i]=="." do
-#    if a[i]=="1" 
-#      a[i] = "0"
-#    end
-#    i += 1
-#  end
-#  a[i] = "1"
+  while a[i]=="1" or a[i]=="." do
+    if a[i]=="1" 
+      a[i] = "0"
+    end
+    i += 1
+  end
+  if i<string_no.length
+    a[i] = "1"
+  end
   return a.join.reverse
 end
 
