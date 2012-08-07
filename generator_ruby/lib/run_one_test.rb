@@ -8,6 +8,6 @@ require "./generator_log.rb"
 require "./generator_exp.rb"
 
 puts "=== Start ==="
-gen = GeneratorDivide.new({"test_file_name" => "24_8/saturated_divide.test", "saturated" => true  , "type" => "24_8", "title" => "24.8 saturated divide"});
+gen = GeneratorExp.new({"test_file_name" => "8_8/saturated_exp.test", "saturated" => true  , "type" => "8_8", "title" => "8.8 saturated exp"});
 gen.make_tests()
 puts "=== Finish ==="

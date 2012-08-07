@@ -808,6 +808,27 @@ int8_8 exp8_8(int8_8 a)
 	return (int8_8)app;
 }
 
+int8_8 sexp8_8(int8_8 a)
+{
+	int64_t x = (((int64_t)a)*LN_2_INV)>>8;
+	int32_t t = (x>>32);
+	int64_t f = (x&MASK_LOWER_32);
+	x = (f*LN_2)>>32;
+
+	uint16_t key = (x>>28);
+	x = x -__AA[key];
+	uint64_t app = (x+((x*x)>>33))&MASK_LOWER_32;
+    app = ((app*(__EXPAA[key]&MASK_LOWER_32))>>32)+(x<0?0:__EXPAA[key])+app*(__EXPAA[key]>>32);
+
+    if (t<24) app >>= (24-t);
+    else app <<= (t-24);
+    if (app&0xFFFFFFFFFFFF8000)
+    {
+    	app = 0x7FFF;
+    }
+	return (int8_8)app;
+}
+
 int16_16 exp16_16(int16_16 a)
 {
 	int64_t x = (((int64_t)a)*LN_2_INV)>>16;
@@ -849,6 +870,38 @@ int16_16 exp16_16_v2(int16_16 a)
 
     if (t<16) app >>= (16-t);
     else app <<= (t-16);
+	return (int16_16)app;
+}
+
+int16_16 sexp16_16_v2(int16_16 a)
+{
+	int64_t x = (((int64_t)a)*LN_2_INV)>>16;
+	int32_t t = (x>>32);
+	int64_t f = (x&MASK_LOWER_32);
+	x = (f*LN_2)>>32;
+
+	uint16_t key = (x>>28);
+	x = x - __AA_v2[key];
+	/* better approximation */
+	short skey=(x&MASK_5_TO_8)>>24;
+	uint64_t xx = (x&MASK_FROM_9) - POW_2_23;
+	uint64_t app = (xx+((xx*xx)>>33));
+	short app_i = (app>>32)+1;
+	app &= MASK_LOWER_32;
+	app = (((app*__EXPX[skey])>>32)+app_i*__EXPX[skey]);
+	app &= MASK_LOWER_32;
+
+    /* end */
+
+    app = ((app*(__EXPAA_v2[key]&MASK_LOWER_32))>>32)+__EXPAA_v2[key]+app*(__EXPAA_v2[key]>>32);
+
+    if (t<16) app >>= (16-t);
+    else app <<= (t-16);
+
+    if (app&0xFFFFFFFF80000000)
+    {
+       	app = 0x7FFFFFFF;
+    }
 	return (int16_16)app;
 }
 
