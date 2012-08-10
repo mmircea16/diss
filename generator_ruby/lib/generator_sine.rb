@@ -1,7 +1,7 @@
 require "./generator.rb"
 
 
-class GeneratorExp < Generator
+class GeneratorSine < Generator
  
  attr_accessor :test_title
  
@@ -12,8 +12,7 @@ class GeneratorExp < Generator
    @test_title = options["title"];
    @type_of_result = "FIXED POINT BINARY"
    @type_of_operands = "FIXED POINT BINARY"
-   @operand_type = options["type"]
-   @saturated = options["saturated"]
+   @operand_type = options["type"];
   end
  
  def generate_test test_no
@@ -22,42 +21,28 @@ class GeneratorExp < Generator
      case @operand_type
      when "8_8":
        k = @gen.generate_fixed_point(8,8)
-       max = 2**7-2**-8
-       #k = k[0...1]*5+k
      when "16_16":
-       k = @gen.generate_fixed_point(16,16)
-       max = 2**15 - 2**-16 
-       #k = k[0...1]*12+k   
+       k = @gen.generate_fixed_point(16,16)   
      when "8_24":
        k = @gen.generate_fixed_point(8,24)
-       max = 2**7 - 2**-24
-       #k = k[0...1]*5+k
      when "24_8":
        k = @gen.generate_fixed_point(24,8)
-       max = 2**23 - 2**8
-      # k = k[0...1]*19+k        
      end
      
      test["first_operand"] = k
      n = @util.signed_binary_to_float(k)
      
-     rez = Math.exp(n)
-     if rez > max and @saturated
-       rez = max
-     end
-
      case @operand_type
      when "8_8":
-       rez = @util.float_to_signed(rez,8,8)
+       rez = @util.float_to_signed(Math.sin(n),8,8)
      when "16_16":
-       rez = @util.float_to_signed(rez,16,16)
+       rez = @util.float_to_signed(Math.sin(n),16,16)
      when "8_24":
-       rez = @util.float_to_signed(rez,8,24);
+       rez = @util.float_to_signed(Math.sin(n),8,24);
      when "24_8":
-       rez = @util.float_to_signed(rez,24,8);
+       rez = @util.float_to_signed(Math.sin(n),24,8);
      end
      
-   
      test["result"] = rez
      return test
    end

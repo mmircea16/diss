@@ -974,6 +974,66 @@ int16_16 log16_16_v2(int16_16 aa)
 	return (int16_16)(app>>24);
 }
 
+int8_8 sin8_8(int8_8 a)
+{
+	uint64_t x = a;
+	short sign = 1;
+	if (a<0)
+	{
+		sign = -1;
+		x = -x;
+	}
+	x = (x*PI_INV)>>7;
+	uint64_t p = (x>>32)&0x3;
+	x &= MASK_LOWER_32;
+	x = ((x * (PI&MASK_LOWER_32))>>33)+((3*x)>>1);
+
+	x = x >> 3;
+
+	uint64_t x_sin;
+	uint64_t x_cos;
+	uint64_t x2 = (x*x)>>32;
+	uint64_t x3 = (x2*x)>>32;
+	uint64_t x4 = (x3*x)>>32;
+	uint64_t x5 = (x4*x)>>32;
+
+	x_sin = x - ((x3*SIN_C1)>>32)+((x5*SIN_C2)>>32);
+	x_cos = POW_2_32 - (x2>>1) + ((x4*COS_C1)>>32);
+
+	uint64_t aux;
+
+	aux = (x_sin*x_cos)>>31;
+	x_cos = ((x_cos*x_cos)>>31) - POW_2_32;
+	x_sin = aux;
+
+	aux = (x_sin*x_cos)>>31;
+	x_cos = ((x_cos*x_cos)>>31) - POW_2_32;
+	x_sin = aux;
+
+	aux = (x_sin*x_cos)>>31;
+	x_cos = ((x_cos*x_cos)>>31) - POW_2_32;
+	x_sin = aux;
+
+	if (p%4 == 1){
+		x_sin = x_cos;
+	}
+
+	if (p%4 == 2){
+		x_sin = -x_sin;
+	}
+
+	if (p%4 == 3){
+		x_sin = -x_cos;
+	}
+
+	if (sign==-1)
+	{
+		x_sin = -x_sin;
+	}
+
+	return (x_sin>>24);
+}
+
 inline char bits4_most_significant(char x)
 {
 	if (!x) return 0;

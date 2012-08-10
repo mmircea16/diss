@@ -6,8 +6,9 @@ require "./generator_floor_fp.rb"
 require "./generator_divide.rb"
 require "./generator_log.rb"
 require "./generator_exp.rb"
+require "./generator_sine.rb"
 
 puts "=== Start ==="
-gen = GeneratorDivide.new({"test_file_name" => "24_8/saturated_divide.test", "saturated" => true  , "type" => "24_8", "title" => "24.8 saturated divide"});
+gen = GeneratorSine.new({"test_file_name" => "8_8/sine.test", "saturated" => false  , "type" => "8_8", "title" => "8.8 sine"});
 gen.make_tests()
 puts "=== Finish ==="

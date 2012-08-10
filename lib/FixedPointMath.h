@@ -32,6 +32,13 @@
 #define MASK_5_TO_6 (0x000000000C000000)
 #define MASK_FROM_7 (0x0000000003FFFFFF)
 
+#define PI (13493037704ULL)
+#define PI_INV (1367130551ULL)
+
+#define SIN_C1 (715827882ULL) // 1/6
+#define SIN_C2 (35791394ULL) // 1/120
+#define COS_C1 (178956970ULL) // 1/24
+
 short norm8_8(int16_t x);
 short norm16_16(int32_t x);
 
@@ -63,6 +70,8 @@ int8_24 exp8_24(int8_24 aa);
 int8_24 exp8_24_v2(int8_24 a);
 int24_8 exp24_8(int24_8 aa);
 int24_8 exp24_8_v2(int24_8 a);
+
+int8_8 sin8_8(int8_8 a);
 
 inline char bits4_most_significant(char x);
 
