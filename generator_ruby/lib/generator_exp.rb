@@ -22,20 +22,24 @@ class GeneratorExp < Generator
      case @operand_type
      when "8_8":
        k = @gen.generate_fixed_point(8,8)
-       max = 2**7-2**-8
+       min = - 2**7
+       max = 2**7 - 2**(-8)
        #k = k[0...1]*5+k
      when "16_16":
        k = @gen.generate_fixed_point(16,16)
-       max = 2**15 - 2**-16 
+       min = - 2**15
+       max = 2**15 - 2**(-16)
        #k = k[0...1]*12+k   
      when "8_24":
        k = @gen.generate_fixed_point(8,24)
-       max = 2**7 - 2**-24
+       min = - 2**7
+       max = 2**7 - 2**(-24)
        #k = k[0...1]*5+k
      when "24_8":
        k = @gen.generate_fixed_point(24,8)
-       max = 2**23 - 2**8
-      # k = k[0...1]*19+k        
+       min = - 2**23
+       max = 2**23 - 2**(-8)
+       #k = k[0...1]*19+k        
      end
      
      test["first_operand"] = k
@@ -56,8 +60,17 @@ class GeneratorExp < Generator
      when "24_8":
        rez = @util.float_to_signed(rez,24,8);
      end
+
+     if @saturated
+       if rez<=min 
+         rez = min
+       end
+       
+       if rez>=max
+         rez = max
+       end
+     end
      
-   
      test["result"] = rez
      return test
    end

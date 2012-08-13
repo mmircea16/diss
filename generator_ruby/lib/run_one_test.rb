@@ -9,6 +9,8 @@ require "./generator_exp.rb"
 require "./generator_sine.rb"
 
 puts "=== Start ==="
+
 gen = GeneratorSine.new({"test_file_name" => "8_8/sine.test", "saturated" => false  , "type" => "8_8", "title" => "8.8 sine"});
+
 gen.make_tests()
 puts "=== Finish ==="
