@@ -5,7 +5,7 @@
  *      Author: moisem
  */
 #include "FixedPointMath.h"
-
+#include "Info.h"
 uint64_t __A[16]={8332236554LL, 7842104992LL, 7406432492LL, 7016620256LL, 6665789243LL, 6348370707LL, 6059808403LL, 5796338472LL, 5554824369LL, 5332631394LL, 5127530187LL, 4937621661LL, 4761278030LL, 4597096029LL, 4443859495LL, 4300509189LL};
 int64_t __LNA[16]={2846223171LL, 2585842403LL, 2340348885LL, 2108131938LL, 1887828916LL, 1678276757LL, 1478474811LL, 1287555944LL, 1104763792LL, 929434661LL, 760982981LL, 598889506LL, 442691664LL, 291975593LL, 146369537LL, 5538320LL};
 
@@ -75,6 +75,11 @@ int8_8 div8_8_v2(int8_8 n,int8_8 m)
 	x >>=32;
 
 	if (sign == -1) x = ~x;
+
+#ifdef DEBUG_FLAG
+    verify_overflow_16_bits(x);
+#endif
+
 	return (int8_8)x;
 }
 
@@ -144,7 +149,9 @@ int8_8 div8_8(int8_8 n, int8_8 m)
     out = (k>8?out>>(k-8):out<<(8-k));
     out >>=32;
     if (sign == -1) out = ~out;
-
+#ifdef DEBUG_FLAG
+    verify_overflow_16_bits(out);
+#endif
 	return (int8_8)(out);
 };
 int8_8 sdiv8_8(int8_8 n, int8_8 m)
@@ -258,6 +265,9 @@ int16_16 div16_16(int16_16 n, int16_16 m)
     out >>=32;
 
     if (sign == -1) out = ~out;
+#ifdef DEBUG_FLAG
+    verify_overflow_32_bits(out);
+#endif
 	return (int16_16)(out);
 };
 
@@ -290,6 +300,9 @@ int16_16 div16_16_v2(int16_16 n,int16_16 m)
 	x >>=32;
 
 	if (sign == -1) x = ~x;
+#ifdef DEBUG_FLAG
+    verify_overflow_32_bits(x);
+#endif
 	return (int16_16)x;
 }
 
@@ -358,6 +371,9 @@ int8_24 div8_24(int8_24 n, int8_24 m)
     out = (k>24?out>>(k-24):out<<(24-k));
     //out >>=32;
     if (sign == -1) {out = ~out;}
+#ifdef DEBUG_FLAG
+    verify_overflow_32_bits(out);
+#endif
 	return (int8_24)(out);
 };
 
@@ -373,7 +389,7 @@ int8_24 div8_24_v2(int8_24 n,int8_24 m)
 	uint64_t x = (~((b<<1)&MASK_LOWER_32)+1)&MASK_LOWER_32;
 	uint64_t p = 1LL;
     int i = 0;
-	for (i=0;i<10;i++){
+	for (i=0;i<4;i++){
 	  p = x << 1;
 	  x = ((((b*x)>>32)*x)>>32) + ((b*x)>>31) + b;
 	  x = p-x;
@@ -385,6 +401,9 @@ int8_24 div8_24_v2(int8_24 n,int8_24 m)
 	x >>=32;
 
 	 if (sign == -1) {x = ~x;}
+#ifdef DEBUG_FLAG
+    verify_overflow_32_bits(x);
+#endif
 	return (int8_24)x;
 }
 
@@ -449,7 +468,7 @@ int8_24 sdiv8_24_v2(int8_24 n,int8_24 m)
 	}
 
     int i = 0;
-	for (i=0;i<10;i++){
+	for (i=0;i<4;i++){
 	  p = x << 1;
 	  x = ((((b*x)>>32)*x)>>32) + ((b*x)>>31) + b;
 	  x = p-x;
@@ -491,7 +510,9 @@ int24_8 div24_8(int24_8 n, int24_8 m)
     out = (k>8?out>>(k-8):out<<(8-k));
     out >>=32;
     if (sign == -1) out = ~out;
-
+#ifdef DEBUG_FLAG
+    verify_overflow_32_bits(out);
+#endif
 	return (int24_8)(out);
 };
 
@@ -507,7 +528,7 @@ int24_8 div24_8_v2(int24_8 n,int24_8 m)
 	uint64_t x = (~((b<<1)&MASK_LOWER_32)+1)&MASK_LOWER_32;
 	uint64_t p = 1LL;
     int i = 0;
-	for (i=0;i<10;i++){
+	for (i=0;i<4;i++){
 	  p = x << 1;
 	  x = ((((b*x)>>32)*x)>>32) + ((b*x)>>31) + b;
 	  x = p-x;
@@ -519,6 +540,9 @@ int24_8 div24_8_v2(int24_8 n,int24_8 m)
 	x >>=32;
 
 	if (sign == -1) x = ~x;
+#ifdef DEBUG_FLAG
+    verify_overflow_32_bits(out);
+#endif
 	return (int24_8)x;
 }
 
@@ -573,7 +597,7 @@ int24_8 sdiv24_8_v2(int24_8 n,int24_8 m)
 	uint64_t x = (~((b<<1)&MASK_LOWER_32)+1)&MASK_LOWER_32;
 	uint64_t p = 1LL;
     int i = 0;
-	for (i=0;i<10;i++){
+	for (i=0;i<4;i++){
 	  p = x << 1;
 	  x = ((((b*x)>>32)*x)>>32) + ((b*x)>>31) + b;
 	  x = p-x;
@@ -616,6 +640,7 @@ int8_8 sqrt8_8(int8_8 a)
 
     if (k%2) {x = ((x*SQRT_2)>>32)+x; }
     x = (k>8?x << ((k-8)/2) : x >> ((9-k)/2));
+
 	return (int8_8)(x>>24);
 }
 
@@ -731,6 +756,9 @@ int8_8 log8_8(int8_8 aa)
 	uint64_t app = t - ((t*t)>>33);
 	app = app - __LNA[key];
 	app = app + (k-8)*LN_2;
+#ifdef DEBUG_FLAG
+    verify_overflow_16_bits(app>>24);
+#endif
 	return (int8_8)(app>>24);
 }
 
@@ -749,6 +777,9 @@ int16_16 log16_16(int16_16 aa)
 	uint64_t app = t - ((t*t)>>33);
 	app = app - __LNA[key];
 	app = (app<<4) + (k-16)*LN_2_EXTRA; //increased the precision with 4 bits
+#ifdef DEBUG_FLAG
+    verify_overflow_32_bits(app>>20);
+#endif
 	return (int16_16)(app>>20);
 }
 
@@ -768,6 +799,9 @@ int8_24 log8_24(int8_24 aa)
 	uint64_t app = t - ((t*t)>>33);
 	app = (app<<8) - __LNA[key];
 	app = app + (k-24)*(LN_2_EXTRA<<4); //increased the precision with 4 bits
+#ifdef DEBUG_FLAG
+    verify_overflow_32_bits(app>>16);
+#endif
 	return (int8_24)(app>>16);
 }
 
@@ -788,6 +822,9 @@ int24_8 log24_8(int24_8 aa)
 	uint64_t app = t - ((t*t)>>33);
 	app = app - __LNA[key];
 	app = app + (k-8)*LN_2; //increased the precision with 4 bits
+#ifdef DEBUG_FLAG
+    verify_overflow_32_bits(app>>24);
+#endif
 	return (int24_8)(app>>24);
 }
 
@@ -805,6 +842,9 @@ int8_8 exp8_8(int8_8 a)
 
     if (t<24) app >>= (24-t);
     else app <<= (t-24);
+#ifdef DEBUG_FLAG
+    verify_overflow_16_bits(app);
+#endif
 	return (int8_8)app;
 }
 
@@ -843,6 +883,9 @@ int16_16 exp16_16(int16_16 a)
 
     if (t<16) app >>= (16-t);
     else app <<= (t-16);
+#ifdef DEBUG_FLAG
+    verify_overflow_32_bits(app);
+#endif
 	return (int16_16)app;
 }
 
@@ -870,6 +913,9 @@ int16_16 exp16_16_v2(int16_16 a)
 
     if (t<16) app >>= (16-t);
     else app <<= (t-16);
+#ifdef DEBUG_FLAG
+    verify_overflow_32_bits(app);
+#endif
 	return (int16_16)app;
 }
 
@@ -902,6 +948,9 @@ int16_16 sexp16_16_v2(int16_16 a)
     {
        	app = 0x7FFFFFFF;
     }
+#ifdef DEBUG_FLAG
+    verify_overflow_32_bits(app);
+#endif
 	return (int16_16)app;
 }
 
@@ -919,6 +968,9 @@ int24_8 exp24_8(int24_8 a)
 
     if (t<24) app >>= (24-t);
     else app <<= (t-24);
+#ifdef DEBUG_FLAG
+    verify_overflow_32_bits(app);
+#endif
 	return (int24_8)app;
 }
 
@@ -946,6 +998,9 @@ int24_8 exp24_8_v2(int24_8 a)
     app = ((app*(__EXPAA_v2[key]&MASK_LOWER_32))>>32)+ __EXPAA_v2[key]+app*(__EXPAA_v2[key]>>32);
     if (t<24) app >>= (24-t);
     else app <<= (t-24);
+#ifdef DEBUG_FLAG
+    verify_overflow_32_bits(app);
+#endif
 	return (int24_8)app;
 }
 
@@ -972,6 +1027,9 @@ int8_24 exp8_24_v2(int8_24 a)
     app = ((app*(__EXPAA_v2[key]&MASK_LOWER_32))>>32)+ __EXPAA_v2[key]+app*(__EXPAA_v2[key]>>32);
     if (t<8) app >>= (8-t);
     else app <<= (t-8);
+#ifdef DEBUG_FLAG
+    verify_overflow_32_bits(app);
+#endif
 	return (int8_24)app;
 }
 
@@ -998,6 +1056,9 @@ int8_24 log8_24_v2(int8_24 aa)
 	/* better approximation end*/
 	app = (app<<8) - __LNAA[key];
 	app = app + (k-24)*(LN_2_EXTRA<<4); //increased the precision with 4 bits
+#ifdef DEBUG_FLAG
+    verify_overflow_32_bits(app>>16);
+#endif
 	return (int8_24)(app>>16);
 }
 
@@ -1024,6 +1085,9 @@ int16_16 log16_16_v2(int16_16 aa)
 	/* better approximation end*/
 	app = (app<<8) - __LNAA[key];
 	app = app + (k-16)*(LN_2_EXTRA<<4); //increased the precision with 4 bits
+#ifdef DEBUG_FLAG
+    verify_overflow_32_bits(app>>24);
+#endif
 	return (int16_16)(app>>24);
 }
 

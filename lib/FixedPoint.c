@@ -20,7 +20,10 @@ inline int16_16 int16_16_new(const float X)
 
 inline int8_8 add8_8(int8_8 x,int8_8 y)
 {
-	int16_t __s = (int16_t)(x) + (int16_t)(y);
+	int32_t __s = (int16_t)(x) + (int16_t)(y);
+#ifdef DEBUG_FLAG
+	verify_overflow_16_bits(__s);
+#endif
 	return (int8_8)__s;
 }
 
@@ -38,7 +41,10 @@ inline int8_8 sadd8_8(int8_8 x,int8_8 y)
 
 inline int8_8 sub8_8(int8_8 x,int8_8 y)
 {
-	int16_t __s = (int16_t)(x) - (int16_t)(y);
+	int32_t __s = (int16_t)(x) - (int16_t)(y);
+#ifdef DEBUG_FLAG
+	verify_overflow_16_bits(__s);
+#endif
     return (int8_8)__s;
 }
 
@@ -51,6 +57,7 @@ inline int8_8 ssub8_8(int8_8 x,int8_8 y)
 		if ((x & 0x8000) && !(__s & 0x8000)) __s = 0x8000;
 		if (!(x & 0x8000) && (__s & 0x8000)) __s = 0x7FFF;
 	}
+
 	return (int8_8)__s;
 }
 
@@ -58,6 +65,9 @@ inline int8_8 mul8_8(int8_8 x,int8_8 y)
 {
  int32_t __s = (int16_t)(x) * (int16_t)(y);
  int16_t r = __s>>8;
+#ifdef DEBUG_FLAG
+	verify_overflow_16_bits(__s>>8);
+#endif
  return (int8_8)r;
 }
 
@@ -99,7 +109,11 @@ inline int16_16 cast8_8_to_16_16(int8_8 x)
 
 inline int16_16 add16_16(int16_16 x,int16_16 y)
 {
-	return (int16_16)((int32_t)x+(int32_t)y);
+	int64_t s = (int32_t)x+(int32_t)y;
+#ifdef DEBUG_FLAG
+	verify_overflow_32_bits(s);
+#endif
+	return (int16_16)(s);
 }
 
 inline int16_16 sadd16_16(int16_16 x,int16_16 y)
@@ -115,7 +129,10 @@ inline int16_16 sadd16_16(int16_16 x,int16_16 y)
 
 inline int16_16 sub16_16(int16_16 x,int16_16 y)
 {
-	int32_t __s = (int32_t)(x) - (int32_t)(y);
+	int64_t __s = (int32_t)(x) - (int32_t)(y);
+#ifdef DEBUG_FLAG
+	verify_overflow_32_bits(__s);
+#endif
 	return (int16_16)(__s);
 }
 
@@ -134,6 +151,9 @@ inline int16_16 mul16_16(int16_16 x,int16_16 y)
 {
 	 int64_t __s = (int64_t)(x) * (int64_t)(y);
 	 int32_t r = __s>>16;
+#ifdef DEBUG_FLAG
+	verify_overflow_32_bits(__s>>16);
+#endif
 	 return (int16_16)r;
 }
 
@@ -183,7 +203,10 @@ inline int8_24 int8_24_new(const float X)
 
 inline int8_24 add8_24(int8_24 x,int8_24 y)
 {
-	int32_t __s = (int32_t)(x) + (int32_t)(y);
+	int64_t __s = (int32_t)(x) + (int32_t)(y);
+#ifdef DEBUG_FLAG
+	verify_overflow_32_bits(__s);
+#endif
     return (int8_24)__s;
 }
 
@@ -200,7 +223,10 @@ inline int8_24 sadd8_24(int8_24 x,int8_24 y)
 
 inline int8_24 sub8_24(int8_24 x,int8_24 y)
 {
-	int32_t __s = (int32_t)(x) - (int32_t)(y);
+	int64_t __s = (int32_t)(x) - (int32_t)(y);
+#ifdef DEBUG_FLAG
+	verify_overflow_32_bits(__s);
+#endif
     return (int8_24)__s;
 }
 
@@ -220,6 +246,9 @@ inline int8_24 mul8_24(int8_24 x,int8_24 y)
 {
     int64_t __s = (int64_t)(x) * (int64_t)(y);
     int32_t r = __s>>24;
+#ifdef DEBUG_FLAG
+	verify_overflow_32_bits(__s>>24);
+#endif
     return (int8_24)r;
 }
 
@@ -265,7 +294,10 @@ inline int24_8 int24_8_new(const float X)
 
 inline int24_8 add24_8(int24_8 x,int24_8 y)
 {
-	int32_t __s =(int32_t)x + (int32_t)y;
+	int64_t __s =(int32_t)x + (int32_t)y;
+#ifdef DEBUG_FLAG
+	verify_overflow_32_bits(__s);
+#endif
 	return (int24_8)__s;
 }
 
@@ -282,7 +314,10 @@ inline int24_8 sadd24_8(int24_8 x,int24_8 y)
 
 inline int24_8 sub24_8(int24_8 x,int24_8 y)
 {
-	int32_t __s =(int32_t)x - (int32_t)y;
+	int64_t __s =(int32_t)x - (int32_t)y;
+#ifdef DEBUG_FLAG
+	verify_overflow_32_bits(__s);
+#endif
 	return (int24_8)__s;
 }
 
@@ -301,6 +336,9 @@ inline int24_8 mul24_8(int24_8 x,int24_8 y)
 {
     int64_t __s = (int64_t)(x) * (int64_t)(y);
     int32_t r = __s>>8;
+#ifdef DEBUG_FLAG
+	verify_overflow_32_bits(__s>>8);
+#endif
     return (int8_24)r;
 }
 
