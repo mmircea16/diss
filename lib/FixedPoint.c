@@ -6,6 +6,8 @@
  */
 #include "FixedPoint.h"
 
+//#define DEBUG_FLAG
+
 inline int8_8 int8_8_new(const float X)
 {
 	int16_t __yy =(int16_t)(X*256);

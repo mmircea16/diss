@@ -4,14 +4,18 @@
 
 O_SRCS := 
 C_SRCS := 
-S_UPPER_SRCS := 
 OBJ_SRCS := 
-ASM_SRCS := 
 OBJS := 
 C_DEPS := 
 EXECUTABLES := 
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-. \
+util \
+test_sources \
+samples/simple \
+lib \
+Export/util \
+Export/samples/simple \
+Export/lib \
 

@@ -9,13 +9,13 @@
 
 
 
-#define DEBUG_FLAG
+#define DEBUG_FLAG 1
 
 #include "FixedPoint.h"
 #include "FixedPointTests.h"
 #include "FixedPointMath.h"
 #include "FixedPointMathTests.h"
-
+#include "FixedPointMathDebugTests.h"
 
 
 
@@ -29,9 +29,9 @@ int tests_run = 0;
 int main()
 {
 
-	char *result = all_tests_fixed_point();
+	//char *result = all_tests_fixed_point();
 	//char *result = all_tests_fixed_point_math();
-	//char *result = all_tests_fixed_point_with_info();
+	char *result = all_tests_fixed_point_math_debug();
 	 //char *result = all_tests_info();
 	 if (result != 0) {
 	     printf("%s\n", result);

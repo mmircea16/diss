@@ -9,6 +9,13 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include subdir.mk
+-include util/subdir.mk
+-include test_sources/subdir.mk
+-include samples/simple/subdir.mk
+-include lib/subdir.mk
+-include Export/util/subdir.mk
+-include Export/samples/simple/subdir.mk
+-include Export/lib/subdir.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
@@ -22,19 +29,19 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: FixedPointTypes
+all: diss
 
 # Tool invocations
-FixedPointTypes: $(OBJS) $(USER_OBJS)
+diss: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
-	@echo 'Invoking: GCC C Linker'
-	gcc  -o"FixedPointTypes" $(OBJS) $(USER_OBJS) $(LIBS)
+	@echo 'Invoking: Cross GCC Linker'
+	gcc  -o"diss" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(OBJS)$(C_DEPS)$(EXECUTABLES) FixedPointTypes
+	-$(RM) $(OBJS)$(C_DEPS)$(EXECUTABLES) diss
 	-@echo ' '
 
 .PHONY: all clean dependents
