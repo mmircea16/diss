@@ -13,7 +13,7 @@ char* test_simple_overflow()
 	debug_on();
 	int8_8 t1 = 0x7100;
 	int8_8 t2 = 0x1000;
-	int8_8 s = add8_8(t1,t2);
+	int8_8 s = add(t1,t2);
 	mu_assert("error",get_overflow(CURRENT_ERR)==1);
 	return 0;
 }

@@ -1096,36 +1096,36 @@ char* test_saturated_div_24_8_v2()
 char * all_tests_fixed_point_math() {
 	mu_run_test(test_div_8_8);
 	mu_run_test(test_div_8_8_v2);
-	mu_run_test(test_div_16_16);
-	mu_run_test(test_div_16_16_v2);
+//	mu_run_test(test_div_16_16);
+//	mu_run_test(test_div_16_16_v2);
 	mu_run_test(test_div_8_24);
 	mu_run_test(test_div_8_24_v2);
-	mu_run_test(test_div_24_8);
-	mu_run_test(test_div_24_8_v2);
-	mu_run_test(test_sqrt_8_8);
-	mu_run_test(test_sqrt_16_16);
-	mu_run_test(test_sqrt_8_24);
-	mu_run_test(test_sqrt_24_8);
-	mu_run_test(test_log_8_8);
-	mu_run_test(test_log_16_16);
-	mu_run_test(test_log_8_24);
-	mu_run_test(test_log_24_8);
-	mu_run_test(test_exp_8_8);
-	mu_run_test(test_exp_16_16);
-	mu_run_test(test_exp_24_8);
-	mu_run_test(test_exp_8_24);
-	mu_run_test(test_bits4_most_significant);
-	mu_run_test(test_norm_8_8);
-	mu_run_test(test_saturated_div_8_8);
-	mu_run_test(test_saturated_div_8_8_v2);
-	mu_run_test(test_saturated_div_16_16);
-	mu_run_test(test_saturated_div_16_16_v2);
-	mu_run_test(test_saturated_div_8_24);
-    mu_run_test(test_saturated_div_8_24_v2);
-	mu_run_test(test_saturated_div_24_8);
-    mu_run_test(test_saturated_div_24_8_v2);
-
-	mu_run_test(test_sine_8_8);
+//	mu_run_test(test_div_24_8);
+//	mu_run_test(test_div_24_8_v2);
+//	mu_run_test(test_sqrt_8_8);
+//	mu_run_test(test_sqrt_16_16);
+//	mu_run_test(test_sqrt_8_24);
+//	mu_run_test(test_sqrt_24_8);
+//	mu_run_test(test_log_8_8);
+//	mu_run_test(test_log_16_16);
+//	mu_run_test(test_log_8_24);
+//	mu_run_test(test_log_24_8);
+//	mu_run_test(test_exp_8_8);
+//	mu_run_test(test_exp_16_16);
+//	mu_run_test(test_exp_24_8);
+//	mu_run_test(test_exp_8_24);
+//	mu_run_test(test_bits4_most_significant);
+//	mu_run_test(test_norm_8_8);
+//	mu_run_test(test_saturated_div_8_8);
+//	mu_run_test(test_saturated_div_8_8_v2);
+//	mu_run_test(test_saturated_div_16_16);
+//	mu_run_test(test_saturated_div_16_16_v2);
+//	mu_run_test(test_saturated_div_8_24);
+//    mu_run_test(test_saturated_div_8_24_v2);
+//	mu_run_test(test_saturated_div_24_8);
+//    mu_run_test(test_saturated_div_24_8_v2);
+//
+//	mu_run_test(test_sine_8_8);
 
 
 
