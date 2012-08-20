@@ -55,24 +55,24 @@ int8_8 div8_8_v2(int8_8 n,int8_8 m)
 	short k = norm8_8(m);
 	if (!k) return 0;
 
-	uint64_t b =(m << (32-k))&MASK_LOWER_32;
-	uint64_t x = (~((b<<1)&MASK_LOWER_32)+1)&MASK_LOWER_32;
+	uint32_t b =(m << (32-k))&MASK_LOWER_32;
+	uint32_t x = (~((b<<1)&MASK_LOWER_32)+1)&MASK_LOWER_32;
 	uint64_t p = 1LL;
-
+    uint64_t q;
 	if (b==POW_2_31){
 		return (sign==-1?~(k>8?n>>(k-9):n<<(9-k)):(k>8?n>>(k-9):n<<(9-k)));
 	}
     int i = 0;
 	for (i=0;i<3;i++){
-	  p = x << 1;
-	  x = ((((b*x)>>32)*x)>>32) + ((b*x)>>31) + b;
+	  p = ((int64_t)x) << 1;
+	  q = ((int64_t)b*x)>>32;
+	  q = (int64_t)((int32_t)q)*x;
+	  x = (q>>32) + (((int64_t)b*x)>>31) + b;
 	  x = p-x;
-	  x &=MASK_LOWER_32;
 	}
-    x = (x*n)+POW_2_32*n;
+    x = (((int64_t)x*n)>>32)+n;
 
 	x = (k>8?x>>(k-8):x<<(8-k));
-	x >>=32;
 
 	if (sign == -1) x = ~x;
 
@@ -91,9 +91,10 @@ int8_8 sdiv8_8_v2(int8_8 n,int8_8 m)
 	short k = norm8_8(m);
 	if (!k) return 0;
 
-	uint64_t b =(m << (32-k))&MASK_LOWER_32;
-	uint64_t x = (~((b<<1)&MASK_LOWER_32)+1)&MASK_LOWER_32;
+	uint32_t b =(m << (32-k))&MASK_LOWER_32;
+	uint32_t x = (~((b<<1)&MASK_LOWER_32)+1)&MASK_LOWER_32;
 	uint64_t p = 1LL;
+	uint64_t q;
 
 	if (b==POW_2_31){
 		x = (k>9?n>>(k-9):n<<(9-k));
@@ -101,17 +102,18 @@ int8_8 sdiv8_8_v2(int8_8 n,int8_8 m)
 		if (sign == -1) x = ~x;
 		return x;
 	}
-    int i = 0;
+
+	int i = 0;
 	for (i=0;i<3;i++){
-	  p = x << 1;
-	  x = ((((b*x)>>32)*x)>>32) + ((b*x)>>31) + b;
+	  p = ((int64_t)x) << 1;
+	  q = ((int64_t)b*x)>>32;
+	  q = (int64_t)((int32_t)q)*x;
+	  x = (q>>32) + (((int64_t)b*x)>>31) + b;
 	  x = p-x;
-	  x &=MASK_LOWER_32;
 	}
-    x = (x*n)+POW_2_32*n;
+    x = (((int64_t)x*n)>>32)+n;
 
 	x = (k>8?x>>(k-8):x<<(8-k));
-	x >>=32;
 
 	if (x&0xFFFFFFFFFFFF8000) x = 0x7FFF;
 	if (sign == -1) x = ~x;
@@ -126,28 +128,30 @@ int8_8 div8_8(int8_8 n, int8_8 m)
 	short k = norm8_8(m);
 	if (!k) return 0;
 
-    uint64_t z = (((uint16_t)m) << (32-k));
-	uint64_t y = -z;
-	uint64_t x = y;
-	if ((z&MASK_LOWER_32)==POW_2_31){
-		return (sign==-1?~(k>9?n>>(k-9):n<<(9-k)):(k>9?n>>(k-9):n<<(9-k)));
+    uint32_t z = (((uint16_t)m) << (32-k));
+	uint32_t y = -z;
+	uint32_t x = y;
+	uint32_t out;
+	if (z==POW_2_31){
+		out = (k>9?n>>(k-9):n<<(9-k));
+		if (sign == -1) out = ~out;
+		return out;
 	}
 	int j;
 	uint64_t p=1ULL;
 
 
 	for (j=0;j<3;j++){
-    p = x*x;
+    p = (int64_t) x*x;
 	x = p >> 32;
-    p = x*y ;
+    p = (int64_t) x*y ;
     y = (p >> 32)+x+y;
 	}
 
-	uint64_t res = y | POW_2_32;
-	uint64_t out = res * n;
+	uint64_t res = (int64_t) y*n;
+    out = (res>>32)+n;
 
     out = (k>8?out>>(k-8):out<<(8-k));
-    out >>=32;
     if (sign == -1) out = ~out;
 #ifdef DEBUG_FLAG
     verify_overflow_16_bits(out);
@@ -163,10 +167,10 @@ int8_8 sdiv8_8(int8_8 n, int8_8 m)
 	short k = norm8_8(m);
 	if (!k) return 0;
 
-    uint64_t z = (((uint16_t)m) << (32-k));
-	uint64_t y = -z;
-	uint64_t x = y;
-	if ((z&MASK_LOWER_32)==POW_2_31){
+    uint32_t z = (((uint16_t)m) << (32-k));
+	uint32_t y = -z;
+	uint32_t x = y;
+	if (z==POW_2_31){
 		out = (k>9?n>>(k-9):n<<(9-k));
 		if (out&0xFFFFFFFFFFFF8000) out = 0x7FFF;
 		if (sign == -1) out = ~out;
@@ -177,17 +181,17 @@ int8_8 sdiv8_8(int8_8 n, int8_8 m)
 
 
 	for (j=0;j<3;j++){
-    p = x*x;
+    p = (int64_t)x*x;
 	x = p >> 32;
-    p = x*y ;
+    p = (int64_t)x*y ;
     y = (p >> 32)+x+y;
 	}
 
-	uint64_t res = y | POW_2_32;
-	out = res * n;
+	uint64_t res = (int64_t) y*n;
+    out = (res>>32)+n;
 
     out = (k>8?out>>(k-8):out<<(8-k));
-    out >>=32;
+
     if (out&0xFFFFFFFFFFFF8000) out = 0x7FFF;
     if (sign == -1) out = ~out;
 
@@ -241,28 +245,26 @@ int16_16 div16_16(int16_16 n, int16_16 m)
 	short k = norm16_16(m);
 	if (!k) return 0;
 
-    uint64_t z = (((int32_t)m) << (32-k));
-	uint64_t y = -z;
-	uint64_t x = y;
+    uint32_t z = (((int32_t)m) << (32-k));
+	uint32_t y = -z;
+	uint32_t x = y;
 	//if (y==POW_2_31) return (k>16?n>>(k-17):n<<(17-k));
-	if ((z&MASK_LOWER_32)==POW_2_31){
+	if (z==POW_2_31){
 			return (sign==-1?~(k>16?n>>(k-17):n<<(17-k)):(k>16?n>>(k-17):n<<(17-k)));
 		}
 	int j;
 	uint64_t p=1ULL;
 
 	for (j=0;j<4;j++){
-    p = x*x;
+    p = (int64_t)x*x;
 	x = p >> 32;
-    p = x*y ;
+    p = (int64_t)x*y ;
     y = (p >> 32)+x+y;
 	}
 
-	uint64_t res = y | POW_2_32;
-	uint64_t out = res * n;
+	uint64_t out = (((int64_t)y * n)>>32)+n;
 
     out = (k>16?out>>(k-16):out<<(16-k));
-    out >>=32;
 
     if (sign == -1) out = ~out;
 #ifdef DEBUG_FLAG

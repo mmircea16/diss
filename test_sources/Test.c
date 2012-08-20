@@ -29,8 +29,8 @@ int tests_run = 0;
 int main()
 {
 
-	char *result = all_tests_fixed_point();
-	//char *result = all_tests_fixed_point_math();
+//	char *result = all_tests_fixed_point();
+	char *result = all_tests_fixed_point_math();
 	//char *result = all_tests_fixed_point_math_debug();
 	 //char *result = all_tests_info();
 	 if (result != 0) {
