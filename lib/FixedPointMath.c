@@ -91,8 +91,8 @@ int8_8 sdiv8_8_v2(int8_8 n,int8_8 m)
 	short k = norm8_8(m);
 	if (!k) return 0;
 
-	uint32_t b =(m << (32-k))&MASK_LOWER_32;
-	uint32_t x = (~((b<<1)&MASK_LOWER_32)+1)&MASK_LOWER_32;
+	uint32_t b =(m << (32-k));
+	uint32_t x = -(b<<1);
 	uint64_t p = 1LL;
 	uint64_t q;
 
@@ -104,13 +104,25 @@ int8_8 sdiv8_8_v2(int8_8 n,int8_8 m)
 	}
 
 	int i = 0;
-	for (i=0;i<3;i++){
+	
 	  p = ((int64_t)x) << 1;
 	  q = ((int64_t)b*x)>>32;
 	  q = (int64_t)((int32_t)q)*x;
 	  x = (q>>32) + (((int64_t)b*x)>>31) + b;
 	  x = p-x;
-	}
+
+	  p = ((int64_t)x) << 1;
+	  q = ((int64_t)b*x)>>32;
+	  q = (int64_t)((int32_t)q)*x;
+	  x = (q>>32) + (((int64_t)b*x)>>31) + b;
+	  x = p-x;
+
+	  p = ((int64_t)x) << 1;
+	  q = ((int64_t)b*x)>>32;
+	  q = (int64_t)((int32_t)q)*x;
+	  x = (q>>32) + (((int64_t)b*x)>>31) + b;
+	  x = p-x;
+	
     x = (((int64_t)x*n)>>32)+n;
 
 	x = (k>8?x>>(k-8):x<<(8-k));
@@ -141,12 +153,21 @@ int8_8 div8_8(int8_8 n, int8_8 m)
 	uint64_t p=1ULL;
 
 
-	for (j=0;j<3;j++){
-    p = (int64_t) x*x;
+	
+        p = (int64_t) x*x;
 	x = p >> 32;
-    p = (int64_t) x*y ;
-    y = (p >> 32)+x+y;
-	}
+        p = (int64_t) x*y ;
+        y = (p >> 32)+x+y;
+
+        p = (int64_t) x*x;
+	x = p >> 32;
+        p = (int64_t) x*y ;
+        y = (p >> 32)+x+y;
+	
+        p = (int64_t) x*x;
+	x = p >> 32;
+        p = (int64_t) x*y ;
+        y = (p >> 32)+x+y; 
 
 	uint64_t res = (int64_t) y*n;
     out = (res>>32)+n;
@@ -187,8 +208,7 @@ int8_8 sdiv8_8(int8_8 n, int8_8 m)
     y = (p >> 32)+x+y;
 	}
 
-	uint64_t res = (int64_t) y*n;
-    out = (res>>32)+n;
+    out = ((y * n)>>32) + n;
 
     out = (k>8?out>>(k-8):out<<(8-k));
 
@@ -208,11 +228,12 @@ int16_16 sdiv16_16(int16_16 n, int16_16 m)
 	short k = norm16_16(m);
 	if (!k) return 0;
 
-    uint64_t z = (((int32_t)m) << (32-k));
-	uint64_t y = -z;
-	uint64_t x = y;
+       
+        uint32_t z = (((int32_t)m) << (32-k));
+	uint32_t y = -z;
+	uint32_t x = y;
 	//if (y==POW_2_31) return (k>16?n>>(k-17):n<<(17-k));
-	if ((z&MASK_LOWER_32)==POW_2_31){
+	if (z==POW_2_31){
 		out = (k>16?n>>(k-17):n<<(17-k));
 		if (out&0xFFFFFFFF80000000) out = 0x7FFFFFFF;
 		if (sign == -1) out = ~out;
@@ -221,15 +242,15 @@ int16_16 sdiv16_16(int16_16 n, int16_16 m)
 	int j;
 	uint64_t p=1ULL;
 
-	for (j=0;j<4;j++){
-    p = x*x;
+	for (j=0;j<3;j++){
+    p = (int64_t)x*x;
 	x = p >> 32;
-    p = x*y ;
+    p = (int64_t)x*y ;
     y = (p >> 32)+x+y;
 	}
 
-	uint64_t res = y;
-	out = ((res * n)>>32) + n;
+
+	out = (((int64_t)y * n)>>32)+n;
 
     out = (k>16?out>>(k-16):out<<(16-k));
     if (out&0xFFFFFFFF80000000) out = 0x7FFFFFFF;
@@ -239,6 +260,7 @@ int16_16 sdiv16_16(int16_16 n, int16_16 m)
 
 int16_16 div16_16(int16_16 n, int16_16 m)
 {
+    uint64_t out;
     char sign = 1;
 	if (m<0) {m = -m; sign = -1;}
 	if (n<0) {n = -n; sign *= -1;}
@@ -250,7 +272,9 @@ int16_16 div16_16(int16_16 n, int16_16 m)
 	uint32_t x = y;
 	//if (y==POW_2_31) return (k>16?n>>(k-17):n<<(17-k));
 	if (z==POW_2_31){
-			return (sign==-1?~(k>16?n>>(k-17):n<<(17-k)):(k>16?n>>(k-17):n<<(17-k)));
+		out = (k>16?n>>(k-17):n<<(17-k));
+		if (sign == -1) out = ~out;
+		return out;
 		}
 	int j;
 	uint64_t p=1ULL;
@@ -262,7 +286,7 @@ int16_16 div16_16(int16_16 n, int16_16 m)
     y = (p >> 32)+x+y;
 	}
 
-	uint64_t out = (((int64_t)y * n)>>32)+n;
+    out = (((int64_t)y * n)>>32)+n;
 
     out = (k>16?out>>(k-16):out<<(16-k));
 
@@ -281,25 +305,28 @@ int16_16 div16_16_v2(int16_16 n,int16_16 m)
 	short k = norm16_16(m);
 	if (!k) return 0;
 
-	uint64_t b =(m << (32-k))&MASK_LOWER_32;
-	uint64_t x = (~((b<<1)&MASK_LOWER_32)+1)&MASK_LOWER_32;
-	uint64_t p = 1LL;
+	uint32_t b =(m << (32-k));
+	uint32_t x = -(b<<1);
+	uint32_t p = 1LL;
+        uint32_t q;
 
-	if (b==POW_2_31){
-		return (sign==-1?~(k>8?n>>(k-9):n<<(9-k)):(k>8?n>>(k-9):n<<(9-k)));
-	}
+        if (b==POW_2_31){
+		x = (k>16?n>>(k-17):n<<(17-k));
+		if (sign == -1) x = ~x;
+		return x;
+		}
 
     int i = 0;
 	for (i=0;i<4;i++){
-	  p = x << 1;
-	  x = ((((b*x)>>32)*x)>>32) + ((b*x)>>31) + b;
+	  p = ((int64_t)x) << 1;
+	  q = ((int64_t)b*x)>>32;
+	  q = (int64_t)((int32_t)q)*x;
+	  x = (q>>32) + (((int64_t)b*x)>>31) + b;
 	  x = p-x;
-	  x &=MASK_LOWER_32;
 	}
-    x = (x*n)+POW_2_32*n;
+    x = (((int64_t)x*n)>>32)+n;
 
 	x = (k>16?x>>(k-16):x<<(16-k));
-	x >>=32;
 
 	if (sign == -1) x = ~x;
 #ifdef DEBUG_FLAG
@@ -310,65 +337,70 @@ int16_16 div16_16_v2(int16_16 n,int16_16 m)
 
 int16_16 sdiv16_16_v2(int16_16 n,int16_16 m)
 {
-    char sign = 1;
+       char sign = 1;
 	if (m<0) {m = -m; sign = -1;}
 	if (n<0) {n = -n; sign *= -1;}
 	short k = norm16_16(m);
 	if (!k) return 0;
 
-	uint64_t b =(m << (32-k))&MASK_LOWER_32;
-	uint64_t x = (~((b<<1)&MASK_LOWER_32)+1)&MASK_LOWER_32;
-	uint64_t p = 1LL;
+	uint32_t b =(m << (32-k));
+	uint32_t x = -(b<<1);
+	uint32_t p = 1LL;
+        uint32_t q;
 
-	if (b==POW_2_31){
+        if (b==POW_2_31){
 		x = (k>16?n>>(k-17):n<<(17-k));
 		if (x&0xFFFFFFFF80000000) x = 0x7FFFFFFF;
 		if (sign == -1) x = ~x;
 		return x;
-	}
+		}
 
     int i = 0;
 	for (i=0;i<4;i++){
-	  p = x << 1;
-	  x = ((((b*x)>>32)*x)>>32) + ((b*x)>>31) + b;
+	  p = ((int64_t)x) << 1;
+	  q = ((int64_t)b*x)>>32;
+	  q = (int64_t)((int32_t)q)*x;
+	  x = (q>>32) + (((int64_t)b*x)>>31) + b;
 	  x = p-x;
-	  x &=MASK_LOWER_32;
 	}
-    x = ((x*n)>>32)+n;
+    x = (((int64_t)x*n)>>32)+n;
 
 	x = (k>16?x>>(k-16):x<<(16-k));
-	if (x&0xFFFFFFFF80000000) x = 0x7FFFFFFF;
+        if (x&0xFFFFFFFF80000000) x = 0x7FFFFFFF;
 	if (sign == -1) x = ~x;
 	return (int16_16)x;
 }
 
+
 int8_24 div8_24(int8_24 n, int8_24 m)
 {
-    char sign = 1;
+   uint64_t out;
+      char sign = 1;
 	if (m<0) {m = -m; sign = -1;}
 	if (n<0) {n = -n; sign *= -1;}
 	short k = norm16_16(m);
 	if (!k) return 0;
 
-    uint64_t z = (((int32_t)m) << (32-k));
-	uint64_t y = -z;
-	uint64_t x = y;
+        uint32_t z = (((int32_t)m) << (32-k));
+	uint32_t y = -z;
+	uint32_t x = y;
 //	if (y==POW_2_31) return (k>24?n>>(k-25):n<<(25-k));
-	if ((z&MASK_LOWER_32)==POW_2_31){
-				return (sign==-1?~(k>24?n>>(k-25):n<<(25-k)):(k>24?n>>(k-25):n<<(25-k)));
+	if (z==POW_2_31){
+		out = (k>16?n>>(k-17):n<<(17-k));
+		if (sign == -1) out = ~out;
+		return out;
 			}
 	int j;
 	uint64_t p=1ULL;
 
 	for (j=0;j<4;j++){
-    p = x*x;
+    p = (int64_t)x*x;
 	x = p >> 32;
-    p = x*y ;
+    p = (int64_t)x*y ;
     y = (p >> 32)+x+y;
 	}
 
-	uint64_t res = y | POW_2_32;
-	uint64_t out =(((uint64_t) (y * n))>>32)+n;
+     out = (((int64_t)y * n)>>32)+n;
 
     out = (k>24?out>>(k-24):out<<(24-k));
     //out >>=32;
@@ -376,76 +408,6 @@ int8_24 div8_24(int8_24 n, int8_24 m)
 #ifdef DEBUG_FLAG
     verify_overflow_32_bits(out);
 #endif
-	return (int8_24)(out);
-};
-
-int8_24 div8_24_v2(int8_24 n,int8_24 m)
-{
-    char sign = 1;
-	if (m<0) {m = -m; sign = -1;}
-	if (n<0) {n = -n; sign *= -1;}
-	short k = norm16_16(m);
-	if (!k) return 0;
-
-	uint64_t b =(m << (32-k))&MASK_LOWER_32;
-	uint64_t x = (~((b<<1)&MASK_LOWER_32)+1)&MASK_LOWER_32;
-	uint64_t p = 1LL;
-    int i = 0;
-	for (i=0;i<4;i++){
-	  p = x << 1;
-	  x = ((((b*x)>>32)*x)>>32) + ((b*x)>>31) + b;
-	  x = p-x;
-	  x &=MASK_LOWER_32;
-	}
-    x = (x*n)+POW_2_32*n;
-
-	x = (k>24?x>>(k-24):x<<(24-k));
-	x >>=32;
-
-	 if (sign == -1) {x = ~x;}
-#ifdef DEBUG_FLAG
-    verify_overflow_32_bits(x);
-#endif
-	return (int8_24)x;
-}
-
-int8_24 sdiv8_24(int8_24 n, int8_24 m)
-{
-	uint64_t out;
-    char sign = 1;
-	if (m<0) {m = -m; sign = -1;}
-	if (n<0) {n = -n; sign *= -1;}
-	short k = norm16_16(m);
-	if (!k) return 0;
-
-    uint64_t z = (((int32_t)m) << (32-k));
-	uint64_t y = -z;
-	uint64_t x = y;
-//	if (y==POW_2_31) return (k>24?n>>(k-25):n<<(25-k));
-	if ((z&MASK_LOWER_32)==POW_2_31){
-			out = (k>16?n>>(k-17):n<<(17-k));
-			if (out&0xFFFFFFFF80000000) out = 0x7FFFFFFF;
-			if (sign == -1) out = ~out;
-			return out;
-			}
-	int j;
-	uint64_t p=1ULL;
-
-	for (j=0;j<4;j++){
-    p = x*x;
-	x = p >> 32;
-    p = x*y ;
-    y = (p >> 32)+x+y;
-	}
-
-
-	out =(((uint64_t) (y * n))>>32)+n;
-
-    out = (k>24?out>>(k-24):out<<(24-k));
-    //out >>=32;
-
-    if (out&0xFFFFFFFF80000000) out = 0x7FFFFFFF;
-    if (sign == -1) {out = ~out;}
 	return (int8_24)(out);
 };
 
@@ -457,34 +419,37 @@ int8_24 sdiv8_24_v2(int8_24 n,int8_24 m)
 	short k = norm16_16(m);
 	if (!k) return 0;
 
-	uint64_t b =(m << (32-k))&MASK_LOWER_32;
-	uint64_t x = (~((b<<1)&MASK_LOWER_32)+1)&MASK_LOWER_32;
+	uint32_t b =(m << (32-k));
+	uint32_t x = -(b<<1);
 	uint64_t p = 1LL;
+        uint64_t q;
 
-
-	if (b==POW_2_31){
+        if (b==POW_2_31){
 		x = (k>24?n>>(k-25):n<<(25-k));
-		if (x&0xFFFFFFFF80000000) x = 0x7FFFFFFF;
+                if (x&0xFFFFFFFF80000000) x = 0x7FFFFFFF;
 		if (sign == -1) x = ~x;
 		return x;
 	}
 
     int i = 0;
 	for (i=0;i<4;i++){
-	  p = x << 1;
-	  x = ((((b*x)>>32)*x)>>32) + ((b*x)>>31) + b;
+	  p = ((int64_t)x) << 1;
+	  q = ((int64_t)b*x)>>32;
+	  q = (int64_t)((int32_t)q)*x;
+	  x = (q>>32) + (((int64_t)b*x)>>31) + b;
 	  x = p-x;
-	  x &=MASK_LOWER_32;
 	}
-    x = ((x*n)>>32)+n;
+    x = (((int64_t)x*n)>>32)+n;
 
 	x = (k>24?x>>(k-24):x<<(24-k));
-	if (x&0xFFFFFFFF80000000) x = 0x7FFFFFFF;
+         if (x&0xFFFFFFFF80000000) x = 0x7FFFFFFF;
 	 if (sign == -1) {x = ~x;}
+
 	return (int8_24)x;
 }
 
-int24_8 div24_8(int24_8 n, int24_8 m)
+
+int8_24 div8_24_v2(int8_24 n,int8_24 m)
 {
     char sign = 1;
 	if (m<0) {m = -m; sign = -1;}
@@ -492,25 +457,108 @@ int24_8 div24_8(int24_8 n, int24_8 m)
 	short k = norm16_16(m);
 	if (!k) return 0;
 
+	uint32_t b =(m << (32-k));
+	uint32_t x = -(b<<1);
+	uint64_t p = 1LL;
+        uint64_t q;
 
-	uint64_t y = -(((int32_t)m) << (32-k));
-	uint64_t x = -(((int32_t)m) << (32-k));
-	if (y==POW_2_31) return (k>24?n>>(k-25):n<<(25-k));
+        if (b==POW_2_31){
+		x = (k>24?n>>(k-25):n<<(25-k));
+                
+		if (sign == -1) x = ~x;
+		return x;
+	}
+
+    int i = 0;
+	for (i=0;i<4;i++){
+	  p = ((int64_t)x) << 1;
+	  q = ((int64_t)b*x)>>32;
+	  q = (int64_t)((int32_t)q)*x;
+	  x = (q>>32) + (((int64_t)b*x)>>31) + b;
+	  x = p-x;
+	}
+    x = (((int64_t)x*n)>>32)+n;
+
+	x = (k>24?x>>(k-24):x<<(24-k));
+
+	 if (sign == -1) {x = ~x;}
+#ifdef DEBUG_FLAG
+    verify_overflow_32_bits(x);
+#endif
+	return (int8_24)x;
+}
+
+int8_24 sdiv8_24(int8_24 n, int8_24 m)
+{
+	   uint64_t out;
+      char sign = 1;
+	if (m<0) {m = -m; sign = -1;}
+	if (n<0) {n = -n; sign *= -1;}
+	short k = norm16_16(m);
+	if (!k) return 0;
+
+        uint32_t z = (((int32_t)m) << (32-k));
+	uint32_t y = -z;
+	uint32_t x = y;
+//	if (y==POW_2_31) return (k>24?n>>(k-25):n<<(25-k));
+	if (z==POW_2_31){
+		out = (k>16?n>>(k-17):n<<(17-k));
+                if (out&0xFFFFFFFF80000000) out = 0x7FFFFFFF;
+		if (sign == -1) out = ~out;
+		return out;
+			}
 	int j;
 	uint64_t p=1ULL;
 
 	for (j=0;j<4;j++){
-    p = x*x;
+    p = (int64_t)x*x;
 	x = p >> 32;
-    p = x*y ;
+    p = (int64_t)x*y ;
     y = (p >> 32)+x+y;
 	}
 
-	uint64_t res = y | POW_2_32;
-	uint64_t out = res * n;
+     out = (((int64_t)y * n)>>32)+n;
+
+    out = (k>24?out>>(k-24):out<<(24-k));
+    //out >>=32;
+    if (out&0xFFFFFFFF80000000) out = 0x7FFFFFFF;
+    if (sign == -1) {out = ~out;}
+	
+	return (int8_24)out;
+}
+
+int24_8 div24_8(int24_8 n, int24_8 m)
+{
+uint64_t out;
+    char sign = 1;
+	if (m<0) {m = -m; sign = -1;}
+	if (n<0) {n = -n; sign *= -1;}
+	short k = norm16_16(m);
+	if (!k) return 0;
+
+
+	uint32_t y = -(((int32_t)m) << (32-k));
+	uint32_t x = -(((int32_t)m) << (32-k));
+	if (y==POW_2_31){
+		out = (k>8?n>>(k-9):n<<(9-k));
+		if (sign == -1) out = ~out;
+		return out;
+	}
+	int j;
+	uint64_t p=1ULL;
+
+   for (j=0;j<4;j++){
+    p = (int64_t)x*x;
+	x = p >> 32;
+    p = (int64_t)x*y ;
+    y = (p >> 32)+x+y;
+	}
+
+     out = (((int64_t)y * n)>>32)+n;
+
 
     out = (k>8?out>>(k-8):out<<(8-k));
-    out >>=32;
+    
     if (sign == -1) out = ~out;
 #ifdef DEBUG_FLAG
     verify_overflow_32_bits(out);
@@ -526,20 +574,30 @@ int24_8 div24_8_v2(int24_8 n,int24_8 m)
 	short k = norm16_16(m);
 	if (!k) return 0;
 
-	uint64_t b =(m << (32-k))&MASK_LOWER_32;
-	uint64_t x = (~((b<<1)&MASK_LOWER_32)+1)&MASK_LOWER_32;
+	uint32_t b =(m << (32-k));
+	uint32_t x = -(b<<1);
 	uint64_t p = 1LL;
+       uint64_t q;
+
+        if (b==POW_2_31){
+		x = (k>24?n>>(k-25):n<<(25-k));
+                
+		if (sign == -1) x = ~x;
+		return x;
+	}
+
     int i = 0;
 	for (i=0;i<4;i++){
-	  p = x << 1;
-	  x = ((((b*x)>>32)*x)>>32) + ((b*x)>>31) + b;
+	  p = ((int64_t)x) << 1;
+	  q = ((int64_t)b*x)>>32;
+	  q = (int64_t)((int32_t)q)*x;
+	  x = (q>>32) + (((int64_t)b*x)>>31) + b;
 	  x = p-x;
-	  x &=MASK_LOWER_32;
 	}
-    x = (x*n)+POW_2_32*n;
+    x = (((int64_t)x*n)>>32)+n;
 
 	x = (k>8?x>>(k-8):x<<(8-k));
-	x >>=32;
+	
 
 	if (sign == -1) x = ~x;
 #ifdef DEBUG_FLAG
@@ -550,37 +608,37 @@ int24_8 div24_8_v2(int24_8 n,int24_8 m)
 
 int24_8 sdiv24_8(int24_8 n, int24_8 m)
 {
+ uint64_t out;
     char sign = 1;
 	if (m<0) {m = -m; sign = -1;}
 	if (n<0) {n = -n; sign *= -1;}
 	short k = norm16_16(m);
 	if (!k) return 0;
 
-	uint64_t out;
-	uint64_t z = (((int32_t)m) << (32-k));
-	uint64_t y = -z;
-	uint64_t x = -z;
-	if ((z&MASK_LOWER_32)==POW_2_31){
-				out = (k>8?n>>(k-9):n<<(9-k));
-				if (out&0xFFFFFFFF80000000) out = 0x7FFFFFFF;
-				if (sign == -1) out = ~out;
-				return out;
-				}
-	if (y==POW_2_31) return (k>24?n>>(k-25):n<<(25-k));
+
+	uint32_t y = -(((int32_t)m) << (32-k));
+	uint32_t x = -(((int32_t)m) << (32-k));
+	if (y==POW_2_31){
+		out = (k>8?n>>(k-9):n<<(9-k));
+                if (out&0xFFFFFFFF80000000) out = 0x7FFFFFFF;
+		if (sign == -1) out = ~out;
+		return out;
+	}
 	int j;
 	uint64_t p=1ULL;
 
-	for (j=0;j<4;j++){
-    p = x*x;
+   for (j=0;j<4;j++){
+    p = (int64_t)x*x;
 	x = p >> 32;
-    p = x*y ;
+    p = (int64_t)x*y ;
     y = (p >> 32)+x+y;
 	}
 
+     out = (((int64_t)y * n)>>32)+n;
 
-	out =((y * n)>>32)+n;
 
     out = (k>8?out>>(k-8):out<<(8-k));
+    
     if (out&0xFFFFFFFF80000000) out = 0x7FFFFFFF;
     if (sign == -1) out = ~out;
 
@@ -589,28 +647,39 @@ int24_8 sdiv24_8(int24_8 n, int24_8 m)
 
 int24_8 sdiv24_8_v2(int24_8 n,int24_8 m)
 {
-    char sign = 1;
+      char sign = 1;
 	if (m<0) {m = -m; sign = -1;}
 	if (n<0) {n = -n; sign *= -1;}
 	short k = norm16_16(m);
 	if (!k) return 0;
 
-	uint64_t b =(m << (32-k))&MASK_LOWER_32;
-	uint64_t x = (~((b<<1)&MASK_LOWER_32)+1)&MASK_LOWER_32;
+	uint32_t b =(m << (32-k));
+	uint32_t x = -(b<<1);
 	uint64_t p = 1LL;
+       uint64_t q;
+
+        if (b==POW_2_31){
+		x = (k>24?n>>(k-25):n<<(25-k));
+                if (x&0xFFFFFFFF80000000) x = 0x7FFFFFFF;
+		if (sign == -1) x = ~x;
+		return x;
+	}
+
     int i = 0;
 	for (i=0;i<4;i++){
-	  p = x << 1;
-	  x = ((((b*x)>>32)*x)>>32) + ((b*x)>>31) + b;
+	  p = ((int64_t)x) << 1;
+	  q = ((int64_t)b*x)>>32;
+	  q = (int64_t)((int32_t)q)*x;
+	  x = (q>>32) + (((int64_t)b*x)>>31) + b;
 	  x = p-x;
-	  x &=MASK_LOWER_32;
 	}
-    x = ((x*n)>>32)+n;
+    x = (((int64_t)x*n)>>32)+n;
 
 	x = (k>8?x>>(k-8):x<<(8-k));
-
-	if (x&0xFFFFFFFF80000000) x = 0x7FFFFFFF;
+	
+        if (x&0xFFFFFFFF80000000) x = 0x7FFFFFFF;
 	if (sign == -1) x = ~x;
+
 	return (int24_8)x;
 }
 
@@ -618,32 +687,36 @@ int8_8 sqrt8_8(int8_8 a)
 {
     if (a<=0) return 0;
     short k = norm8_8(a);
-    uint64_t aa = ((uint64_t)a<<(32-k))&MASK_LOWER_32;
-    uint64_t x = (SQRT_C1 - ((SQRT_C2*aa)>>32));
-    if (x<POW_2_32) x = 0;
-    else x = x & MASK_LOWER_32;
+    uint32_t aa = (a<<(32-k));
+    int32_t c2_aux = SQRT_C2 & MASK_LOWER_32;
+    uint64_t xx = (((int64_t) c2_aux*aa)>>32)+aa;
+     xx = (SQRT_C1 -xx);
+   uint32_t x;
+    if (xx<POW_2_32) x = 0;
+    else x = xx & MASK_LOWER_32;
 
     int i;
     int p_i;
     uint64_t p = 1ULL;
     for (i=0;i<3;i++)
     {
-    	p = ((x*x)>>32)+(x << 1) + (1LL << 32);
+    	p = (((int64_t)x*x)>>32)+(((int64_t)x) << 1) + (1LL << 32);
     	p_i = p>>32;
     	p = p & MASK_LOWER_32;
-    	p = ((p*aa)>>32) + aa*p_i;
+    	p = (((int64_t)p*aa)>>32) + (int64_t)aa*p_i;
     	p = (3LL << 32) - p;
     	p_i = (p>>32);
     	p = p & MASK_LOWER_32;
-        x = ((p * x) >> 33) + ((p_i * x) >> 1)+(p>>1)+(p_i<<31);
+        x = (((int64_t)p * x) >> 33) + (((int64_t)p_i * x) >> 1)+(p>>1)+(p_i<<31);
         x = x & MASK_LOWER_32;
     }
-    x = ((x * aa)>>32)+aa;
+    int64_t res = (((int64_t)x * aa)>>32)+aa;
 
-    if (k%2) {x = ((x*SQRT_2)>>32)+x; }
-    x = (k>8?x << ((k-8)/2) : x >> ((9-k)/2));
 
-	return (int8_8)(x>>24);
+    if (k%2) {res = (((int64_t)res*SQRT_2)>>32)+res; }
+    res = (k>8?((int64_t)res) << ((k-8)/2) : ((int64_t)res) >> ((9-k)/2));
+
+	return (int8_8)(res>>24);
 }
 
 int16_16 sqrt16_16(int16_16 a)
@@ -1157,4 +1230,15 @@ inline char bits4_most_significant(char x)
 {
 	if (!x) return 0;
 	return (x&0xC?(x&0x8?4:3):(x&0x2?2:1));
+}
+long __ashldi3 (long a, int k)
+{
+  if (k!=0) {if (k>32) { a<<=32; k >>=1; }; if (k>16) { a<<=16; k >>=1; };if (k>8) { a<<=8; k >>=1; };if (k>4) { a<<=4; k >>=1; };if (k>2) { a<<=2; k >>=1; };if (k>1) { a<<=1; k >>=1; }; a<<=k;}
+  return a;
+}
+
+long __lshrdi3 (long a, int k)
+{
+ if (k!=0) {if (k>32) { a>>=32; k >>=1; }; if (k>16) { a>>=16; k >>=1; };if (k>8) { a>>=8; k >>=1; };if (k>4) { a>>=4; k >>=1; };if (k>2) { a>>=2; k >>=1; };if (k>1) { a>>=1; k >>=1; }; a>>=k;}
+ return a;
 }

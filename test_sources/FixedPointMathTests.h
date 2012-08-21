@@ -932,7 +932,7 @@ char* test_norm_8_8()
 	   x = set_int_part_8_8(x,input.integer_part);
 	   x = set_fract_part_8_8(x,input.fractional_part);
 
-	   y = norm8_8(x);
+	   //y = norm8_8(x);
 	   mu_assert_line("error",i,y==output);
 	   i++;
 	}
@@ -1096,13 +1096,13 @@ char* test_saturated_div_24_8_v2()
 char * all_tests_fixed_point_math() {
 //	mu_run_test(test_div_8_8);
 //	mu_run_test(test_div_8_8_v2);
-	mu_run_test(test_div_16_16);
+//	mu_run_test(test_div_16_16);
 //	mu_run_test(test_div_16_16_v2);
 //	mu_run_test(test_div_8_24);
 //	mu_run_test(test_div_8_24_v2);
 //	mu_run_test(test_div_24_8);
 //	mu_run_test(test_div_24_8_v2);
-//	mu_run_test(test_sqrt_8_8);
+	mu_run_test(test_sqrt_8_8);
 //	mu_run_test(test_sqrt_16_16);
 //	mu_run_test(test_sqrt_8_24);
 //	mu_run_test(test_sqrt_24_8);
