@@ -551,7 +551,7 @@ char* test_sqrt_16_16()
 	  	y = sqrt16_16(x1);
 
 	  	int32_t out = (output.integer_part<<16)+output.fractional_part;
-	    mu_assert_line_with_error("error",i,(out - y),4);
+	    mu_assert_line_with_error("error",i,(out - y),256);
 	 	//mu_assert_line("error",i,((get_int_part_8_8(y)==output.integer_part)&&(get_fract_part_8_8(y)==output.fractional_part)));
 	  	i++;
 	  	}
@@ -776,7 +776,7 @@ char* test_log_8_8()
 	  	y = log8_8(x1);
 
 	  	int16_t out = (output.integer_part<<8)+output.fractional_part;
-	    mu_assert_line_with_error("error",i,(out - y),4);
+	    mu_assert_line_with_error("error",i,(out - y),256);
 	 	//mu_assert_line("error",i,((get_int_part_8_8(y)==output.integer_part)&&(get_fract_part_8_8(y)==output.fractional_part)));
 	  	i++;
 	  	}
@@ -1102,7 +1102,7 @@ char * all_tests_fixed_point_math() {
 //	mu_run_test(test_div_8_24_v2);
 //	mu_run_test(test_div_24_8);
 //	mu_run_test(test_div_24_8_v2);
-	mu_run_test(test_sqrt_8_8);
+//	mu_run_test(test_sqrt_8_8);
 //	mu_run_test(test_sqrt_16_16);
 //	mu_run_test(test_sqrt_8_24);
 //	mu_run_test(test_sqrt_24_8);
@@ -1110,7 +1110,7 @@ char * all_tests_fixed_point_math() {
 //	mu_run_test(test_log_16_16);
 //	mu_run_test(test_log_8_24);
 //	mu_run_test(test_log_24_8);
-//	mu_run_test(test_exp_8_8);
+	mu_run_test(test_exp_8_8);
 //	mu_run_test(test_exp_16_16);
 //	mu_run_test(test_exp_24_8);
 //	mu_run_test(test_exp_8_24);

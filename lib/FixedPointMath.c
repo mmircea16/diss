@@ -6,10 +6,8 @@
  */
 #include "FixedPointMath.h"
 #include "Info.h"
-uint64_t __A[16]={8332236554LL, 7842104992LL, 7406432492LL, 7016620256LL, 6665789243LL, 6348370707LL, 6059808403LL, 5796338472LL, 5554824369LL, 5332631394LL, 5127530187LL, 4937621661LL, 4761278030LL, 4597096029LL, 4443859495LL, 4300509189LL};
-int64_t __LNA[16]={2846223171LL, 2585842403LL, 2340348885LL, 2108131938LL, 1887828916LL, 1678276757LL, 1478474811LL, 1287555944LL, 1104763792LL, 929434661LL, 760982981LL, 598889506LL, 442691664LL, 291975593LL, 146369537LL, 5538320LL};
-
-int64_t __LNAA[16]={728633131983LL, 661975655366LL, 599129314724LL, 539681776256LL, 483284202650LL, 429638849824LL, 378489551710LL, 329614321888LL, 282819530961LL, 237935273317LL, 194811643155LL, 153315713702LL, 113329066061LL, 74745751895LL, 37470601627LL, 1417810161LL};
+uint32_t __A[16]={4037269258LL, 3547137696LL, 3111465196LL, 2721652960LL, 2370821947LL, 2053403411LL, 1764841107LL, 1501371176LL, 1259857073LL, 1037664098LL, 832562891LL, 642654365LL, 466310734LL, 302128733LL, 148892199LL, 5541893LL};
+uint32_t __LNA[16]={2846223171LL, 2585842403LL, 2340348885LL, 2108131938LL, 1887828916LL, 1678276757LL, 1478474811LL, 1287555944LL, 1104763792LL, 929434661LL, 760982981LL, 598889506LL, 442691664LL, 291975593LL, 146369537LL, 5538320LL};
 
 uint64_t __AA[16]={134217728LL, 402653184LL, 671088640LL, 939524096LL, 1207959552LL, 1476395008LL, 1744830464LL, 2013265920LL, 2281701376LL, 2550136832LL, 2818572288LL, 3087007744LL, 3355443200LL, 3623878656LL, 3892314112LL, 4160749568LL};
 uint64_t __EXPAA[16]={4431304193LL, 4717098759LL, 5021325491LL, 5345173162LL, 5689907212LL, 6056874699LL, 6447509556LL, 6863338196LL, 7305985480LL, 7777181060LL, 8278766144LL, 8812700687LL, 9381071050LL, 9986098151LL, 10630146148LL, 11315731672LL};
@@ -19,8 +17,8 @@ uint64_t __EXPAA_v2[16]={4294967296LL, 4571968887LL, 4866835547LL, 5180719472LL,
 
 uint64_t __EXPX[16] = {4303364101LL, 4320206992LL, 4337115804LL, 4354090795LL, 4371132225LL, 4388240352LL, 4405415440LL, 4422657748LL, 4439967541LL, 4457345083LL, 4474790638LL, 4492304474LL, 4509886856LL, 4527538054LL, 4545258337LL, 4563047975LL};
 
-int64_t __LNT[8] = {-119076027LL,-84716105LL,-50628884LL,-16810069LL,16744533LL,50039019LL,83077392LL,115863561LL};
-int64_t __INVT[8] = {4415709348LL,4380524413LL,4345895761LL,4311810305LL,4278255360LL,4245218640LL,4212688229LL,4180652577LL};
+int32_t __LNT[8] = {-119076027LL,-84716105LL,-50628884LL,-16810069LL,16744533LL,50039019LL,83077392LL,115863561LL};
+uint32_t __INVT[8] = {120742052LL, 85557117LL, 50928465LL, 16843009LL,4278255360LL,4245218640LL,4212688229LL,4180652577LL};
 
 
 short norm8_8(int16_t x)
@@ -696,139 +694,138 @@ int8_8 sqrt8_8(int8_8 a)
     else x = xx & MASK_LOWER_32;
 
     int i;
-    int p_i;
     uint64_t p = 1ULL;
-    for (i=0;i<3;i++)
+    int32_t y,t1,t2,t3,aa1;
+    aa1 = aa >> 1;
+    for (i=0;i<2;i++)
     {
-    	p = (((int64_t)x*x)>>32)+(((int64_t)x) << 1) + (1LL << 32);
-    	p_i = p>>32;
-    	p = p & MASK_LOWER_32;
-    	p = (((int64_t)p*aa)>>32) + (int64_t)aa*p_i;
-    	p = (3LL << 32) - p;
-    	p_i = (p>>32);
-    	p = p & MASK_LOWER_32;
-        x = (((int64_t)p * x) >> 33) + (((int64_t)p_i * x) >> 1)+(p>>1)+(p_i<<31);
-        x = x & MASK_LOWER_32;
+       y = x+(x>>1)+0x80000000;
+       p = (int64_t)x*aa1; t1 = p>>32;
+       p = (int64_t)t1*x; t2 = p>>32;
+       p = (int64_t)t2*x; t3 = p>>32;
+       x = y - aa1 - t1 - (t1<<1) - t2 - (t2<<1) - t3;
     }
-    int64_t res = (((int64_t)x * aa)>>32)+aa;
+    uint32_t res = (((int64_t)x * aa)>>32)+aa;
 
+    uint64_t aux=res;
+    if (k%2) {aux = (((uint64_t)res*SQRT_2)>>32)+res; }
+    aux = (k>8?aux << ((k-8)/2) : aux >> ((9-k)/2));
 
-    if (k%2) {res = (((int64_t)res*SQRT_2)>>32)+res; }
-    res = (k>8?((int64_t)res) << ((k-8)/2) : ((int64_t)res) >> ((9-k)/2));
-
-	return (int8_8)(res>>24);
+	return (int8_8)(aux>>24);
 }
 
 int16_16 sqrt16_16(int16_16 a)
 {
     if (a<=0) return 0;
     short k = norm16_16(a);
-    uint64_t aa = ((uint64_t)a<<(32-k))&MASK_LOWER_32;
-    uint64_t x = (SQRT_C1 - ((SQRT_C2*aa)>>32));
-    if (x<POW_2_32) x = 0;
-    else x = x & MASK_LOWER_32;
+    uint32_t aa = (a<<(32-k));
+     int32_t c2_aux = SQRT_C2 & MASK_LOWER_32;
+     uint64_t xx = (((int64_t) c2_aux*aa)>>32)+aa;
+      xx = (SQRT_C1 -xx);
+    uint32_t x;
+     if (xx<POW_2_32) x = 0;
+     else x = xx & MASK_LOWER_32;
 
-    int i;
-    int p_i;
+     int i;
     uint64_t p = 1ULL;
-    for (i=0;i<3;i++)
-    {
-    	p = ((x*x)>>32)+(x << 1) + (1LL << 32);
-    	p_i = p>>32;
-    	p = p & MASK_LOWER_32;
-    	p = ((p*aa)>>32) + aa*p_i;
-    	p = (3LL << 32) - p;
-    	p_i = (p>>32);
-    	p = p & MASK_LOWER_32;
-        x = ((p * x) >> 33) + ((p_i * x) >> 1)+(p>>1)+(p_i<<31);
-        x = x & MASK_LOWER_32;
+     int32_t y,t1,t2,t3,aa1;
+     aa1 = aa >> 1;
+     for (i=0;i<3;i++)
+     {
+        y = x+(x>>1)+0x80000000;
+        p = (int64_t)x*aa1; t1 = p>>32;
+        p = (int64_t)t1*x; t2 = p>>32;
+        p = (int64_t)t2*x; t3 = p>>32;
+        x = y - aa1 - t1 - (t1<<1) - t2 - (t2<<1) - t3;
+     }
+     uint32_t res = (((int64_t)x * aa)>>32)+aa;
 
-    }
-    x = ((x * aa)>>32)+aa;
+        uint64_t aux=res;
+        if (k%2) {aux = (((uint64_t)res*SQRT_2)>>32)+res; }
+        aux = (k>16?aux << ((k-16)/2) : aux >> ((17-k)/2));
 
-    if (k%2) {x = ((x*SQRT_2)>>32)+x; }
-    x = (k>16?x << ((k-16)/2) : x >> ((17-k)/2));
-	return (int16_16)(x>>16);
+    	return (int16_16)(aux>>16);
 }
 
 int8_24 sqrt8_24(int8_24 a)
 {
-    if (a<=0) return 0;
-    short k = norm16_16(a);
-    uint64_t aa = ((uint64_t)a<<(32-k))&MASK_LOWER_32;
-    uint64_t x = (SQRT_C1 - ((SQRT_C2*aa)>>32));
+	 if (a<=0) return 0;
+	    short k = norm16_16(a);
+	    uint32_t aa = (a<<(32-k));
+	     int32_t c2_aux = SQRT_C2 & MASK_LOWER_32;
+	     uint64_t xx = (((int64_t) c2_aux*aa)>>32)+aa;
+	      xx = (SQRT_C1 -xx);
+	    uint32_t x;
+	     if (xx<POW_2_32) x = 0;
+	     else x = xx & MASK_LOWER_32;
 
-    if (x<POW_2_32) x = 0;
-    else x = x & MASK_LOWER_32;
+	     int i;
+	    uint64_t p = 1ULL;
+	     int32_t y,t1,t2,t3,aa1;
+	     aa1 = aa >> 1;
+	     for (i=0;i<4;i++)
+	     {
+	        y = x+(x>>1)+0x80000000;
+	        p = (int64_t)x*aa1; t1 = p>>32;
+	        p = (int64_t)t1*x; t2 = p>>32;
+	        p = (int64_t)t2*x; t3 = p>>32;
+	        x = y - aa1 - t1 - (t1<<1) - t2 - (t2<<1) - t3;
+	     }
+	     uint32_t res = (((int64_t)x * aa)>>32)+aa;
 
-    int i;
-    int p_i;
-    uint64_t p = 1ULL;
-    for (i=0;i<3;i++)
-    {
-    	p = ((x*x)>>32)+(x << 1) + (1LL << 32);
-    	p_i = p>>32;
-    	p = p & MASK_LOWER_32;
-    	p = ((p*aa)>>32) + aa*p_i;
-    	p = (3LL << 32) - p;
-    	p_i = (p>>32);
-    	p = p & MASK_LOWER_32;
-        x = ((p * x) >> 33) + ((p_i * x) >> 1)+(p>>1)+(p_i<<31);
-        x = x & MASK_LOWER_32;
+	        uint64_t aux=res;
+	        if (k%2) {aux = (((uint64_t)res*SQRT_2)>>32)+res; }
+	        aux = (k>24?aux << ((k-24)/2) : aux >> ((25-k)/2));
 
-    }
-    x = ((x * aa)>>32)+aa;
-
-    if (k%2) {x = ((x*SQRT_2)>>32)+x; }
-    x = (k>24?x << ((k-24)/2) : x >> ((25-k)/2));
-	return (int8_24)(x>>8);
+	return (int8_24)(aux>>8);
 }
 
 int24_8 sqrt24_8(int24_8 a)
 {
-    if (a<=0) return 0;
-    short k = norm16_16(a);
-    uint64_t aa = ((uint64_t)a<<(32-k))&MASK_LOWER_32;
-    uint64_t x = (SQRT_C1 - ((SQRT_C2*aa)>>32));
-    if (x<POW_2_32) x = 0;
-    else x = x & MASK_LOWER_32;
+	 if (a<=0) return 0;
+	    short k = norm16_16(a);
+	    uint32_t aa = (a<<(32-k));
+	     int32_t c2_aux = SQRT_C2 & MASK_LOWER_32;
+	     uint64_t xx = (((int64_t) c2_aux*aa)>>32)+aa;
+	      xx = (SQRT_C1 -xx);
+	    uint32_t x;
+	     if (xx<POW_2_32) x = 0;
+	     else x = xx & MASK_LOWER_32;
 
-    int i;
-    int p_i;
-    uint64_t p = 1ULL;
-    for (i=0;i<3;i++)
-    {
-    	p = ((x*x)>>32)+(x << 1) + (1LL << 32);
-    	p_i = p>>32;
-    	p = p & MASK_LOWER_32;
-    	p = ((p*aa)>>32) + aa*p_i;
-    	p = (3LL << 32) - p;
-    	p_i = (p>>32);
-    	p = p & MASK_LOWER_32;
-        x = ((p * x) >> 33) + ((p_i * x) >> 1)+(p>>1)+(p_i<<31);
-        x = x & MASK_LOWER_32;
+	     int i;
+	    uint64_t p = 1ULL;
+	     int32_t y,t1,t2,t3,aa1;
+	     aa1 = aa >> 1;
+	     for (i=0;i<3;i++)
+	     {
+	        y = x+(x>>1)+0x80000000;
+	        p = (int64_t)x*aa1; t1 = p>>32;
+	        p = (int64_t)t1*x; t2 = p>>32;
+	        p = (int64_t)t2*x; t3 = p>>32;
+	        x = y - aa1 - t1 - (t1<<1) - t2 - (t2<<1) - t3;
+	     }
+	     uint32_t res = (((int64_t)x * aa)>>32)+aa;
 
-    }
-    x = ((x * aa)>>32)+aa;
+	        uint64_t aux=res;
+	        if (k%2) {aux = (((uint64_t)res*SQRT_2)>>32)+res; }
+	        aux = (k>8?aux << ((k-8)/2) : aux >> ((9-k)/2));
 
-    if (k%2) {x = ((x*SQRT_2)>>32)+x; }
-    x = (k>8?x << ((k-8)/2) : x >> ((9-k)/2));
-	return (int24_8)(x>>24);
+	return (int24_8)(aux>>24);
 }
 
 int8_8 log8_8(int8_8 aa)
 {
 	if (aa<=0) return 0;
 	short k = norm8_8(aa);
-	uint64_t x = ((uint64_t)aa)<<(32-k);
+	uint32_t x = aa<<(32-k);
 	uint16_t key = (x>>27)-16;
 
-	x = (x*__A[key])>>32;
-	uint64_t t;
+	x = (((int64_t)x*__A[key])>>32)+x;
+	int32_t t;
 	if (x<POW_2_31) t=x;
-	else t = x - POW_2_32;
+	else t = x-POW_2_32;
 
-	uint64_t app = t - ((t*t)>>33);
+	uint64_t app = t - (((int64_t)t*t)>>33);
 	app = app - __LNA[key];
 	app = app + (k-8)*LN_2;
 #ifdef DEBUG_FLAG
@@ -841,21 +838,22 @@ int16_16 log16_16(int16_16 aa)
 {
 	if (aa<=0) return 0;
 	short k = norm16_16(aa);
-	uint64_t x = ((uint64_t)aa)<<(32-k);
+	uint32_t x = aa<<(32-k);
 	uint16_t key = (x>>27)-16;
 
-	x = (x*__A[key])>>32;
-	uint64_t t;
+	x = (((int64_t)x*__A[key])>>32)+x;
+	int32_t t;
 	if (x<POW_2_31) t=x;
-	else t = x - POW_2_32;
+	else t = x-POW_2_32;
 
-	uint64_t app = t - ((t*t)>>33);
+	uint64_t app = t - (((int64_t)t*t)>>33);
 	app = app - __LNA[key];
-	app = (app<<4) + (k-16)*LN_2_EXTRA; //increased the precision with 4 bits
+	app = app + (k-16)*LN_2;
 #ifdef DEBUG_FLAG
-    verify_overflow_32_bits(app>>20);
+    verify_overflow_16_bits(app>>16);
 #endif
-	return (int16_16)(app>>20);
+	return (int16_16)(app>>16);
+	//app = (app<<4) + (k-16)*LN_2_EXTRA; //increased the precision with 4 bits
 }
 
 int8_24 log8_24(int8_24 aa)
@@ -866,19 +864,20 @@ int8_24 log8_24(int8_24 aa)
 	uint64_t x = ((uint64_t)aa)<<(32-k);
 	uint16_t key = (x>>27)-16;
 
-	x = (x*__A[key])>>32;
+	x = (((int64_t)x*__A[key])>>32)+x;
 	uint64_t t;
 	if (x<POW_2_31) t=x;
 	else t = x - POW_2_32;
 
 	uint64_t app = t - ((t*t)>>33);
-	app = (app<<8) - __LNA[key];
-	app = app + (k-24)*(LN_2_EXTRA<<4); //increased the precision with 4 bits
+	app = app - __LNA[key];
+	app = app + (k-24)*(LN_2); //increased the precision with 4 bits
 #ifdef DEBUG_FLAG
-    verify_overflow_32_bits(app>>16);
+    verify_overflow_32_bits(app>>12);
 #endif
-	return (int8_24)(app>>16);
+	return (int8_24)(app>>8);
 }
+
 
 
 
@@ -886,34 +885,34 @@ int24_8 log24_8(int24_8 aa)
 {
 	if (aa<=0) return 0;
 	short k = norm16_16(aa);
-	uint64_t x = ((uint64_t)aa)<<(32-k);
+	uint32_t x = aa<<(32-k);
 	uint16_t key = (x>>27)-16;
 
-	x = (x*__A[key])>>32;
-	uint64_t t;
+	x = (((int64_t)x*__A[key])>>32)+x;
+	int32_t t;
 	if (x<POW_2_31) t=x;
-	else t = x - POW_2_32;
+	else t = x-POW_2_32;
 
-	uint64_t app = t - ((t*t)>>33);
+	uint64_t app = t - (((int64_t)t*t)>>33);
 	app = app - __LNA[key];
-	app = app + (k-8)*LN_2; //increased the precision with 4 bits
+	app = app + (k-8)*LN_2;
 #ifdef DEBUG_FLAG
-    verify_overflow_32_bits(app>>24);
+    verify_overflow_16_bits(app>>24);
 #endif
 	return (int24_8)(app>>24);
 }
 
 int8_8 exp8_8(int8_8 a)
 {
-	int64_t x = (((int64_t)a)*LN_2_INV)>>8;
-	int32_t t = (x>>32);
-	int64_t f = (x&MASK_LOWER_32);
-	x = (f*LN_2)>>32;
+	int64_t xx = (((int64_t)a)*LN_2_INV)>>8;
+	short t = (xx>>32);
+	int32_t f = (xx&MASK_LOWER_32);
+	int32_t x = ((int64_t)f*LN_2)>>32;
 
 	uint16_t key = (x>>28);
 	x = x -__AA[key];
-	uint64_t app = (x+((x*x)>>33))&MASK_LOWER_32;
-    app = ((app*(__EXPAA[key]&MASK_LOWER_32))>>32)+(x<0?0:__EXPAA[key])+app*(__EXPAA[key]>>32);
+	uint32_t app = (x+(((int64_t)x*x)>>33));
+    app = (((int64_t)app*(__EXPAA[key]&MASK_LOWER_32))>>32)+(x<0?0:__EXPAA[key])+(int64_t)app*(__EXPAA[key]>>32);
 
     if (t<24) app >>= (24-t);
     else app <<= (t-24);
@@ -1113,11 +1112,11 @@ int8_24 log8_24_v2(int8_24 aa)
 	/*Needs to double the number of entries in the lookup tables to make the interval (0.99,1.01)*/
 	if (aa<=0) return 0;
 	short k = norm16_16(aa);
-	uint64_t x = ((uint64_t)aa)<<(32-k);
+	uint32_t x = aa<<(32-k);
 	uint16_t key = (x>>27)-16;
 
-	x = (x*__A[key])>>32;
-	int64_t t;
+	x = (((int64_t)x*__A[key])>>32)+x;
+	int32_t t;
 	char sign;
 	if (x<POW_2_31) {t=x;sign = -1;}
 	else {t = x - POW_2_32;sign = 1;}
@@ -1126,15 +1125,17 @@ int8_24 log8_24_v2(int8_24 aa)
 	t += POW_2_27;
 	short skey=(t&MASK_5_TO_7)>>25;
 	t = (t & MASK_FROM_8) - POW_2_24;
-	t = (t*__INVT[skey])>>32;
-	int64_t app = __LNT[skey]+t - ((t*t)>>33);
+	int aux = 1;
+	if (skey>3) aux = 0;
+	t = aux*t+(((int64_t)t*__INVT[skey])>>32);
+	int64_t app = __LNT[skey]+t - (((int64_t)t*t)>>33);
 	/* better approximation end*/
-	app = (app<<8) - __LNAA[key];
-	app = app + (k-24)*(LN_2_EXTRA<<4); //increased the precision with 4 bits
+	app = app - (((uint64_t)__LNA[key]));
+	app = app + (k-24)*(LN_2); //increased the precision with 4 bits
 #ifdef DEBUG_FLAG
-    verify_overflow_32_bits(app>>16);
+    verify_overflow_32_bits(app>>8);
 #endif
-	return (int8_24)(app>>16);
+	return (int8_24)(app>>8);
 }
 
 int16_16 log16_16_v2(int16_16 aa)
@@ -1142,11 +1143,11 @@ int16_16 log16_16_v2(int16_16 aa)
 	/*Needs to double the number of entries in the lookup tables to make the interval (0.99,1.01)*/
 	if (aa<=0) return 0;
 	short k = norm16_16(aa);
-	uint64_t x = ((uint64_t)aa)<<(32-k);
+	uint32_t x = aa<<(32-k);
 	uint16_t key = (x>>27)-16;
 
-	x = (x*__A[key])>>32;
-	int64_t t;
+	x = (((int64_t)x*__A[key])>>32)+x;
+	int32_t t;
 	char sign;
 	if (x<POW_2_31) {t=x;sign = -1;}
 	else {t = x - POW_2_32;sign = 1;}
@@ -1155,15 +1156,17 @@ int16_16 log16_16_v2(int16_16 aa)
 	t += POW_2_27;
 	short skey=(t&MASK_5_TO_7)>>25;
 	t = (t & MASK_FROM_8) - POW_2_24;
-	t = (t*__INVT[skey])>>32;
-	int64_t app = __LNT[skey]+t - ((t*t)>>33);
+	int aux = 1;
+	if (skey>3) aux = 0;
+	t = aux*t+(((int64_t)t*__INVT[skey])>>32);
+	int64_t app = __LNT[skey]+t - (((int64_t)t*t)>>33);
 	/* better approximation end*/
-	app = (app<<8) - __LNAA[key];
-	app = app + (k-16)*(LN_2_EXTRA<<4); //increased the precision with 4 bits
+	app = app - (((uint64_t)__LNA[key]));
+	app = app + (k-16)*(LN_2);
 #ifdef DEBUG_FLAG
-    verify_overflow_32_bits(app>>24);
+    verify_overflow_32_bits(app>>16);
 #endif
-	return (int16_16)(app>>24);
+	return (int8_24)(app>>16);
 }
 
 int8_8 sin8_8(int8_8 a)
