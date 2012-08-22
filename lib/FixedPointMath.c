@@ -12,7 +12,6 @@ uint32_t __LNA[16]={2846223171LL, 2585842403LL, 2340348885LL, 2108131938LL, 1887
 uint64_t __AA[16]={134217728LL, 402653184LL, 671088640LL, 939524096LL, 1207959552LL, 1476395008LL, 1744830464LL, 2013265920LL, 2281701376LL, 2550136832LL, 2818572288LL, 3087007744LL, 3355443200LL, 3623878656LL, 3892314112LL, 4160749568LL};
 uint64_t __EXPAA[16]={4431304193LL, 4717098759LL, 5021325491LL, 5345173162LL, 5689907212LL, 6056874699LL, 6447509556LL, 6863338196LL, 7305985480LL, 7777181060LL, 8278766144LL, 8812700687LL, 9381071050LL, 9986098151LL, 10630146148LL, 11315731672LL};
 
-uint64_t __AA_v2[16]={0LL, 268435456LL, 536870912LL, 805306368LL, 1073741824LL, 1342177280LL, 1610612736LL, 1879048192LL, 0x0000000080000000, 2415919104LL, 2684354560LL, 2952790016LL, 3221225472LL, 3489660928LL, 3758096384LL, 4026531840LL};
 uint64_t __EXPAA_v2[16]={4294967296LL, 4571968887LL, 4866835547LL, 5180719472LL, 5514847171LL, 5870524256LL, 6249140541LL, 6652175479LL, 7081203937LL, 7537902354LL, 8024055288LL, 8541562392LL, 9092445836LL, 9678858211LL, 10303090934LL, 10967583209LL};
 
 uint64_t __EXPX[16] = {4303364101LL, 4320206992LL, 4337115804LL, 4354090795LL, 4371132225LL, 4388240352LL, 4405415440LL, 4422657748LL, 4439967541LL, 4457345083LL, 4474790638LL, 4492304474LL, 4509886856LL, 4527538054LL, 4545258337LL, 4563047975LL};
@@ -905,14 +904,14 @@ int24_8 log24_8(int24_8 aa)
 int8_8 exp8_8(int8_8 a)
 {
 	int64_t xx = (((int64_t)a)*LN_2_INV)>>8;
-	short t = (xx>>32);
-	int32_t f = (xx&MASK_LOWER_32);
-	int32_t x = ((int64_t)f*LN_2)>>32;
+	int32_t t = (xx>>32);
+	uint32_t f = (xx&MASK_LOWER_32);
+	int32_t x = ((uint64_t)f*LN_2)>>32;
 
-	uint16_t key = (x>>28);
+	uint16_t key = (((uint32_t)x)>>28);
 	x = x -__AA[key];
-	uint32_t app = (x+(((int64_t)x*x)>>33));
-    app = (((int64_t)app*(__EXPAA[key]&MASK_LOWER_32))>>32)+(x<0?0:__EXPAA[key])+(int64_t)app*(__EXPAA[key]>>32);
+	uint64_t app = (x+(((int64_t)x*x)>>33))&MASK_LOWER_32;
+    app = ((app*(__EXPAA[key]&MASK_LOWER_32))>>32)+(x<0?0:__EXPAA[key])+app*(__EXPAA[key]>>32);
 
     if (t<24) app >>= (24-t);
     else app <<= (t-24);
@@ -971,7 +970,9 @@ int16_16 exp16_16_v2(int16_16 a)
 	x = (f*LN_2)>>32;
 
 	uint16_t key = (x>>28);
-	x = x - __AA_v2[key];
+	uint32_t aux = 0;
+	if (key>0) aux=(__AA[key-1]+__AA[key])>>1;
+	x = x - aux;
 	/* better approximation */
 	short skey=(x&MASK_5_TO_8)>>24;
 	uint64_t xx = (x&MASK_FROM_9) - POW_2_23;
@@ -1001,7 +1002,9 @@ int16_16 sexp16_16_v2(int16_16 a)
 	x = (f*LN_2)>>32;
 
 	uint16_t key = (x>>28);
-	x = x - __AA_v2[key];
+	uint32_t aux = 0;
+	if (key>0) aux=(__AA[key-1]+__AA[key])>>1;
+	x = x - aux;
 	/* better approximation */
 	short skey=(x&MASK_5_TO_8)>>24;
 	uint64_t xx = (x&MASK_FROM_9) - POW_2_23;
@@ -1036,7 +1039,9 @@ int24_8 exp24_8(int24_8 a)
 	x = (f*LN_2)>>32;
 
 	uint16_t key = (x>>28);
-	x = x - __AA[key];
+	uint32_t aux = 0;
+	if (key>0) aux=(__AA[key-1]+__AA[key])>>1;
+	x = x - aux;
 	uint64_t app = (x+((x*x)>>33))&MASK_LOWER_32;
     app = ((app*(__EXPAA[key]&MASK_LOWER_32))>>32)+(x<0?0:__EXPAA[key])+app*(__EXPAA[key]>>32);
 
@@ -1056,7 +1061,9 @@ int24_8 exp24_8_v2(int24_8 a)
 	x = (f*LN_2)>>32;
 
 	uint16_t key = (x>>28);
-	x = x - __AA_v2[key];
+	uint32_t aux = 0;
+	if (key>0) aux=(__AA[key-1]+__AA[key])>>1;
+	x = x - aux;
 	/* better approximation */
 	short skey=(x&MASK_5_TO_8)>>24;
 	uint64_t xx = (x&MASK_FROM_9) - POW_2_23;
@@ -1086,7 +1093,9 @@ int8_24 exp8_24_v2(int8_24 a)
 	x = (f*LN_2)>>32;
 
 	uint16_t key = (x>>28);
-	x = x - __AA_v2[key];
+	uint32_t aux = 0;
+	if (key>0) aux=(__AA[key-1]+__AA[key])>>1;
+	x = x - aux;
 	/* better approximation */
 	short skey=(x&MASK_5_TO_8)>>24;
 	uint64_t xx = (x&MASK_FROM_9) - POW_2_23;
